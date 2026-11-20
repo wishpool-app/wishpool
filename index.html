@@ -255,16 +255,6 @@
     *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   }
 </style>
-<!-- 百度统计 -->
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?31f0a55adb5210a1bf9476449d1ba48c";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 </head>
 <body>
 <div class="sky" id="sky"><div class="moon"></div></div>
@@ -432,7 +422,7 @@ zh:{
  plans:[['¥28','每周<br>随时取消'],['¥228','每年<br>折合 ¥4.4/周'],['¥68','终身<br>一次买断']],
  saveTag:'省 72%',trial:'开始 7 天免费体验',
  payNote:'⚠️ 演示版占位 · 未接入真实支付<br>上线时对接微信/支付宝订阅即可变现',later:'暂不需要',
- shareTip:'长按保存卡片 · 发到朋友圈/小红书<br>让更多人替你见证这个愿望',close:'关闭',
+ shareTip:'长按卡片可保存到相册 · 发朋友圈/小红书<br>让更多人替你见证这个愿望',shareSend:'📤 转发 / 分享',copyLink:'🔗 复制链接',copied:'链接已复制 ✨ 发给想一起许愿的人吧',close:'关闭',
  shareTitle:'✨ 许 愿 池 ✨',manifesting:' 天，显化中 ——',firstDay:'—— 第 ',
  shareFoot:'许愿池 Wishing Pool · make it happen',
  t:['先写下你的愿望 ✍️','愿望已投入 ✨ 「未来的你」稍后来信','「未来的你」来信了 💌','先去许愿池投下一枚硬币 🪙','已解锁（演示）· 现在可以无限生成 🎉','恭喜！宇宙听到了 🎉','今日打卡完成 ✓ 持续显化中','先许一个愿望，再来生成卡片 🌙','个性化完成 ✨ 你已是「显化中」状态','当前设备不支持语音朗读','肯定语已更新 ✨','已收藏 ⭐','已取消收藏','已保存 ✍️','本节已完成 ✓ 明天继续','课程进行中','愿望已更新 ✨ 来信可以重写了','来信已重写 💌','已开启每日提醒 🔔','请先允许通知权限','已关闭每日提醒','数据已导出 💾 存到手机里就安全了','备份已恢复 ✨ 愿望都回来了','导入失败 · 文件无效 ⚠️'],
@@ -484,7 +474,7 @@ en:{
  plans:[['$4.99','Weekly<br>cancel anytime'],['$49.99','Yearly<br>just $0.96/wk'],['$12.99','Lifetime<br>one-time']],
  saveTag:'SAVE 72%',trial:'Start 7-day free trial',
  payNote:'⚠️ Demo paywall placeholder · no real billing yet<br>Hook up Stripe/App Store subscriptions at launch',later:'Not now',
- shareTip:'Save this card · share to Instagram / TikTok<br>Let the world witness your wish',close:'Close',
+ shareTip:'Long-press the card to save · share to Instagram / TikTok<br>Let the world witness your wish',shareSend:'📤 Share',copyLink:'🔗 Copy link',copied:'Link copied ✨ Send it to someone who dreams too',close:'Close',
  shareTitle:'✨ WISHING POOL ✨',manifesting:' days manifesting ——',firstDay:'—— day ',
  shareFoot:'Wishing Pool · make it happen',
  t:['Write your wish first ✍️','Wish tossed in ✨ A letter is on its way','A letter from your future self 💌','Toss a coin in the Pool first 🪙','Unlocked (demo) · unlimited generation 🎉','Congratulations! The universe heard you 🎉','Checked in ✓ Keep manifesting','Make a wish before creating a card 🌙','Personalization complete ✨ You\'re manifesting','Speech not supported on this device','Affirmations refreshed ✨','Saved ⭐','Removed from saved','Saved ✍️','Session complete ✓ See you tomorrow','Program in progress','Wish updated ✨ Letter can be rewritten','Letter rewritten 💌','Daily reminder on 🔔','Please allow notifications first','Daily reminder off','Data exported 💾 Keep the file safe','Backup restored ✨ Your wishes are back','Import failed · invalid file ⚠️'],
@@ -1071,13 +1061,44 @@ function shareCard(){
   g.fillStyle='#6e5f96';g.font='20px sans-serif';g.fillText(T('shareFoot'),375,940);
   openShare(c.toDataURL('image/png'));
 }
+let lastCardUrl='';
 function openShare(dataUrl){
+  lastCardUrl=dataUrl;
   const m=document.createElement('div');m.className='mask on';
   m.innerHTML='<div class="glass sheet" style="border-radius:22px;max-width:360px;padding:14px;text-align:center">'+
    '<img src="'+dataUrl+'" style="width:100%;border-radius:14px;display:block" alt="share card">'+
    '<div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.8">'+T('shareTip')+'</div>'+
+   '<div style="display:flex;gap:8px;margin-top:10px">'+
+    '<button class="btn" style="flex:1;margin-top:0" onclick="doShare()">'+T('shareSend')+'</button>'+
+    '<button class="btn ghost" style="flex:1;margin-top:0" onclick="doCopy()">'+T('copyLink')+'</button></div>'+
    '<button class="btn ghost" onclick="this.closest(\'.mask\').remove()">'+T('close')+'</button></div>';
   document.body.appendChild(m);
+}
+async function doShare(){
+  try{
+    const blob=await (await fetch(lastCardUrl)).blob();
+    const file=new File([blob],'wishing-pool.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:T('shareTitle'),text:T('shareFoot')+' → https://wishpool.xin'});
+      return;
+    }
+  }catch(e){/* 用户取消或文件分享不支持，走下面 */}
+  if(navigator.share){
+    try{await navigator.share({title:T('shareTitle'),text:T('shareFoot'),url:'https://wishpool.xin'})}catch(e){}
+  }else{doCopy()}
+}
+function doCopy(){
+  const done=()=>toast(T('copied'));
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText('https://wishpool.xin').then(done,()=>fallbackCopy(done));
+  }else fallbackCopy(done);
+}
+function fallbackCopy(done){
+  const ta=document.createElement('textarea');ta.value='https://wishpool.xin';
+  ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');done()}catch(e){}
+  ta.remove();
 }
 
 /* ================= 订阅墙 ================= */
