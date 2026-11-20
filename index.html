@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>许愿池 Wishing Pool — Notes from your future self</title>
+<meta name="description" content="Wishing Pool 许愿池：Write your wish, hear from your future self. Affirmations · guided programs · streaks · daily moments.">
+<meta name="theme-color" content="#0b0620">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0620'/%3E%3Ccircle cx='50' cy='50' r='27' fill='%23ffd97a'/%3E%3Ccircle cx='50' cy='50' r='20' fill='none' stroke='%23fff4c8' stroke-width='2'/%3E%3Cpath d='M50 36l4.2 8.6 9.5 1.4-6.9 6.7 1.6 9.4L50 57.6l-8.4 4.5 1.6-9.4-6.9-6.7 9.5-1.4z' fill='%23b48228'/%3E%3C/svg%3E">
+<meta property="og:title" content="许愿池 WishPool — Hear from your future self">
+<meta property="og:description" content="Write your wish, toss a coin, and get a letter from your future self. 愿望投进池里，未来的你会回信。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://wishpool.xin/">
+<meta property="og:site_name" content="WishPool">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="许愿池 WishPool">
+<meta name="twitter:description" content="Write your wish, hear from your future self. ✨">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WishPool">
+<meta name="application-name" content="WishPool">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<style>
+  :root{
+    --bg1:#070313; --bg2:#150b36; --bg3:#2b1b5e; --bg4:#3d2a7d;
+    --glow:#9d7bff; --glow2:#ff9ad5; --gold:#ffd97a; --gold2:#ffb3d9;
+    --text:#f2ecff; --muted:#a99cc9; --faint:#6e5f96;
+    --card:rgba(255,255,255,.055); --line:rgba(157,123,255,.30); --line2:rgba(157,123,255,.55);
+    --shadow:0 8px 32px rgba(0,0,0,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","HarmonyOS Sans SC","Segoe UI","Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(900px 500px at 50% -8%, var(--bg4), transparent 60%),
+      radial-gradient(700px 420px at 12% 30%, rgba(157,123,255,.14), transparent 65%),
+      radial-gradient(700px 420px at 88% 70%, rgba(255,154,213,.10), transparent 65%),
+      linear-gradient(180deg, var(--bg2), var(--bg1) 70%);
+    color:var(--text); min-height:100vh; overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3.4s infinite ease-in-out}
+  @keyframes twinkle{0%,100%{opacity:.12;transform:scale(.6)}50%{opacity:.95;transform:scale(1.1)}}
+  .moon{position:absolute;top:5%;right:7%;width:58px;height:58px;border-radius:50%;
+    background:radial-gradient(circle at 34% 32%, #fffdf2, #ffeec2 58%, #ecd398);
+    box-shadow:0 0 46px 14px rgba(255,233,184,.22), inset -10px -8px 0 rgba(200,170,120,.18);opacity:.92}
+  .meteor{position:absolute;width:110px;height:1.5px;
+    background:linear-gradient(90deg, rgba(255,255,255,.9), transparent);
+    border-radius:2px;transform:rotate(-32deg);opacity:0;animation:meteor 1.6s ease-out}
+  @keyframes meteor{0%{opacity:0}8%{opacity:1}100%{opacity:0;transform:rotate(-32deg) translateX(-360px)}}
+
+  .app{position:relative;z-index:1;max-width:540px;margin:0 auto;padding:0 18px 110px}
+  header{padding-top:26px;text-align:center;position:relative}
+  .langbtn{position:absolute;top:0;right:0;padding:6px 12px;border-radius:16px;cursor:pointer;
+    font-size:12px;color:var(--muted);border:1px solid var(--line);background:var(--card)}
+  .logo{font-size:30px;letter-spacing:6px;font-weight:700;
+    background:linear-gradient(120deg,#fff 20%,var(--gold) 50%,var(--glow2) 85%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 22px rgba(157,123,255,.55))}
+  .slogan{color:var(--muted);font-size:12.5px;margin-top:8px;letter-spacing:2px}
+
+  .glass{background:var(--card);border:1px solid var(--line);border-radius:20px;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+  .page{display:none;animation:pagein .35s ease}
+  .page.on{display:block}
+  @keyframes pagein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .sec-title{font-size:13px;color:var(--muted);letter-spacing:2px;margin:20px 0 4px;display:flex;justify-content:space-between;align-items:center}
+
+  .pool{position:relative;height:200px;border-radius:26px;overflow:hidden;margin-top:22px;
+    background:linear-gradient(180deg, rgba(157,123,255,.22), rgba(61,42,125,.55) 45%, rgba(7,3,19,.95));
+    border:1px solid var(--line2);
+    box-shadow:inset 0 14px 44px rgba(157,123,255,.28), 0 16px 50px rgba(157,123,255,.18)}
+  .wave{position:absolute;left:-50%;width:200%;height:56px;bottom:26px;opacity:.5;animation:waveMove 7s linear infinite}
+  .wave.w2{bottom:16px;opacity:.35;animation-duration:11s;animation-direction:reverse}
+  @keyframes waveMove{from{transform:translateX(0)}to{transform:translateX(25%)}}
+  .shine{position:absolute;left:-60%;top:0;width:40%;height:100%;transform:skewX(-18deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);animation:shine 6s ease-in-out infinite}
+  @keyframes shine{0%,60%{left:-60%}90%,100%{left:130%}}
+  .pool-ring{position:absolute;left:50%;bottom:30px;width:180px;height:70px;border-radius:50%;
+    border:1.5px solid rgba(255,217,122,.35);transform:translateX(-50%)}
+  .ripple{position:absolute;left:50%;bottom:40px;width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(255,217,122,.95);transform:translate(-50%,0);animation:rip 1.7s cubic-bezier(.2,.6,.4,1) forwards}
+  @keyframes rip{0%{width:16px;height:16px;opacity:1}100%{width:260px;height:110px;opacity:0}}
+  .coin{position:absolute;left:50%;top:-34px;width:30px;height:30px;border-radius:50%;
+    background:radial-gradient(circle at 34% 28%, #fff6d0, var(--gold) 52%, #b8912f);
+    box-shadow:0 0 22px 8px rgba(255,217,122,.55), inset 0 -3px 5px rgba(140,100,20,.5);
+    transform:translateX(-50%);animation:drop 1.25s cubic-bezier(.45,0,.85,.55) forwards;z-index:3}
+  @keyframes drop{0%{top:-34px;opacity:0}12%{opacity:1}
+    55%{transform:translateX(-50%) rotate(160deg)}100%{top:140px;opacity:0;transform:translateX(-50%) rotate(320deg) scale(.5)}}
+  .pool-label{position:absolute;left:0;right:0;bottom:12px;text-align:center;color:var(--faint);font-size:11px;letter-spacing:4px;z-index:2}
+  .fresh-chip{position:absolute;top:12px;right:12px;font-size:10.5px;color:var(--gold);
+    background:rgba(255,217,122,.14);border:1px solid rgba(255,217,122,.4);padding:4px 10px;border-radius:12px;z-index:2}
+
+  .quote-card{padding:20px 18px;margin-top:18px;position:relative;overflow:hidden}
+  .quote-card::before{content:"";position:absolute;top:-30px;right:-30px;width:90px;height:90px;
+    background:radial-gradient(circle, rgba(255,217,122,.18), transparent 70%)}
+  .quote{font-size:16px;line-height:1.8;text-align:center}
+  .quote b{color:var(--gold);font-weight:600}
+  .quote-tag{font-size:10.5px;color:var(--faint);text-align:center;margin-top:10px;letter-spacing:3px}
+
+  .input-card{padding:16px;margin-top:18px}
+  .cats{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px}
+  .cat{flex:0 0 auto;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;
+    border:1px solid var(--line);color:var(--muted);transition:.2s;white-space:nowrap}
+  .cat.on{color:#1a0f3d;font-weight:600;border-color:transparent;
+    background:linear-gradient(90deg,var(--gold),var(--gold2));box-shadow:0 3px 14px rgba(255,217,122,.3)}
+  textarea{width:100%;background:rgba(7,3,19,.55);border:1px solid var(--line);border-radius:14px;
+    color:var(--text);font-size:15px;line-height:1.7;padding:13px;min-height:88px;resize:none;outline:none;font-family:inherit}
+  textarea:focus{border-color:var(--line2);box-shadow:0 0 16px rgba(157,123,255,.30)}
+  textarea::placeholder{color:var(--faint)}
+  .input-foot{display:flex;justify-content:space-between;margin-top:6px}
+  .hint,.count{font-size:11px;color:var(--faint)}
+  .btn{display:block;width:100%;margin-top:14px;padding:14px;border:none;border-radius:14px;
+    font-size:16px;font-weight:700;color:#1a0f3d;cursor:pointer;letter-spacing:1px;
+    background:linear-gradient(92deg,var(--gold),var(--gold2));
+    box-shadow:0 6px 24px rgba(255,217,122,.32);transition:transform .15s}
+  .btn:active{transform:scale(.965)}
+  .btn.ghost{background:transparent;color:var(--gold);border:1px solid rgba(255,217,122,.45);box-shadow:none;font-weight:600}
+  .btn.dark{background:linear-gradient(92deg,var(--glow),var(--glow2));color:#fff;
+    box-shadow:0 6px 24px rgba(157,123,255,.35)}
+  .btn.sm{width:auto;display:inline-block;padding:8px 18px;font-size:13px;margin-top:0;border-radius:12px}
+
+  .stats{display:flex;gap:10px;margin-top:18px}
+  .stat{flex:1;text-align:center;padding:13px 4px}
+  .stat .num{font-size:23px;font-weight:800;
+    background:linear-gradient(120deg,var(--gold),#fff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .stat .lbl{font-size:10.5px;color:var(--muted);margin-top:5px}
+
+  .story{padding:18px;margin-top:14px;position:relative;overflow:hidden}
+  .story .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#cabdff;
+    background:rgba(157,123,255,.18);border:1px solid var(--line2);padding:4px 12px;border-radius:12px}
+  .story h3{font-size:15px;margin:12px 0 8px;color:var(--gold);word-break:break-word;padding-right:30px}
+  .story .st{font-size:14px;line-height:2.0;white-space:pre-wrap}
+  .story .sfoot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px;flex-wrap:wrap}
+  .playbtn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:24px;
+    background:linear-gradient(92deg,var(--glow),var(--glow2));color:#fff;font-size:14px;font-weight:700;
+    border:none;cursor:pointer;box-shadow:0 4px 18px rgba(157,123,255,.4)}
+  .playbtn.playing{animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 4px 18px rgba(157,123,255,.4)}50%{box-shadow:0 4px 30px rgba(255,154,213,.7)}}
+  .wavebars{display:flex;gap:3px;align-items:flex-end;height:16px}
+  .wavebars i{width:3px;background:var(--glow2);border-radius:2px;animation:bar .8s infinite ease-in-out}
+  .wavebars i:nth-child(2){animation-delay:.15s}.wavebars i:nth-child(3){animation-delay:.3s}
+  .wavebars i:nth-child(4){animation-delay:.45s}.wavebars i:nth-child(5){animation-delay:.6s}
+  @keyframes bar{0%,100%{height:4px}50%{height:16px}}
+  .gen-box{text-align:center;padding:26px 18px;color:var(--muted);font-size:13px;line-height:2}
+  .fav-btn{background:none;border:none;cursor:pointer;font-size:18px;filter:grayscale(1);opacity:.5;transition:.2s}
+  .fav-btn.on{filter:none;opacity:1;transform:scale(1.1)}
+  .mini-ops{display:flex;gap:8px;align-items:center}
+  .mini-op{background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;
+    font-size:11px;padding:4px 10px;cursor:pointer}
+
+  .aff{display:flex;gap:12px;align-items:flex-start;padding:15px 16px;margin-top:12px;border-radius:16px}
+  .aff .at{flex:1;font-size:14px;line-height:1.8}
+
+  .prog{padding:18px;margin-top:14px}
+  .prog .ph{display:flex;align-items:center;gap:12px}
+  .prog .pi{font-size:30px}
+  .prog .pt{flex:1}
+  .prog .pn{font-size:15px;font-weight:700;color:var(--gold)}
+  .prog .pd{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.6}
+  .pbar{height:6px;background:rgba(157,123,255,.15);border-radius:4px;margin-top:14px;overflow:hidden}
+  .pbar>i{display:block;height:100%;border-radius:4px;
+    background:linear-gradient(90deg,var(--gold),var(--glow2));transition:width .4s}
+  .pbar-lbl{font-size:10.5px;color:var(--faint);margin-top:6px;text-align:right}
+  .sess .daychip{font-size:10.5px;color:#cabdff;background:rgba(157,123,255,.18);padding:3px 10px;border-radius:10px}
+  .sess .body{font-size:14px;line-height:2;margin-top:10px;white-space:pre-wrap}
+
+  .filters{display:flex;gap:8px;margin-top:14px;overflow-x:auto;padding-bottom:2px}
+  .chip{flex:0 0 auto;padding:6px 14px;border-radius:18px;font-size:12px;cursor:pointer;
+    border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+  .chip.on{color:#fff;background:rgba(157,123,255,.28);border-color:var(--line2)}
+  .wish{display:flex;gap:12px;align-items:flex-start;padding:15px;margin-top:12px;border-radius:16px}
+  .wish .icon{font-size:19px;filter:drop-shadow(0 0 6px rgba(255,217,122,.4))}
+  .wish .body{flex:1;min-width:0}
+  .wish .txt{font-size:14px;line-height:1.7;word-break:break-word}
+  .wish .meta{display:flex;gap:8px;font-size:11px;color:var(--muted);margin-top:7px;flex-wrap:wrap}
+  .meta .tag{padding:1px 8px;border-radius:8px;background:rgba(157,123,255,.16);color:#cabdff}
+  .meta .days{color:var(--faint)}
+  .wish.done .txt{color:var(--gold);text-decoration:line-through;opacity:.7}
+  .wish .ops{display:flex;flex-direction:column;gap:8px}
+  .op{background:none;border:1px solid var(--line);color:var(--muted);border-radius:9px;
+    font-size:11.5px;padding:5px 9px;cursor:pointer;white-space:nowrap}
+  .op.ok{color:var(--gold);border-color:rgba(255,217,122,.5)}
+
+  .streak-row{display:flex;align-items:center;justify-content:space-between;padding:16px}
+  .streak-row .left{font-size:13px;color:var(--muted);line-height:1.8}
+  .streak-row .big{font-size:30px;font-weight:800;color:var(--gold)}
+  .moods{display:flex;gap:10px;margin-top:12px}
+  .mood{flex:1;text-align:center;padding:10px 0;border-radius:14px;cursor:pointer;font-size:24px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);transition:.2s}
+  .mood.on{background:rgba(157,123,255,.25);border-color:var(--line2);transform:scale(1.06)}
+  .mood .m{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+  .entry{padding:14px 16px;margin-top:12px;border-radius:14px;display:flex;gap:12px;align-items:flex-start}
+  .entry .em{font-size:22px}
+  .entry .et{font-size:13.5px;line-height:1.7}
+  .entry .ed{font-size:11px;color:var(--faint);margin-top:5px}
+
+  .mask{position:fixed;inset:0;background:rgba(4,2,12,.8);backdrop-filter:blur(6px);z-index:20;
+    display:none;align-items:flex-end;justify-content:center}
+  .mask.on{display:flex}
+  .sheet{width:100%;max-width:540px;max-height:88vh;overflow-y:auto;border-radius:26px 26px 0 0;
+    padding:24px 20px calc(20px + env(safe-area-inset-bottom));animation:sheetup .4s cubic-bezier(.2,.8,.3,1)}
+  @keyframes sheetup{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+  .q-title{text-align:center;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:6px}
+  .q-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px}
+  .qdots{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+  .qdots i{width:6px;height:6px;border-radius:50%;background:var(--line2)}
+  .qdots i.on{background:var(--gold)}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .opt{padding:8px 14px;border-radius:18px;font-size:13px;cursor:pointer;border:1px solid var(--line);color:var(--muted)}
+  .opt.on{color:#1a0f3d;font-weight:600;background:linear-gradient(90deg,var(--gold),var(--gold2));border-color:transparent}
+
+  .pay-head{text-align:center}
+  .pay-head .crown{font-size:40px}
+  .pay-head h3{font-size:19px;color:var(--gold);margin-top:8px}
+  .pay-head p{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.8}
+  .plans{display:flex;gap:10px;margin-top:18px}
+  .plan{flex:1;padding:14px 8px;text-align:center;border-radius:16px;cursor:pointer;border:1.5px solid var(--line);position:relative}
+  .plan.on{border-color:var(--gold);background:rgba(255,217,122,.10)}
+  .plan .pp{font-size:17px;font-weight:800;color:var(--gold)}
+  .plan .pd{font-size:10.5px;color:var(--muted);margin-top:4px}
+  .plan .save{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:9.5px;
+    background:var(--gold2);color:#1a0f3d;padding:2px 10px;border-radius:8px;font-weight:700}
+  .pay-note{text-align:center;font-size:10.5px;color:var(--faint);margin-top:12px;line-height:1.8}
+
+  .setrow{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;margin-top:12px;border-radius:14px}
+  .setrow .sl{font-size:13.5px;color:var(--text)}
+  .setrow .sd{font-size:10.5px;color:var(--faint);margin-top:4px}
+  .switch{width:44px;height:24px;border-radius:14px;background:rgba(157,123,255,.2);position:relative;cursor:pointer;transition:.2s;flex:0 0 auto}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--muted);transition:.2s}
+  .switch.on{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+  .switch.on::after{left:22px;background:#1a0f3d}
+  input[type=time]{background:rgba(7,3,19,.55);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);padding:5px 8px;font-size:13px;outline:none}
+  .in{width:100%;background:rgba(7,3,19,.55);border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:14px;padding:12px;outline:none;font-family:inherit}
+  .in:focus{border-color:var(--line2)}
+
+  .tabbar{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:540px;
+    z-index:5;padding:10px 10px calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,transparent,rgba(7,3,19,.92) 40%);display:flex;gap:4px}
+  .tab{flex:1;text-align:center;padding:8px 0;border-radius:16px;cursor:pointer;color:var(--muted);font-size:10px}
+  .tab .ti{font-size:19px;display:block;margin-bottom:2px}
+  .tab.on{color:var(--gold);background:rgba(157,123,255,.14);border-color:var(--line)}
+
+  .toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(16px);
+    background:rgba(157,123,255,.92);color:#fff;padding:11px 24px;border-radius:22px;font-size:13px;
+    opacity:0;transition:.3s;z-index:30;pointer-events:none;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:25}
+  .footer{text-align:center;color:var(--faint);font-size:10.5px;margin-top:34px;line-height:2}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<div class="sky" id="sky"><div class="moon"></div></div>
+
+<div class="app">
+  <header>
+    <div class="langbtn" onclick="toggleLang()">🌐 <span id="langLabel">EN</span></div>
+    <div class="logo" id="logo"></div>
+    <div class="slogan" id="slogan"></div>
+  </header>
+
+  <section class="page on" id="pg-pool">
+    <div class="pool" id="pool">
+      <svg class="wave w1" viewBox="0 0 240 56" preserveAspectRatio="none"><path d="M0 28 Q30 8 60 28 T120 28 T180 28 T240 28 V56 H0 Z" fill="rgba(157,123,255,.28)"/></svg>
+      <svg class="wave w2" viewBox="0 0 240 56" preserveAspectRatio="none"><path d="M0 30 Q30 12 60 30 T120 30 T180 30 T240 30 V56 H0 Z" fill="rgba(255,154,213,.22)"/></svg>
+      <div class="pool-ring"></div><div class="shine"></div>
+      <div class="fresh-chip" id="freshChip" style="display:none"></div>
+      <div class="pool-label" id="poolLabel"></div>
+    </div>
+    <div class="glass quote-card">
+      <div class="quote" id="quote"></div>
+      <div class="quote-tag" id="quoteTag"></div>
+    </div>
+    <div class="glass input-card">
+      <div class="cats" id="cats"></div>
+      <textarea id="input" maxlength="140"></textarea>
+      <div class="input-foot">
+        <span class="hint" id="hint"></span>
+        <span class="count"><span id="cnt">0</span>/140</span>
+      </div>
+      <button class="btn" id="tossBtn" onclick="makeWish()"></button>
+      <button class="btn dark" id="dailyBtn" onclick="genDaily()"></button>
+    </div>
+    <div class="stats">
+      <div class="glass stat"><div class="num" id="nAll">0</div><div class="lbl" id="lAll"></div></div>
+      <div class="glass stat"><div class="num" id="nDone">0</div><div class="lbl" id="lDone"></div></div>
+      <div class="glass stat"><div class="num" id="nWait">0</div><div class="lbl" id="lWait"></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="pg-story">
+    <div class="glass" style="padding:18px;margin-top:18px">
+      <div style="font-size:13px;color:var(--muted);line-height:1.9" id="storyIntro"></div>
+    </div>
+    <div id="storyList"></div>
+  </section>
+
+  <section class="page" id="pg-affirm">
+    <div class="glass" style="padding:18px;margin-top:18px">
+      <div style="font-size:13px;color:var(--muted);line-height:1.9" id="affIntro"></div>
+      <button class="btn dark sm" id="affRefresh" onclick="refreshAffs()" style="margin-top:12px"></button>
+    </div>
+    <div id="affList"></div>
+    <div class="sec-title" id="customTitle"></div>
+    <div class="glass" style="padding:16px">
+      <input id="affInput" class="in" maxlength="80">
+      <button class="btn" id="affAddBtn" onclick="addCustomAff()"></button>
+      <div id="customAffs"></div>
+    </div>
+  </section>
+
+  <section class="page" id="pg-prog">
+    <div class="glass" style="padding:18px;margin-top:18px">
+      <div style="font-size:13px;color:var(--muted);line-height:1.9" id="progIntro"></div>
+    </div>
+    <div id="progList"></div>
+  </section>
+
+  <section class="page" id="pg-mine">
+    <div class="sec-title" id="favTitle" style="margin-top:18px"></div>
+    <div id="favList"></div>
+    <div class="sec-title" id="wishSec"></div>
+    <div class="filters" id="filters"></div>
+    <div class="glass" style="padding:16px;margin-top:10px"><div id="wishList"></div></div>
+    <button class="btn ghost" id="cardBtn" onclick="shareCard()" style="margin-top:18px">🎴</button>
+
+    <div class="sec-title" id="journalSec"></div>
+    <div class="glass streak-row">
+      <div class="left" id="streakLbl"></div>
+      <div style="text-align:center"><div class="big" id="streak">0</div><div style="font-size:10px;color:var(--muted)" id="streakDay"></div></div>
+    </div>
+    <div class="glass" style="padding:16px;margin-top:12px">
+      <div style="font-size:13px;color:var(--muted)" id="moodLbl"></div>
+      <div class="moods" id="moods"></div>
+      <textarea id="jinput" maxlength="120" style="min-height:64px;margin-top:12px;font-size:14px"></textarea>
+      <button class="btn" id="checkinBtn" onclick="saveJournal()"></button>
+    </div>
+    <div id="journalList" style="margin-top:4px"></div>
+
+    <div class="sec-title" id="setSec"></div>
+    <div class="glass setrow">
+      <div><div class="sl" id="remLbl"></div><div class="sd" id="remDesc"></div></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <input type="time" id="remTime" value="21:00" onchange="setRemTime(this.value)">
+        <div class="switch" id="remSwitch" onclick="toggleRem()"></div>
+      </div>
+    </div>
+    <div class="glass setrow">
+      <div><div class="sl" id="bkLbl"></div><div class="sd" id="bkDesc"></div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" style="padding:9px 14px;font-size:13px" onclick="exportData()">💾</button>
+        <button class="btn ghost" style="padding:9px 14px;font-size:13px" onclick="importData()">📥</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer" id="footer"></div>
+</div>
+
+<div class="tabbar">
+  <div class="tab on" data-pg="pg-pool" onclick="goTab(this)"><span class="ti">🪙</span><span class="tt"></span></div>
+  <div class="tab" data-pg="pg-story" onclick="goTab(this)"><span class="ti">🎧</span><span class="tt"></span></div>
+  <div class="tab" data-pg="pg-affirm" onclick="goTab(this)"><span class="ti">📿</span><span class="tt"></span></div>
+  <div class="tab" data-pg="pg-prog" onclick="goTab(this)"><span class="ti">🧘</span><span class="tt"></span></div>
+  <div class="tab" data-pg="pg-mine" onclick="goTab(this)"><span class="ti">🌟</span><span class="tt"></span></div>
+</div>
+
+<div class="mask" id="quizMask"><div class="glass sheet" id="quizSheet"></div></div>
+<div class="mask" id="payMask"><div class="glass sheet" id="paySheet"></div></div>
+
+<div class="toast" id="toast"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+/* ================= i18n ================= */
+const I18N={
+zh:{
+ logo:'许 愿 池',slogan:'未来的你 · 每天回来给你打气',
+ poolLabel:'投 一 枚 硬 币',fresh:'今日已刷新 ✨',
+ quoteTag:'今 日 显 化 语 · 每日刷新',
+ inputPh:'我想要……用现在时描述，越具体越好',
+ hint:'提示：写「我已经…」而不是「我想…」',
+ toss:'🪙 投入许愿池',daily:'🎧 听「今日时刻」· 未来的你讲给你听',
+ lAll:'许下愿望',lDone:'已实现',lWait:'显化中',
+ tabs:['池','未来的你','肯定语','显化课','我的'],
+ storyIntro:'🎧 每投下一个愿望，「未来的你」就会写来一封信——<br>用<b style="color:var(--gold)">已经实现了这个愿望的那个你</b>的口吻，把那一天讲给你听。<br>点 ⭐ 收藏 · 点 🔄 重写这封信。',
+ storyEmpty:'还没有来信<br>去「许愿池」许下愿望，「未来的你」就会写信给你 💌',
+ fromFuture:'来自未来的你',about:'关于',play:'▶ 语音播放',playing:' 朗读中 · 点击停止',
+ regen:'🔄 重写',
+ filters:['全部','显化中','已实现','⭐ 收藏'],
+ madeOn:' 许下 · 第 ',day:' 天',letter:' · 💌 已来信',
+ realize:'实现了',undo:'撤销',del:'删除',edit:'编辑',edited:'（已修改，来信可重写）',
+ wishEmpty:'这里还空空的<br>去「许愿池」投下第一枚硬币 🪙',
+ card:'🎴 生成愿望分享卡',
+ favTitle:'⭐ 我的收藏',favEmpty:'点 ⭐ 收藏喜欢的来信、肯定语和愿望',
+ wishSec:'🌟 我的愿望',journalSec:'📖 显化日记',
+ streakLbl:'连续显化打卡<br><span style="font-size:11px;color:var(--faint)">每天一句话，见证愿望成真</span>',
+ streakDay:'天',moodLbl:'今天的能量状态',
+ jPh:'今天，我感受到／做到了……',checkin:'📝 完成今日打卡',
+ journalEmpty:'还没有打卡记录<br>今天就是最好的开始',
+ setSec:'⚙️ 设置',remLbl:'每日提醒',remDesc:'每天固定时间提醒你回来看愿望',
+ bkLbl:'数据备份',bkDesc:'导出愿望与打卡记录，换手机也不丢',
+ affIntro:'📿 肯定语根据你的愿望与目标每日生成。读出来，或点 ⭐ 收藏，随时重温。',
+ affTag:'今日为你生成 · 每日刷新',affRefresh:'🔄 换一批（每日 1 次免费）',
+ affCustom:'✍️ 我的自定义肯定语',affPh:'写一句属于你的肯定语…',affAdd:'＋ 保存到我的清单',
+ affEmpty:'今天的肯定语正在路上…点上面按钮生成',
+ customEmpty:'还没有自定义肯定语',
+ progIntro:'🧘 引导式显化课程：每天一节，跟着语音走进你想要的人生。完成 7 天，愿望更清晰。',
+ progStart:'开始第 1 天',progGo:'继续 · 第 {n} 天',progDone:'✓ 已完成 · 回顾',progDay:'第 {n} 天 / 7',
+ progMark:'完成本节',progAll:'🎉 恭喜完成全部 7 天！',
+ footer:'愿望与日记保存在你自己的设备上<br>许愿池 WISHING POOL · make it happen',
+ quizSub:'个性化你的显化体验',
+ moods:[['😞','低落'],['😐','平静'],['🙂','不错'],['😄','很好'],['🤩','满格']],
+ payTitle:'解锁「许愿池 · 无限」',payDesc:'无限生成「未来的你」语音信与肯定语<br>多门显化课程同时进行 · 解锁全部仪式',
+ plans:[['¥28','每周<br>随时取消'],['¥228','每年<br>折合 ¥4.4/周'],['¥68','终身<br>一次买断']],
+ saveTag:'省 72%',trial:'开始 7 天免费体验',
+ payNote:'⚠️ 演示版占位 · 未接入真实支付<br>上线时对接微信/支付宝订阅即可变现',later:'暂不需要',
+ shareTip:'长按保存卡片 · 发到朋友圈/小红书<br>让更多人替你见证这个愿望',close:'关闭',
+ shareTitle:'✨ 许 愿 池 ✨',manifesting:' 天，显化中 ——',firstDay:'—— 第 ',
+ shareFoot:'许愿池 Wishing Pool · make it happen',
+ t:['先写下你的愿望 ✍️','愿望已投入 ✨ 「未来的你」稍后来信','「未来的你」来信了 💌','先去许愿池投下一枚硬币 🪙','已解锁（演示）· 现在可以无限生成 🎉','恭喜！宇宙听到了 🎉','今日打卡完成 ✓ 持续显化中','先许一个愿望，再来生成卡片 🌙','个性化完成 ✨ 你已是「显化中」状态','当前设备不支持语音朗读','肯定语已更新 ✨','已收藏 ⭐','已取消收藏','已保存 ✍️','本节已完成 ✓ 明天继续','课程进行中','愿望已更新 ✨ 来信可以重写了','来信已重写 💌','已开启每日提醒 🔔','请先允许通知权限','已关闭每日提醒','数据已导出 💾 存到手机里就安全了','备份已恢复 ✨ 愿望都回来了','导入失败 · 文件无效 ⚠️'],
+ quiz:[
+  {k:'focus',t:'你最想在哪个领域显化？',o:['💰 财富','❤️ 感情','💼 事业','🌱 自我成长','🌙 全都要']},
+  {k:'when',t:'你希望多久后实现？',o:['3 个月','6 个月','1 年','3 年']},
+  {k:'feel',t:'实现那天，你最想先做什么？',o:['给家人报喜','辞职去旅行','搬进新家','安静地哭一场','请自己吃顿好的']}
+ ],
+ futureSign:'—— 未来的你'
+},
+en:{
+ logo:'WISHING POOL',slogan:'Your future self · cheering you on daily',
+ poolLabel:'TOSS A COIN',fresh:'Refreshed today ✨',
+ quoteTag:'TODAY\'S AFFIRMATION · refreshed daily',
+ inputPh:'I want... describe it in present tense, be specific',
+ hint:'Tip: write "I have..." not "I wish..."',
+ toss:'🪙 Toss into the Pool',daily:'🎧 Play Today\'s Moment · from your future self',
+ lAll:'Wishes Made',lDone:'Realized',lWait:'Manifesting',
+ tabs:['Pool','Future You','Affirmations','Programs','Me'],
+ storyIntro:'🎧 Every wish you toss summons a letter from your future self —<br>spoken by <b style="color:var(--gold)">the version of you who already made it</b>.<br>Tap ⭐ to save · 🔄 to rewrite a letter.',
+ storyEmpty:'No letters yet.<br>Make a wish in the Pool and your future self will write to you 💌',
+ fromFuture:'FROM YOUR FUTURE SELF',about:'About',play:'▶ Play Voice',playing:' Reading · tap to stop',
+ regen:'🔄 Rewrite',
+ filters:['All','Manifesting','Realized','⭐ Saved'],
+ madeOn:' made · day ',day:'',letter:' · 💌 letter received',
+ realize:'It happened!',undo:'Undo',del:'Delete',edit:'Edit',edited:'(edited — letter can be rewritten)',
+ wishEmpty:'Nothing here yet.<br>Go toss your first coin 🪙',
+ card:'🎴 Create Share Card',
+ favTitle:'⭐ Saved',favEmpty:'Tap ⭐ to save letters, affirmations and wishes',
+ wishSec:'🌟 My Wishes',journalSec:'📖 Manifestation Journal',
+ streakLbl:'Manifestation streak<br><span style="font-size:11px;color:var(--faint)">One line a day. Watch it come true.</span>',
+ streakDay:'days',moodLbl:'Today\'s energy',
+ jPh:'Today I felt... / I did...',checkin:'📝 Check in today',
+ journalEmpty:'No entries yet.<br>Today is the perfect start',
+ setSec:'⚙️ Settings',remLbl:'Daily reminder',remDesc:'A gentle nudge to revisit your wishes every day',
+ bkLbl:'Backup & restore',bkDesc:'Export your wishes and check-ins — they follow you anywhere',
+ affIntro:'📿 Affirmations are generated daily from your wishes and goals. Read them out loud, or tap ⭐ to save.',
+ affTag:'Generated for you today · refreshes daily',affRefresh:'🔄 New batch (1 free per day)',
+ affCustom:'✍️ My custom affirmations',affPh:'Write your own affirmation...',affAdd:'＋ Add to my list',
+ affEmpty:'Today\'s affirmations are on the way... tap the button above',
+ customEmpty:'No custom affirmations yet',
+ progIntro:'🧘 Guided manifestation programs: one session a day, walking you into the life you want. Finish 7 days and your wish gets clearer.',
+ progStart:'Start Day 1',progGo:'Continue · Day {n}',progDone:'✓ Completed · revisit',progDay:'Day {n} / 7',
+ progMark:'Mark session complete',progAll:'🎉 All 7 days complete!',
+ footer:'Wishes and journal are stored on your device<br>WISHING POOL · make it happen',
+ quizSub:'Personalize your manifestation',
+ moods:[['😞','Low'],['😐','Calm'],['🙂','Okay'],['😄','Great'],['🤩','Peak']],
+ payTitle:'Unlock Wishing Pool Unlimited',payDesc:'Unlimited future-self letters & affirmations<br>Multiple programs at once · all rituals unlocked',
+ plans:[['$4.99','Weekly<br>cancel anytime'],['$49.99','Yearly<br>just $0.96/wk'],['$12.99','Lifetime<br>one-time']],
+ saveTag:'SAVE 72%',trial:'Start 7-day free trial',
+ payNote:'⚠️ Demo paywall placeholder · no real billing yet<br>Hook up Stripe/App Store subscriptions at launch',later:'Not now',
+ shareTip:'Save this card · share to Instagram / TikTok<br>Let the world witness your wish',close:'Close',
+ shareTitle:'✨ WISHING POOL ✨',manifesting:' days manifesting ——',firstDay:'—— day ',
+ shareFoot:'Wishing Pool · make it happen',
+ t:['Write your wish first ✍️','Wish tossed in ✨ A letter is on its way','A letter from your future self 💌','Toss a coin in the Pool first 🪙','Unlocked (demo) · unlimited generation 🎉','Congratulations! The universe heard you 🎉','Checked in ✓ Keep manifesting','Make a wish before creating a card 🌙','Personalization complete ✨ You\'re manifesting','Speech not supported on this device','Affirmations refreshed ✨','Saved ⭐','Removed from saved','Saved ✍️','Session complete ✓ See you tomorrow','Program in progress','Wish updated ✨ Letter can be rewritten','Letter rewritten 💌','Daily reminder on 🔔','Please allow notifications first','Daily reminder off','Data exported 💾 Keep the file safe','Backup restored ✨ Your wishes are back','Import failed · invalid file ⚠️'],
+ quiz:[
+  {k:'focus',t:'Which area do you want to manifest in?',o:['💰 Wealth','❤️ Love','💼 Career','🌱 Growth','🌙 All of it']},
+  {k:'when',t:'When do you want it real?',o:['3 months','6 months','1 year','3 years']},
+  {k:'feel',t:'The day it happens, what will you do first?',o:['Call my family','Quit & travel','Move into my dream home','Cry quietly','Treat myself to a great meal']}
+ ],
+ futureSign:'—— Your future self'
+}
+};
+let L='zh';
+const T=k=>I18N[L][k];
+const tq=i=>I18N[L].t[i];
+
+/* ================= 数据 ================= */
+const KEY='wishing_pool_global_v2';
+let state={wishes:[],journal:{},profile:null,unlocked:false,genCount:0,lang:'zh',
+  affs:{date:'',list:[]},customAffs:[],progs:{},settings:{remOn:false,remTime:'21:00',lastRem:''},lastDaily:'',affsRefreshed:''};
+try{state=Object.assign(state,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){}
+L=state.lang==='en'?'en':'zh';
+const save=()=>{state.lang=L;localStorage.setItem(KEY,JSON.stringify(state))};
+
+const CATS=[
+ {id:'money',ic:'💰',n:['财富','Wealth']},{id:'love',ic:'❤️',n:['爱情','Love']},
+ {id:'career',ic:'💼',n:['事业','Career']},{id:'growth',ic:'🌱',n:['成长','Growth']},
+ {id:'other',ic:'🌌',n:['其他','Other']}
+];
+let curCat='money';
+const catOf=id=>CATS.find(c=>c.id===id)||CATS[4];
+const FREE_LIMIT=3;
+
+const QUOTES={
+ zh:["我值得拥有一切我想要的。","宇宙正在为你安排，<b>只需保持相信</b>。","你许下的每一个愿望，都是给未来的自己下的订单。","放下焦虑，<b>愿望已经在路上</b>。","今天，向宇宙清晰地说出你要什么。","你不需要知道<b>怎么实现</b>，只需要知道它会发生。","感恩已经拥有的，<b>更多正在到来</b>。","想象它已实现的样子，并带着那份心情生活。","你的注意力在哪里，能量就在哪里。","所谓显化，就是<b>先成为</b>，再拥有。"],
+ en:["I deserve everything I want.","The universe is arranging it — <b>just keep believing</b>.","Every wish you make is an order to your future self.","Let go of the anxiety. <b>It's already on its way.</b>","Today, tell the universe exactly what you want.","You don't need to know <b>how</b>. Only that it will happen.","Be grateful for what you have — <b>more is coming</b>.","Picture it done. Live from that feeling.","Where your attention goes, energy flows.","Manifesting means <b>becoming it first</b>, then having it."]
+};
+const SCENES={
+ zh:{
+  money:['手机弹出银行入账短信，我把手机轻轻扣在桌上，没有惊讶——因为这一天，我早就每天都在心里过了无数遍。','我打开记账 App，把那一笔标记为「梦想成真」，然后给爸妈转了一笔钱，附言只有两个字：放心。','我坐在喜欢的咖啡店里，看着账户余额，第一次觉得「安全感」是摸得着的东西。'],
+  love:['那天晚上我们并肩走在回家的路上，路灯把两个人的影子拉得很长，我忽然明白：原来被人笃定地选择，是这种感觉。','我收到那条消息的时候正在浇花，水壶还举在半空——是我等了很久、又来得刚刚好的那句「在吗」。','我们的家不大，但清晨的阳光刚好落在餐桌上，TA把最后一颗煎蛋推到我盘子里。'],
+  career:['我站在工位前，屏幕上是团队刚刷新的数字。我深吸一口气——这不是运气，是我每一个清晨的选择堆出来的。','会议结束，TA说「这个项目，只有你能带」。我笑着点头，心里那句重复了无数次的肯定语，终于长成了现实。','我签下自己的名字，笔画很稳。抬头看窗外，是我曾经只在想象里见过的那座城市天际线。'],
+  growth:['今早照镜子，我看见了那个我一直想成为的人——不是变形了，是终于长出来了。','我合上最后一页笔记，忽然意识到：曾经让我彻夜难眠的事，如今只是我故事里平静的一章。','我完成了一件过去「想都不敢想」的事。完成的那一刻，反而很安静——原来成长是这样的。'],
+  other:['这一天终于来了。我站在当初许愿的位置，一切都对上了。','我翻到手机里当年许愿的截图，笑出了声——那个写下愿望的我，一定很想抱抱现在的我。']
+ },
+ en:{
+  money:['My phone buzzed with a deposit notification. I placed it face-down, calm — I had already lived this morning a thousand times in my head.','I opened my banking app, tagged the transfer "dream come true", then sent money home with two words: "I got you."','I sat in my favorite café, looked at my balance, and felt safety as something I could actually touch.'],
+  love:['We walked home side by side, two long shadows under the streetlights, and I finally understood what it means to be chosen — surely, completely.','I was watering my plants when the message arrived. I froze, watering can in mid-air. It was the "hey" I had waited so long for, right on time.','Our home isn\'t big, but morning light lands exactly on the breakfast table. The last egg always ends up on my plate.'],
+  career:['I stood at my desk watching the team\'s numbers refresh. Deep breath — not luck; this was built from every morning I chose to keep going.','After the meeting they said, "Only you can lead this." I nodded, smiling — that affirmation I repeated for years had finally grown into reality.','I signed my name with a steady hand, then looked up at the skyline I had only ever visited in imagination.'],
+  growth:['This morning, in the mirror, I met the person I always wanted to become — not transformed, finally arrived.','I closed the last page of my journal and realized: what once kept me up all night is now just a calm chapter in my story.','I finished something I once wouldn\'t have dared to imagine. And in that moment — quiet. So this is what growth feels like.'],
+  other:['The day finally came. I stood exactly where I made that wish, and everything lined up.','I found the old screenshot of my wish and laughed out loud — the me who wrote it would want to hug the me who lives it.']
+ }
+};
+const OPENERS={
+ zh:['现在是 {when}后的一个清晨，','这一天来得比想象中平静。{when}前许愿的那个夜晚，我还记得。','刚刚发生的这件事，让我想起了{when}前那枚硬币落进池子的声音。'],
+ en:['It\'s a quiet morning, {when} since you tossed that coin.','This day arrived more gently than expected. I still remember the night, {when} ago, when you made this wish.','What just happened pulled me back to the sound of a coin hitting the water, {when} ago.']
+};
+const CLOSERS={
+ zh:['所以，今天也请继续相信。我在这边等你。','别急，每一步都算数。我已实现，你正在路上。','谢谢你当年没有放弃。剩下的路，我们一起走完。'],
+ en:['So keep believing, today too. I\'m waiting for you on this side.','Don\'t rush. Every step counts. I\'ve already made it — you\'re on your way.','Thank you for not giving up back then. The rest of the road, we finish together.']
+};
+function zhWhen(){const r=state.profile&&state.profile.when?state.profile.when:'一段时间';return r.replace(' 后','')}
+function enWhen(){
+  const r=state.profile&&state.profile.when?state.profile.when:'some time';
+  return r.replace('3 个月','3 months').replace('6 个月','6 months').replace('1 年','1 year').replace('3 年','3 years').replace(' 个月',' months').replace(' 年',' years');
+}
+function futureStory(wish){
+  const c=catOf(wish.cat);
+  const when=L==='zh'?zhWhen():enWhen();
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  const opener=pick(OPENERS[L]).replace('{when}',when);
+  const scene=pick(SCENES[L][c.id]);
+  const closer=pick(CLOSERS[L]);
+  if(L==='zh')return opener+'\n\n'+scene+'\n\n这愿望是——「'+wish.text+'」。此刻，它已经是我的日常。\n\n'+closer+'\n\n'+T('futureSign');
+  return opener+'\n\n'+scene+'\n\nThe wish was: "'+wish.text+'". Right now, it is just my ordinary life.\n\n'+closer+'\n\n'+T('futureSign');
+}
+
+/* ================= 肯定语引擎 ================= */
+const AFF={
+ zh:{
+  money:['我的收入正在持续增长，钱以我意想不到的方式流向我。','我值得获得丰厚的回报，我也正在接收它。','我花钱时心怀感恩，赚钱时从容笃定。','丰盛是我的自然状态。','我吸引的机会越来越多，财富越来越自由。'],
+  love:['我值得被坚定地选择，也正在被坚定地选择。','我给出的爱，正在加倍回到我身上。','对的人正在向我走来，我们也准备好了。','我在关系里感到安全、被看见、被珍惜。','我吸引的爱，和我说出的一样具体。'],
+  career:['我的才华正在被看见，机会正朝我涌来。','我做的每一件事，都在把我推向更高的位置。','我是那个「只有你能做」的人。','我的工作带来回报、意义和自由。','我的职业版图，正在以可见的速度扩张。'],
+  growth:['我每天都在成为更好的自己，而且感受得到。','过去让我恐惧的事，如今只是我的日常。','我的自律在长成我的自由。','我允许自己拥有大得多的梦想。','我在成长里，感到平静而有力。'],
+  other:['我的愿望正在以完美的时机实现。','宇宙在为我重新排列人和事。','我想要的正在向我走来，我在来的路上迎接它。','一切都在为我的好消息让路。','我值得，我准备好了，它正在发生。']
+ },
+ en:{
+  money:['My income is growing steadily; money flows to me in unexpected ways.','I deserve abundant rewards — and I am receiving them.','I spend with gratitude and earn with ease.','Abundance is my natural state.','The opportunities I attract keep multiplying.'],
+  love:['I deserve to be chosen — surely and completely, and I am.','The love I give returns to me multiplied.','The right person is already on their way to me.','I feel safe, seen and cherished in love.','The love I attract matches exactly what I speak.'],
+  career:['My talent is being seen, and opportunities are rushing toward me.','Everything I do moves me toward something bigger.','I am the one who "only you can do this".','My work brings me rewards, meaning and freedom.','My career map is expanding at a visible speed.'],
+  growth:['Every day I become more of who I want to be — and I can feel it.','What once terrified me is now just routine.','My discipline is growing into my freedom.','I allow myself much bigger dreams.','In growth, I feel calm and powerful.'],
+  other:['My wishes are coming true at the perfect time.','The universe is rearranging people and events for me.','What I want is walking toward me; I am walking toward it.','Everything is making way for my good news.','I deserve it, I am ready, and it is happening.']
+ }
+};
+function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function genAffs(){
+  const pool=[...AFF[L].other];
+  const cats=new Set(state.wishes.map(w=>w.cat));
+  cats.forEach(c=>{if(AFF[L][c.id])pool.push(...AFF[L][c.id])});
+  if(state.profile&&state.profile.focus){
+    const m={'💰 财富':'money','❤️ 感情':'love','💼 事业':'career','🌱 自我成长':'growth','🌙 全都要':'other','💰 Wealth':'money','❤️ Love':'love','💼 Career':'career','🌱 Growth':'growth','🌙 All of it':'other'};
+    const c=m[state.profile.focus];if(c&&AFF[L][c])pool.push(...AFF[L][c]);
+  }
+  const shuffled=pool.slice().sort(()=>Math.random()-.5).slice(0,5);
+  const w=state.wishes.find(x=>!x.done);
+  if(w)shuffled.push(L==='zh'?'「'+w.text+'」正在向我走来。':'"'+w.text+'" is on its way to me.');
+  return shuffled.map(t=>({text:t,fav:false}));
+}
+function ensureAffs(){if(state.affs.date!==todayKey()){state.affs={date:todayKey(),list:genAffs()};save()}}
+
+/* ================= 显化课程数据 ================= */
+const PROGS=[
+ {id:'abundance',ic:'💰',n:['丰盛显化 · 7 天','Abundance · 7 Days'],d:['重新编程你与金钱的关系','Reprogram your relationship with money'],
+  days:[
+   {t:['金钱是流动的能量','Money is flowing energy'],b:['今天，写下你收到过的每一笔意外的钱——红包、退款、多找的零钱。它们证明：钱可以不费力地到来。','Today, write down every unexpected dollar you have received — gifts, refunds, spare change. Proof that money arrives without struggle.']},
+   {t:['我值得丰盛','I deserve abundance'],b:['对着镜子说三遍：「我值得」。不是因为你做了什么，而是因为你存在。','Say to the mirror three times: "I deserve this." Not because of what you did — because you exist.']},
+   {t:['花钱的仪式','The ritual of spending'],b:['今天每一次花钱，在心里说：「这钱会十倍回来。」让消费变成播种。','Every time you spend today, think: "this returns tenfold." Turn spending into planting.']},
+   {t:['丰盛的想象','Visualizing abundance'],b:['闭上眼两分钟：想象你银行里的数字，想象那个数字带来的平静。让它成为今天最真实的画面。','Close your eyes for 2 minutes: see the number in your account, and the calm it brings. Make it today\'s most vivid image.']},
+   {t:['感恩已有的','Gratitude for what is'],b:['列出你已拥有的 10 样东西。丰盛从不从零开始——它从看见开始。','List 10 things you already have. Abundance never starts from zero — it starts from noticing.']},
+   {t:['接收练习','The practice of receiving'],b:['今天接受每一次帮助、每一句赞美，只说两个字：「谢谢」。练习成为接收者。','Accept every favor and compliment today with just: "thank you." Practice being a receiver.']},
+   {t:['写下新的金钱故事','Write your new money story'],b:['用一段话写下「一年后我和钱的关系」。写完存好——这是给未来的你的第一封信。','In one paragraph, write "my relationship with money, one year from now." Keep it — your first letter to your future self.']}
+  ]},
+ {id:'love',ic:'❤️',n:['爱的显化 · 7 天','Love · 7 Days'],d:['先成为爱本身','Become love first'],
+  days:[
+   {t:['我爱现在的自己','I love who I am now'],b:['写下你身上 3 个别人夸过但你没当真的优点。今天开始当真。','Write down 3 things people have praised in you that you never took seriously. Start today.']},
+   {t:['清理旧的伤口','Clearing old wounds'],b:['给过去那段感情写一封不寄出的信，结尾必须是「谢谢」。写完删除。','Write an unsent letter to your past relationship. It must end with "thank you." Then delete it.']},
+   {t:['想象那顿晚餐','Imagine that dinner'],b:['想象你们的第一顿晚餐：TA点了什么，你笑了几次，聊到几点。细节越具体，显化越快。','Imagine your first dinner: what they ordered, how many times you laughed, how late you talked. Specificity speeds manifestation.']},
+   {t:['爱是一种频率','Love is a frequency'],b:['今天做一件让自己发光的小事。你先亮起来，对的人才能看见你。','Do one small thing that makes you glow today. Shine first — so the right person can find you.']},
+   {t:['列出非妥协项','List your non-negotiables'],b:['写下 5 条「绝对不能少」的品质，和 3 条「可以放过」的缺点。清晰是最强的吸引力。','Write 5 must-have qualities and 3 forgivable flaws. Clarity is the strongest attraction.']},
+   {t:['成为TA的礼物','Become the gift'],b:['问自己：那个人出现时，我会带给TA什么？从今天开始准备这份礼物。','Ask: when they arrive, what will I bring into their life? Start preparing that gift today.']},
+   {t:['给未来的TA留句话','A note for your future person'],b:['写一句话，给那个还没出现的人。存进许愿池——TA来的那天，你会想起来。','Write one line to the person who has not arrived yet. Save it here — you will remember it the day they do.']}
+  ]},
+ {id:'confidence',ic:'🔥',n:['自信显化 · 7 天','Confidence · 7 Days'],d:['把「我可以」变成「我做到了」','Turn "I can" into "I did"'],
+  days:[
+   {t:['盘点你的证据','Inventory your proof'],b:['写下 5 件你曾经以为做不到、但做到了的事。自信不是想象出来的，是数出来的。','Write 5 things you once thought impossible — and did. Confidence is not imagined; it is counted.']},
+   {t:['换掉你的口头禅','Change your catchphrase'],b:['今天把「我不行」换成「我在学」。语言会重塑大脑。','Replace "I can\'t" with "I am learning" today. Language rewires the brain.']},
+   {t:['身体先自信','Body first'],b:['抬头、挺胸、放慢呼吸三次。身体是自信的开关，先让身体站上去。','Chin up, shoulders back, three slow breaths. The body is the switch — turn it on first.']},
+   {t:['做一件怕的小事','One small scary thing'],b:['发那条消息、提那个请求、举那只手。恐惧缩小最快的方式，是穿过它。','Send the message, make the ask, raise the hand. Fear shrinks fastest when you walk through it.']},
+   {t:['删掉比较','Delete comparison'],b:['今天不打开任何让你焦虑的比较源。你的时间线，只跟你自己比。','No comparison triggers today. Your only timeline is yours.']},
+   {t:['接受赞美','Accept praise'],b:['今天被夸时，不许摆手，只说「谢谢，我也觉得」。练习接住它。','When praised today, do not wave it off. Say "thank you, I think so too." Practice receiving.']},
+   {t:['写下你的宣言','Write your declaration'],b:['一段以「我是一个……的人」开头的宣言，每天读一遍。你会开始按它行动。','Write a declaration starting with "I am someone who..." Read it daily. You will start acting like it.']}
+  ]},
+ {id:'gratitude',ic:'🙏',n:['感恩显化 · 7 天','Gratitude · 7 Days'],d:['感恩是最快的显化加速器','Gratitude is the fastest accelerator'],
+  days:[
+   {t:['三件小事','Three small things'],b:['睡前写下今天值得感谢的三件小事，再小都算。','Tonight, write 3 things worth thanking today. No matter how small.']},
+   {t:['感谢一个人','Thank one person'],b:['给一个帮过你的人发条消息，具体说出TA帮了什么。','Message someone who helped you. Say exactly what they did.']},
+   {t:['感谢你自己','Thank yourself'],b:['今天感谢一次自己的身体或努力——它扛住了很多。','Thank your own body or effort today — it has carried a lot.']},
+   {t:['重新看一个「坏事」','Reframe one "bad" thing'],b:['找一件今年的倒霉事，写下它间接给你的两样东西。','Take one bad thing this year, write 2 things it indirectly gave you.']},
+   {t:['感恩未来的事','Gratitude in advance'],b:['为你还没收到的东西提前道谢——这是显化的核心动作。','Thank something you have not received yet — the core move of manifestation.']},
+   {t:['散步式感恩','Walking gratitude'],b:['散步 15 分钟，每看到一样东西就在心里说谢谢。','Walk 15 minutes, saying "thank you" for everything you notice.']},
+   {t:['写成信存起来','Write it down'],b:['把 7 天里最触动你的三个瞬间写成信，存进许愿池。','Turn the 3 most touching moments of these 7 days into a letter. Save it here.']}
+  ]}
+];
+
+/* ================= 星空流星 ================= */
+const sky=document.getElementById('sky');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');s.className='star';const sz=Math.random()*2.2+1;
+  s.style.cssText='left:'+(Math.random()*100)+'%;top:'+(Math.random()*60)+'%;width:'+sz+'px;height:'+sz+'px;animation-delay:'+(Math.random()*3.4)+'s';
+  sky.appendChild(s);
+}
+setInterval(()=>{if(Math.random()<.4){
+  const m=document.createElement('div');m.className='meteor';
+  m.style.cssText+=';left:'+(20+Math.random()*60)+'%;top:'+(Math.random()*30)+'%;';
+  sky.appendChild(m);setTimeout(()=>m.remove(),1700)}},2600);
+
+let AC=null;
+function chime(){try{
+  AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  [880,1320].forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.value=f;
+    g.gain.setValueAtTime(0,AC.currentTime);
+    g.gain.linearRampToValueAtTime(.12,AC.currentTime+.02+i*.09);
+    g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.9+i*.09);
+    o.connect(g).connect(AC.destination);o.start(AC.currentTime+i*.09);o.stop(AC.currentTime+1.2)});
+}catch(e){}}
+function buzz(){if(navigator.vibrate)navigator.vibrate(30)}
+
+/* ================= 语言切换 ================= */
+function toggleLang(){
+  L=L==='zh'?'en':'zh';save();applyLang();
+  toast(L==='zh'?'已切换为中文 🌐':'Switched to English 🌐');
+}
+function applyLang(){
+  document.documentElement.lang=L==='zh'?'zh-CN':'en';
+  document.getElementById('langLabel').textContent=L==='zh'?'EN':'中文';
+  document.getElementById('logo').textContent=T('logo');
+  document.getElementById('slogan').textContent=T('slogan');
+  document.getElementById('poolLabel').textContent=T('poolLabel');
+  document.getElementById('quote').innerHTML=QUOTES[L][new Date().getDate()%QUOTES[L].length];
+  document.getElementById('quoteTag').textContent=T('quoteTag');
+  document.getElementById('input').placeholder=T('inputPh');
+  document.getElementById('hint').textContent=T('hint');
+  document.getElementById('tossBtn').textContent=T('toss');
+  document.getElementById('dailyBtn').textContent=T('daily');
+  document.getElementById('lAll').textContent=T('lAll');
+  document.getElementById('lDone').textContent=T('lDone');
+  document.getElementById('lWait').textContent=T('lWait');
+  document.getElementById('storyIntro').innerHTML=T('storyIntro');
+  document.getElementById('cardBtn').textContent=T('card');
+  document.getElementById('favTitle').textContent=T('favTitle');
+  document.getElementById('wishSec').textContent=T('wishSec');
+  document.getElementById('journalSec').textContent=T('journalSec');
+  document.getElementById('streakLbl').innerHTML=T('streakLbl');
+  document.getElementById('streakDay').textContent=T('streakDay');
+  document.getElementById('moodLbl').textContent=T('moodLbl');
+  document.getElementById('jinput').placeholder=T('jPh');
+  document.getElementById('checkinBtn').textContent=T('checkin');
+  document.getElementById('setSec').textContent=T('setSec');
+  document.getElementById('remLbl').textContent=T('remLbl');
+  document.getElementById('remDesc').textContent=T('remDesc');
+  document.getElementById('bkLbl').textContent=T('bkLbl');
+  document.getElementById('bkDesc').textContent=T('bkDesc');
+  document.getElementById('affIntro').textContent=T('affIntro');
+  document.getElementById('affRefresh').textContent=T('affRefresh');
+  document.getElementById('customTitle').textContent=T('affCustom');
+  document.getElementById('affInput').placeholder=T('affPh');
+  document.getElementById('affAddBtn').textContent=T('affAdd');
+  document.getElementById('progIntro').textContent=T('progIntro');
+  document.getElementById('remTime').value=state.settings.remTime;
+  document.getElementById('remSwitch').classList.toggle('on',state.settings.remOn);
+  document.getElementById('footer').innerHTML=T('footer');
+  document.querySelectorAll('.tabbar .tab').forEach((t,i)=>t.querySelector('.tt').textContent=T('tabs')[i]);
+  document.title=L==='zh'?'许愿池 — 未来的你，每天回来给你打气':'Wishing Pool — Notes from your future self';
+  renderCats();renderFilters();renderWishes();renderStories();renderAffs();renderCustomAffs();renderProgs();renderMoods();renderJournal();renderFavs();
+  renderPlayBtns();
+}
+
+/* ================= 问卷 ================= */
+let quizStep=0,quizAns={};
+function openQuiz(){
+  const q=I18N[L].quiz[quizStep];
+  document.getElementById('quizSheet').innerHTML=
+   '<div class="q-title">'+q.t+'</div>'+
+   '<div class="q-sub">'+(L==='zh'?'第 '+(quizStep+1)+' / '+I18N.zh.quiz.length+' 题':'Question '+(quizStep+1)+' of '+I18N.en.quiz.length)+' · '+T('quizSub')+'</div>'+
+   '<div class="qdots">'+I18N[L].quiz.map((_,i)=>'<i class="'+(i<=quizStep?'on':'')+'"></i>').join('')+'</div>'+
+   '<div class="opts">'+q.o.map((o,oi)=>'<div class="opt" onclick="pickOpt('+oi+')">'+o+'</div>').join('')+'</div>'+
+   (quizStep>0?'<button class="btn ghost sm" style="margin:14px auto 0;display:block" onclick="quizStep--;openQuiz()">←</button>':'');
+  document.getElementById('quizMask').classList.add('on');
+}
+function pickOpt(oi){
+  const q=I18N[L].quiz[quizStep];
+  quizAns[q.k]=q.o[oi];
+  document.querySelectorAll('#quizSheet .opt').forEach((el,j)=>{if(j===oi)el.classList.add('on')});
+  setTimeout(()=>{
+    quizStep++;
+    if(quizStep<I18N[L].quiz.length)openQuiz();
+    else{state.profile=quizAns;save();document.getElementById('quizMask').classList.remove('on');toast(tq(8))}
+  },350);
+}
+if(!state.profile)openQuiz();
+
+/* ================= 语音 ================= */
+let speaking=false;
+function speak(text){
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=L==='zh'?'zh-CN':'en-US';u.rate=.92;u.pitch=1;
+    const vs=speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.indexOf(L==='zh'?'zh':'en')===0);
+    if(vs.length)u.voice=vs[0];
+    u.onend=u.onerror=()=>{speaking=false;renderPlayBtns()};
+    speechSynthesis.speak(u);speaking=true;renderPlayBtns();
+  }catch(e){toast(tq(9))}
+}
+function stopSpeak(){speechSynthesis.cancel();speaking=false;renderPlayBtns()}
+function renderPlayBtns(){
+  document.querySelectorAll('.playbtn').forEach(b=>{
+    b.classList.toggle('playing',speaking);
+    b.innerHTML=speaking?'<span class="wavebars"><i></i><i></i><i></i><i></i><i></i></span>'+T('playing'):T('play');
+  });
+}
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+
+/* ================= 今日时刻 / 来信 ================= */
+function genDaily(){
+  const w=state.wishes.find(x=>!x.done);
+  if(!w){toast(tq(3));return}
+  if(!state.unlocked&&state.genCount>=FREE_LIMIT){openPay();return}
+  const story={wish:w.text,cat:w.cat,text:futureStory(w),ts:Date.now(),fav:false};
+  state.wishes[state.wishes.indexOf(w)].story=story;
+  state.genCount++;state.lastDaily=todayKey();save();
+  document.getElementById('freshChip').textContent=T('fresh');
+  document.getElementById('freshChip').style.display='inline-block';
+  toast(tq(2));
+  goTab(document.querySelector('[data-pg=pg-story]'));
+  renderStories();speak(story.text);
+}
+function storyCardHTML(s,idx){
+  const c=catOf(s.cat);
+  return '<span class="badge">💌 '+T('fromFuture')+' · '+c.ic+' '+c.n[L==='zh'?0:1]+'</span>'+
+   '<button class="fav-btn '+(s.fav?'on':'')+'" style="position:absolute;top:16px;right:16px" onclick="favStory('+idx+',this)">⭐</button>'+
+   '<h3>'+T('about')+'「'+esc(s.wish)+'」</h3>'+
+   '<div class="st">'+esc(s.text)+'</div>'+
+   '<div class="sfoot">'+
+   '<button class="playbtn" onclick="if(speaking)stopSpeak();else speak(this.closest(\'.story\').querySelector(\'.st\').textContent)">'+T('play')+'</button>'+
+   '<div class="mini-ops"><button class="mini-op" onclick="regenStory('+idx+')">'+T('regen')+'</button>'+
+   '<span style="font-size:11px;color:var(--faint)">'+fmt(s.ts)+'</span></div></div>';
+}
+function renderStories(){
+  const el=document.getElementById('storyList');
+  const ss=state.wishes.filter(w=>w.story).map(w=>w.story).reverse();
+  el.innerHTML='';
+  if(!ss.length){el.innerHTML='<div class="glass gen-box">'+T('storyEmpty')+'</div>';return}
+  ss.forEach((s,i)=>{
+    const div=document.createElement('div');div.className='glass story';
+    div.innerHTML=storyCardHTML(s,i);el.appendChild(div);
+  });
+}
+function favStory(idx,btn){
+  const s=state.wishes.filter(w=>w.story).map(w=>w.story).reverse()[idx];
+  s.fav=!s.fav;save();btn.classList.toggle('on',s.fav);
+  toast(s.fav?tq(11):tq(12));renderFavs();
+}
+function regenStory(idx){
+  if(!state.unlocked&&state.genCount>=FREE_LIMIT){openPay();return}
+  const w=state.wishes.filter(x=>x.story).reverse()[idx];
+  if(!w)return;
+  w.story={wish:w.text,cat:w.cat,text:futureStory(w),ts:Date.now(),fav:w.story.fav};
+  state.genCount++;save();renderStories();speak(w.story.text);toast(tq(17));
+}
+
+/* ================= 肯定语 ================= */
+function renderAffs(){
+  ensureAffs();
+  const el=document.getElementById('affList');
+  el.innerHTML='<div class="sec-title">'+T('affTag')+'</div>';
+  state.affs.list.forEach((a,i)=>{
+    const div=document.createElement('div');div.className='glass aff';
+    div.innerHTML='<div class="at">'+esc(a.text)+'</div>'+
+     '<button class="fav-btn '+(a.fav?'on':'')+'" onclick="favAff('+i+',this)">⭐</button>'+
+     '<button class="mini-op" onclick="speakAff('+i+')">▶</button>';
+    el.appendChild(div);
+  });
+}
+function favAff(i,btn){const a=state.affs.list[i];a.fav=!a.fav;save();btn.classList.toggle('on',a.fav);toast(a.fav?tq(11):tq(12));renderFavs()}
+function speakAff(i){speak(state.affs.list[i].text)}
+function refreshAffs(){
+  if(!state.unlocked&&state.affsRefreshed===todayKey()){openPay();return}
+  state.affs={date:todayKey(),list:genAffs()};state.affsRefreshed=todayKey();save();
+  renderAffs();toast(tq(10));
+}
+function renderCustomAffs(){
+  const el=document.getElementById('customAffs');
+  el.innerHTML=state.customAffs.length?'':'<div class="empty">'+T('customEmpty')+'</div>';
+  state.customAffs.forEach((a,i)=>{
+    const div=document.createElement('div');div.className='aff';
+    div.style.cssText='background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px';
+    div.innerHTML='<div class="at">'+esc(a.text)+'</div>'+
+     '<button class="fav-btn '+(a.fav?'on':'')+'" onclick="favCustom('+i+',this)">⭐</button>'+
+     '<button class="mini-op" onclick="speakCustom('+i+')">▶</button>'+
+     '<button class="mini-op" onclick="delCustom('+i+')">✕</button>';
+    el.appendChild(div);
+  });
+}
+function addCustomAff(){
+  const v=document.getElementById('affInput').value.trim();
+  if(!v)return;
+  state.customAffs.unshift({text:v,fav:false});save();
+  document.getElementById('affInput').value='';
+  renderCustomAffs();renderFavs();toast(tq(13));
+}
+function favCustom(i,btn){const a=state.customAffs[i];a.fav=!a.fav;save();btn.classList.toggle('on',a.fav);toast(a.fav?tq(11):tq(12));renderFavs()}
+function speakCustom(i){speak(state.customAffs[i].text)}
+function delCustom(i){state.customAffs.splice(i,1);save();renderCustomAffs();renderFavs()}
+
+/* ================= 显化课程 ================= */
+function activeProgCount(){return Object.values(state.progs).filter(p=>p.doneDays.length<7).length}
+function renderProgs(){
+  const el=document.getElementById('progList');el.innerHTML='';
+  PROGS.forEach(p=>{
+    const pr=state.progs[p.id];
+    const div=document.createElement('div');div.className='glass prog';
+    const done=pr?pr.doneDays.length:0;
+    let act='';
+    if(!pr)act='<button class="btn dark sm" onclick="startProg(\''+p.id+'\')">'+T('progStart')+'</button>';
+    else if(done>=7)act='<button class="btn sm ghost" onclick="openSess(\''+p.id+'\',0)">'+T('progDone')+'</button>';
+    else act='<button class="btn dark sm" onclick="openSess(\''+p.id+'\','+done+')">'+T('progGo').replace('{n}',done+1)+'</button>';
+    div.innerHTML='<div class="ph"><div class="pi">'+p.ic+'</div>'+
+     '<div class="pt"><div class="pn">'+p.n[L==='zh'?0:1]+'</div><div class="pd">'+p.d[L==='zh'?0:1]+'</div></div></div>'+
+     '<div class="pbar"><i style="width:'+(done/7*100)+'%"></i></div>'+
+     '<div class="pbar-lbl">'+done+' / 7</div>'+
+     '<div style="margin-top:12px">'+act+'</div>';
+    el.appendChild(div);
+  });
+}
+function startProg(id){
+  if(!state.unlocked&&activeProgCount()>=1){openPay();return}
+  state.progs[id]={start:Date.now(),doneDays:[]};save();renderProgs();
+  openSess(id,0);
+}
+function openSess(id,d){
+  const p=PROGS.find(x=>x.id===id),sess=p.days[d];
+  const pr=state.progs[id];
+  const isDone=pr&&pr.doneDays.indexOf(d)>=0;
+  const m=document.createElement('div');m.className='mask on';
+  m.innerHTML='<div class="glass sheet">'+
+   '<div class="sess" style="background:rgba(255,255,255,.04)">'+
+   '<span class="daychip">'+T('progDay').replace('{n}',d+1)+'</span>'+
+   '<div style="font-size:17px;font-weight:700;color:var(--gold);margin-top:10px">'+sess.t[L==='zh'?0:1]+'</div>'+
+   '<div class="body">'+esc(sess.b[L==='zh'?0:1])+'</div></div>'+
+   '<button class="playbtn" style="margin-top:14px;width:100%;justify-content:center" onclick="if(speaking)stopSpeak();else speak(this.closest(\'.sheet\').querySelector(\'.body\').textContent)">'+T('play')+'</button>'+
+   (isDone?'':'<button class="btn" style="margin-top:10px" onclick="finishSess(\''+id+'\','+d+',this)">'+T('progMark')+'</button>')+
+   '<button class="btn ghost" style="margin-top:8px" onclick="this.closest(\'.mask\').remove()">'+T('close')+'</button></div>';
+  document.body.appendChild(m);
+  speak(sess.b[L==='zh'?0:1]);
+}
+function finishSess(id,d,btn){
+  const pr=state.progs[id];
+  if(pr.doneDays.indexOf(d)<0)pr.doneDays.push(d);
+  save();btn.closest('.mask').remove();renderProgs();
+  if(pr.doneDays.length>=7){toast(T('progAll'));confettiGo()}
+  else toast(tq(14));
+}
+
+/* ================= 许愿 ================= */
+const input=document.getElementById('input');
+input.addEventListener('input',()=>document.getElementById('cnt').textContent=input.value.length);
+function renderCats(){
+  document.getElementById('cats').innerHTML=CATS.map(c=>
+    '<div class="cat '+(c.id===curCat?'on':'')+'" onclick="pickCat(\''+c.id+'\')">'+c.ic+' '+c.n[L==='zh'?0:1]+'</div>').join('');
+}
+function pickCat(id){curCat=id;renderCats()}
+function makeWish(){
+  const text=input.value.trim();
+  if(!text){toast(tq(0));input.focus();return}
+  state.wishes.unshift({text,cat:curCat,ts:Date.now(),done:false,story:null,fav:false});
+  save();input.value='';document.getElementById('cnt').textContent=0;
+  const pool=document.getElementById('pool');
+  const coin=document.createElement('div');coin.className='coin';pool.appendChild(coin);
+  chime();buzz();
+  setTimeout(()=>{const r=document.createElement('div');r.className='ripple';pool.appendChild(r);setTimeout(()=>r.remove(),1800)},1100);
+  setTimeout(()=>{coin.remove();toast(tq(1));renderAll()},1250);
+}
+
+let curFilter='all';
+function renderFilters(){
+  const F=T('filters');
+  const fs=[{id:'all',n:F[0]},{id:'doing',n:F[1]},{id:'done',n:F[2]},{id:'fav',n:F[3]}].concat(CATS.map(c=>({id:c.id,n:c.ic+' '+c.n[L==='zh'?0:1]})));
+  document.getElementById('filters').innerHTML=fs.map(f=>'<div class="chip '+(f.id===curFilter?'on':'')+'" onclick="pickFilter(\''+f.id+'\')">'+f.n+'</div>').join('');
+}
+function pickFilter(id){curFilter=id;renderFilters();renderWishes()}
+
+const DAY=86400000;
+function esc(s){return String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmt(ts){const d=new Date(ts);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')}
+function renderWishes(){
+  const list=document.getElementById('wishList');
+  const ws=state.wishes.filter(w=>
+    curFilter==='all'?true:curFilter==='doing'?!w.done:curFilter==='done'?w.done:curFilter==='fav'?w.fav:w.cat===curFilter);
+  list.innerHTML=ws.length?ws.map(w=>{
+    const i=state.wishes.indexOf(w),c=catOf(w.cat),days=Math.max(1,Math.ceil((Date.now()-w.ts)/DAY));
+    return '<div class="wish '+(w.done?'done':'')+'">'+
+     '<div class="icon">'+(w.done?'🌟':c.ic)+'</div>'+
+     '<div class="body"><div class="txt">'+esc(w.text)+(w.edited?'<span style="font-size:10px;color:var(--faint)"> '+T('edited')+'</span>':'')+'</div>'+
+     '<div class="meta"><span class="tag">'+c.n[L==='zh'?0:1]+'</span><span class="days">'+fmt(w.ts)+T('madeOn')+days+T('day')+(w.story?T('letter'):'')+'</span></div></div>'+
+     '<div class="ops">'+
+     '<button class="op ok" onclick="toggleWish('+i+')">'+(w.done?T('undo'):T('realize'))+'</button>'+
+     '<button class="op" onclick="editWish('+i+')">'+T('edit')+'</button>'+
+     '<button class="op" onclick="delWish('+i+')">'+T('del')+'</button></div></div>'}).join(''):
+    '<div class="empty">'+T('wishEmpty')+'</div>';
+}
+function toggleWish(i){state.wishes[i].done=!state.wishes[i].done;save();renderAll();
+  if(state.wishes[i].done){toast(tq(5));confettiGo()}}
+function editWish(i){
+  const w=state.wishes[i];
+  const v=prompt(L==='zh'?'修改你的愿望：':'Edit your wish:',w.text);
+  if(v===null)return;
+  const nv=v.trim();if(!nv)return;
+  if(nv!==w.text){w.text=nv;w.edited=true;if(w.story)w.story.wish=nv;save();renderAll();toast(tq(16))}
+}
+function delWish(i){state.wishes.splice(i,1);save();renderAll()}
+
+/* ================= 收藏 ================= */
+function renderFavs(){
+  const el=document.getElementById('favList');
+  const items=[];
+  state.wishes.filter(w=>w.fav).forEach(w=>items.push('🌟 '+w.text));
+  state.wishes.filter(w=>w.story&&w.story.fav).forEach(w=>items.push('💌 '+w.story.wish));
+  state.affs.list.filter(a=>a.fav).forEach(a=>items.push('📿 '+a.text));
+  state.customAffs.filter(a=>a.fav).forEach(a=>items.push('📿 '+a.text));
+  el.innerHTML=items.length?
+    '<div class="glass" style="padding:6px 16px">'+items.map(x=>'<div style="padding:9px 0;border-bottom:1px solid rgba(157,123,255,.12);font-size:13px;line-height:1.7">'+esc(x)+'</div>').join('')+'</div>':
+    '<div class="empty" style="padding:16px 0">'+T('favEmpty')+'</div>';
+}
+
+/* ================= 日记 ================= */
+let curMood=3;
+function renderMoods(){
+  document.getElementById('moods').innerHTML=T('moods').map((m,i)=>
+    '<div class="mood '+(i===curMood?'on':'')+'" onclick="pickMood('+i+')">'+m[0]+'<span class="m">'+m[1]+'</span></div>').join('');
+}
+function pickMood(i){curMood=i;renderMoods()}
+function saveJournal(){
+  state.journal[todayKey()]={mood:curMood,text:document.getElementById('jinput').value.trim(),ts:Date.now()};
+  save();document.getElementById('jinput').value='';calcStreak();renderJournal();toast(tq(6));
+}
+function calcStreak(){
+  let n=0,d=new Date();
+  if(!state.journal[todayKey()])d=new Date(Date.now()-DAY);
+  for(;;){
+    const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(state.journal[k]){n++;d=new Date(d.getTime()-DAY)}else break;
+  }
+  document.getElementById('streak').textContent=n;
+}
+function renderJournal(){
+  const keys=Object.keys(state.journal).sort().reverse().slice(0,30);
+  document.getElementById('journalList').innerHTML=keys.length?keys.map(k=>{
+    const j=state.journal[k];
+    return '<div class="glass entry"><div class="em">'+(MOODS_IC[j.mood]||'🙂')+'</div>'+
+     '<div style="flex:1"><div class="et">'+(esc(j.text)||'—')+'</div><div class="ed">'+k+'</div></div></div>';
+  }).join(''):'<div class="empty">'+T('journalEmpty')+'</div>';
+}
+const MOODS_IC=['😞','😐','🙂','😄','🤩'];
+
+/* ================= 每日提醒 ================= */
+function toggleRem(){
+  const on=!state.settings.remOn;
+  if(on&&'Notification' in window&&Notification.permission!=='granted'){
+    Notification.requestPermission().then(p=>{
+      if(p==='granted'){state.settings.remOn=true;save();syncRem();toast(tq(18))}
+      else toast('⚠️ '+tq(19));
+    });
+    return;
+  }
+  state.settings.remOn=on;save();syncRem();
+  toast(on?tq(18):tq(20));
+}
+function syncRem(){document.getElementById('remSwitch').classList.toggle('on',state.settings.remOn)}
+function setRemTime(v){state.settings.remTime=v||'21:00';save()}
+setInterval(()=>{
+  if(!state.settings.remOn||state.settings.lastRem===todayKey())return;
+  const now=new Date();
+  const cur=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  if(cur>=state.settings.remTime){
+    state.settings.lastRem=todayKey();save();
+    const msg=L==='zh'?'🪙 你的愿望在等你回来看看':'🪙 Your wishes are waiting for you';
+    if('Notification' in window&&Notification.permission==='granted'){try{new Notification('✨ '+T('logo'),{body:msg})}catch(e){}}
+    toast(msg);
+  }
+},30000);
+
+/* ================= 彩带 ================= */
+const cv=document.getElementById('confetti'),ctx=cv.getContext('2d');
+function confettiGo(){
+  cv.width=innerWidth;cv.height=innerHeight;
+  const parts=Array.from({length:90},()=>({
+    x:innerWidth/2+(Math.random()-.5)*140,y:innerHeight*.45,
+    vx:(Math.random()-.5)*9,vy:-Math.random()*11-4,
+    s:Math.random()*6+3,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,
+    c:['#ffd97a','#ff9ad5','#9d7bff','#fff'][Math.random()*4|0]}));
+  let t=0;
+  (function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);t++;
+    parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.32;p.r+=p.vr;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);
+      ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore()});
+    if(t<120)requestAnimationFrame(loop);else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ================= 分享卡 ================= */
+function shareCard(){
+  const w=state.wishes.find(x=>!x.done);
+  if(!w){toast(tq(7));goTab(document.querySelector('[data-pg=pg-pool]'));return}
+  const c=document.createElement('canvas');c.width=750;c.height=1000;
+  const g=c.getContext('2d');
+  const bg=g.createLinearGradient(0,0,0,1000);
+  bg.addColorStop(0,'#2b1b5e');bg.addColorStop(.6,'#150b36');bg.addColorStop(1,'#070313');
+  g.fillStyle=bg;g.fillRect(0,0,750,1000);
+  for(let i=0;i<120;i++){g.globalAlpha=Math.random()*.8+.1;g.fillStyle='#fff';
+    g.beginPath();g.arc(Math.random()*750,Math.random()*600,Math.random()*1.8+.5,0,7);g.fill()}
+  g.globalAlpha=1;g.textAlign='center';
+  g.fillStyle='#ffd97a';g.font='700 46px sans-serif';g.fillText(T('shareTitle'),375,150);
+  g.fillStyle='#a99cc9';g.font='22px sans-serif';
+  g.fillText(catOf(w.cat).ic+' '+catOf(w.cat).n[L==='zh'?0:1]+' · '+fmt(w.ts),375,205);
+  const words=w.text.split('');let line='';const lines=[];
+  words.forEach(ch=>{if(g.measureText(line+ch).width>560){lines.push(line);line=ch}else line+=ch});
+  lines.push(line);
+  g.fillStyle='#f2ecff';g.font='34px sans-serif';
+  lines.slice(0,6).forEach((l,i)=>g.fillText(l,375,380+i*56));
+  g.fillStyle='#ffd97a';g.font='26px sans-serif';
+  g.fillText(T('firstDay')+Math.max(1,Math.ceil((Date.now()-w.ts)/DAY))+T('manifesting'),375,380+Math.min(lines.length,6)*56+40);
+  g.fillStyle='#6e5f96';g.font='20px sans-serif';g.fillText(T('shareFoot'),375,940);
+  openShare(c.toDataURL('image/png'));
+}
+function openShare(dataUrl){
+  const m=document.createElement('div');m.className='mask on';
+  m.innerHTML='<div class="glass sheet" style="border-radius:22px;max-width:360px;padding:14px;text-align:center">'+
+   '<img src="'+dataUrl+'" style="width:100%;border-radius:14px;display:block" alt="share card">'+
+   '<div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.8">'+T('shareTip')+'</div>'+
+   '<button class="btn ghost" onclick="this.closest(\'.mask\').remove()">'+T('close')+'</button></div>';
+  document.body.appendChild(m);
+}
+
+/* ================= 订阅墙 ================= */
+let planIdx=1;
+function openPay(){renderPay();document.getElementById('payMask').classList.add('on')}
+function closePay(){document.getElementById('payMask').classList.remove('on')}
+function renderPay(){
+  document.getElementById('paySheet').innerHTML=
+   '<div class="pay-head"><div class="crown">👑</div><h3>'+T('payTitle')+'</h3><p>'+T('payDesc')+'</p></div>'+
+   '<div class="plans">'+T('plans').map((p,i)=>'<div class="plan '+(i===planIdx?'on':'')+'" onclick="pickPlan('+i+')">'+(i===1?'<span class="save">'+T('saveTag')+'</span>':'')+'<div class="pp">'+p[0]+'</div><div class="pd">'+p[1]+'</div></div>').join('')+'</div>'+
+   '<button class="btn" onclick="unlock()">'+T('trial')+'</button>'+
+   '<div class="pay-note">'+T('payNote')+'</div>'+
+   '<button class="btn ghost" onclick="closePay()">'+T('later')+'</button>';
+}
+function pickPlan(i){planIdx=i;document.querySelectorAll('#paySheet .plan').forEach((p,j)=>p.classList.toggle('on',j===i))}
+function unlock(){state.unlocked=true;save();closePay();toast(tq(4))}
+
+/* ================= 页签 ================= */
+function goTab(el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t===el));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===el.dataset.pg));
+  window.scrollTo({top:0});
+}
+function renderAll(){
+  document.getElementById('nAll').textContent=state.wishes.length;
+  document.getElementById('nDone').textContent=state.wishes.filter(w=>w.done).length;
+  document.getElementById('nWait').textContent=state.wishes.filter(w=>!w.done).length;
+  renderWishes();renderStories();renderFavs();
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2000);
+}
+/* 首访语言 */
+if(!state.langSet){
+  const nav=(navigator.language||'').toLowerCase();
+  L=nav.indexOf('zh')===0?'zh':'en';
+  state.langSet=true;save();
+}
+/* 今日时刻新鲜度标记 */
+if(state.lastDaily===todayKey()){
+  document.getElementById('freshChip').textContent=T('fresh');
+  document.getElementById('freshChip').style.display='inline-block';
+}
+applyLang();renderAll();ensureAffs();renderAffs();calcStreak();renderJournal();
+
+/* ================= 数据备份 ================= */
+function exportData(){
+  try{
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='wishpool-backup-'+todayKey()+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+    toast(tq(21));
+  }catch(e){toast('⚠️ Export error')}
+}
+function importData(){
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='.json,application/json';
+  inp.onchange=()=>{
+    const f=inp.files&&inp.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const d=JSON.parse(r.result);
+        if(!d||typeof d!=='object'||!Array.isArray(d.wishes))throw 0;
+        state=Object.assign(
+          {wishes:[],journal:{},profile:null,unlocked:false,genCount:0,lang:L,
+           affs:{date:'',list:[]},customAffs:[],progs:{},settings:{remOn:false,remTime:'21:00',lastRem:''},lastDaily:'',affsRefreshed:''},
+          d);
+        state.langSet=true;
+        L=state.lang==='en'?'en':'zh';
+        save();applyLang();renderAll();ensureAffs();renderAffs();calcStreak();renderJournal();
+        document.getElementById('remTime').value=state.settings.remTime||'21:00';
+        syncRem();
+        toast(tq(22));
+      }catch(e){toast(tq(23))}
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+}
+</script>
+</body>
+</html>
