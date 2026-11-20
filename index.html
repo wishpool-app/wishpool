@@ -1075,6 +1075,8 @@ function openShare(dataUrl){
   document.body.appendChild(m);
 }
 async function doShare(){
+  const inWx=/MicroMessenger/i.test(navigator.userAgent);
+  if(inWx){toast('微信里请长按上方卡片保存到相册 · 或点「复制链接」发给朋友');return}
   try{
     const blob=await (await fetch(lastCardUrl)).blob();
     const file=new File([blob],'wishing-pool.png',{type:'image/png'});
