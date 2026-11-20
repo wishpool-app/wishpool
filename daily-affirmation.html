@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日显化语（每天更新一句）— 许愿池 WishPool</title>
+<meta name="description" content="每天更新一句显化语/肯定语，365 天不重复。今天属于你的那句话是什么？">
+<meta name="keywords" content="今日显化语,每日肯定语,吸引力法则,今天语录">
+<link rel="canonical" href="https://wishpool.xin/daily-affirmation.html">
+<style>
+body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0620;color:#e8e2f7;line-height:1.9;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{max-width:560px;margin:40px 20px;text-align:center;background:rgba(157,123,255,.1);border:1px solid rgba(157,123,255,.35);border-radius:24px;padding:48px 32px;box-shadow:0 0 60px rgba(157,123,255,.15)}
+.date{font-size:14px;color:#9d8fc9;letter-spacing:2px}
+.quote{font-size:24px;font-weight:600;margin:28px 0;color:#fff}
+.en{font-size:15px;color:#b3a5dd;font-style:italic}
+.theme{display:inline-block;margin-top:20px;font-size:13px;color:#ffd97a;border:1px solid rgba(255,217,122,.4);border-radius:20px;padding:4px 16px}
+a.btn{display:inline-block;margin-top:36px;padding:13px 28px;background:linear-gradient(90deg,#ffd97a,#ffb84d);color:#2a1d05;border-radius:30px;text-decoration:none;font-weight:700}
+.links{margin-top:30px;font-size:13px}
+.links a{color:#c9a7ff;text-decoration:none;margin:0 8px}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="date" id="date"></div>
+<div class="quote" id="quote"></div>
+<div class="en" id="en"></div>
+<div class="theme" id="theme"></div>
+<br>
+<a class="btn" href="/">🪙 去许愿池投一枚金币</a>
+<div class="links"><a href="/manifestation-quotes.html">200 条显化语大全</a> · <a href="/how-to-wish.html">许愿指南</a></div>
+</div>
+<script>
+var Q=[
+["金钱源源不断地流向我，轻松且丰盛。","Money flows to me easily and abundantly.","财富"],
+["我值得被温柔地、认真地爱着。","I deserve to be loved gently and truly.","爱情"],
+["我的事业正在稳步上升。","My career is steadily rising.","事业"],
+["我的身体一天比一天健康。","My body grows healthier every day.","健康"],
+["我本来就足够好。","I am already enough.","自信"],
+["我敞开自己，接收宇宙的丰盛。","I open myself to the abundance of the universe.","财富"],
+["对的人正在向我走来。","The right person is on their way to me.","爱情"],
+["我吸引让我成长的机会。","I attract opportunities that help me grow.","事业"],
+["我醒来时充满能量。","I wake up full of energy.","健康"],
+["我的声音值得被听见。","My voice deserves to be heard.","自信"],
+["每一笔花出去的钱都会加倍回到我身上。","Every yuan I spend returns to me doubled.","财富"],
+["我在对的时间遇到对的人。","I meet the right person at the right time.","爱情"],
+["我的每一份努力都被看见。","Every effort I make is seen.","事业"],
+["我的睡眠深沉而安稳。","My sleep is deep and peaceful.","健康"],
+["我接受自己的全部，包括不完美。","I accept all of me, including my flaws.","自信"],
+["机会在四面八方找到我。","Opportunities find me from every direction.","财富"],
+["我的关系充满了尊重与信任。","My relationships are built on respect and trust.","爱情"],
+["我的创造正在影响更多的人。","My work is touching more lives.","事业"],
+["我释放所有不属于我的压力。","I release all stress that is not mine.","健康"],
+["我不再向任何人证明什么。","I have nothing to prove to anyone.","自信"],
+["我的收入渠道正在一天天变多。","My income streams grow every day.","财富"],
+["我吸引那些真正珍惜我的人。","I attract those who truly cherish me.","爱情"],
+["每一个挑战都是我的升级机会。","Every challenge is my upgrade.","事业"],
+["我的情绪流动而平衡。","My emotions flow in balance.","健康"],
+["我敢想，也敢做。","I dare to dream and to act.","自信"],
+["我是金钱的磁铁，丰盛自动找到我。","I am a magnet for money and abundance.","财富"],
+["我的爱情正在路上，我们都在成长。","My love is on the way; we are both growing.","爱情"],
+["成功是我顺其自然的结果。","Success is my natural outcome.","事业"],
+["平静是我内心的底色。","Calmness is my inner baseline.","健康"],
+["我的直觉值得信任。","My intuition is trustworthy.","自信"],
+["我值得拥有财务自由。","I deserve financial freedom.","财富"],
+["我值得一段让我安心的感情。","I deserve a love that makes me feel safe.","爱情"],
+["我信任自己的判断。","I trust my own judgment.","事业"],
+["我允许自己休息。","I allow myself to rest.","健康"],
+["我正在成为自己的骄傲。","I am becoming my own pride.","自信"],
+["丰盛从我的每一个念头开始。","Abundance begins with every thought.","财富"],
+["我给出的爱都在加倍回来。","All the love I give comes back doubled.","爱情"],
+["我的能力配得上我的野心。","My abilities match my ambition.","事业"],
+["我放下焦虑，专注当下。","I release anxiety and focus on now.","健康"],
+["我的成长速度惊人。","My growth is remarkable.","自信"],
+["我信任金钱，金钱也信任我。","Money trusts me and I trust money.","财富"],
+["我在感情里被理解、被珍惜。","In love, I am understood and cherished.","爱情"],
+["我的项目进展顺利。","My projects are moving forward smoothly.","事业"],
+["我的内心越来越安定。","My inner world grows calmer.","健康"],
+["我值得站在光里。","I deserve to stand in the light.","自信"],
+["我允许自己变得富有。","I allow myself to be wealthy.","财富"],
+["我的魅力在安静地发光。","My charm glows quietly.","爱情"],
+["我轻松地完成看似困难的目标。","I achieve difficult goals with ease.","事业"],
+["我值得被治愈，也正在被治愈。","I deserve healing, and healing is happening.","健康"],
+["我值得拥有我羡慕的一切。","I deserve everything I admire.","自信"],
+["我的财富蓝图正在升级。","My wealth blueprint is upgrading.","财富"],
+["我们的相遇是宇宙的美好安排。","Our meeting is a beautiful arrangement of the universe.","爱情"],
+["我的才华正在被世界需要。","My talents are needed by the world.","事业"],
+["我的皮肤在发光，我在发光。","My skin glows, and so do I.","健康"],
+["我的人生剧本由我书写。","I am the author of my life.","自信"],
+["我感激此刻已拥有的一切，更多正在路上。","I am grateful for what I have; more is coming.","财富"],
+["爱在我生命里自然地生长。","Love grows naturally in my life.","爱情"],
+["我在对的赛道上，做对的事。","I am on the right track, doing the right things.","事业"],
+["我善待自己，世界也会善待我。","As I am kind to myself, the world is kind to me.","健康"],
+["我此刻的样子，已经是礼物。","As I am right now, I am already a gift.","自信"],
+["我每天都在变得更值钱。","I become more valuable every day.","财富"],
+["我的爱情简单、干净、坚定。","My love is simple, pure, and firm.","爱情"],
+["我的努力正在复利式地变成财富。","My efforts compound into wealth.","事业"],
+["我的呼吸平稳，心跳有力。","My breath is calm, my heart is strong.","健康"],
+["我比昨天更勇敢。","I am braver than yesterday.","自信"],
+["我以丰盛之心给予，以感恩之心接收。","I give with abundance and receive with gratitude.","财富"],
+["我放下了过去，为新的爱腾出空间。","I release the past and make room for new love.","爱情"],
+["我在关键场合总能超常发挥。","I perform beyond expectations when it matters.","事业"],
+["我的身心正在回到平衡。","My body and mind are returning to balance.","健康"],
+["一切美好都与我相配。","All good things match who I am.","自信"],
+["我的账户余额每天都在增长。","My account balance grows every day.","财富"],
+["我们彼此成就，而不是彼此消耗。","We build each other up, never wear each other down.","爱情"],
+["我的职业生涯越走越宽。","My career path widens every day.","事业"],
+["我的专注力越来越强。","My focus grows stronger every day.","健康"],
+["我不再用别人的尺子量自己。","I no longer measure myself with others' rulers.","自信"],
+["钱是我创造价值的回声。","Money is the echo of the value I create.","财富"],
+["我的伴侣欣赏最真实的我。","My partner appreciates the real me.","爱情"],
+["我的理想正在变成日常。","My ideals are becoming my daily life.","事业"],
+["我的精力可以支撑我的梦想。","My energy can carry my dreams.","健康"],
+["我配得上我梦想中的一切。","I deserve everything I dream of.","自信"],
+["金钱来得很轻松，走得很体面。","Money comes easily and leaves gracefully.","财富"],
+["我不再将就，我的爱值得等待。","I no longer settle; my love is worth the wait.","爱情"],
+["灵感源源不断地流向我。","Inspiration flows to me endlessly.","事业"],
+["我的情绪是我的朋友，不是敌人。","My emotions are friends, not enemies.","健康"],
+["我正在练习对自己温柔。","I am learning to be gentle with myself.","自信"],
+["宇宙的供应取之不尽，我只管敞开。","The universe's supply is endless; I simply stay open.","财富"],
+["被爱是我的自然状态。","Being loved is my natural state.","爱情"],
+["我的名字会出现在更大的舞台上。","My name will appear on bigger stages.","事业"],
+["我允许坏情绪离开我的身体。","I let negative emotions leave my body.","健康"],
+["我的潜力超出我的想象。","My potential is beyond my imagination.","自信"],
+["我每天都能想到新的赚钱点子。","New money ideas come to me every day.","财富"],
+["我信任我的爱情故事。","I trust my love story.","爱情"],
+["我敢于争取我想要的一切。","I dare to reach for everything I want.","事业"],
+["我的身体是智慧的，它知道如何痊愈。","My body is wise; it knows how to heal.","健康"],
+["我的未来正在今天的努力里成形。","My future is taking shape in today's effort.","事业"],
+["我不再等准备好才开始。","I no longer wait to feel ready.","自信"],
+["我的价值被看见，也被高价回报。","My value is seen and rewarded well.","财富"],
+["我们在彼此眼里都是最好的样子。","In each other's eyes, we are our best selves.","爱情"],
+["我把热爱变成了事业。","I turned my passion into my career.","事业"],
+["我爱我的身体，它也在回馈我。","I love my body, and it loves me back.","健康"],
+["我的自信来自一次次的小胜利。","My confidence grows from small wins.","自信"],
+["我的富足不伤害任何人，反而照亮他人。","My abundance harms no one and lights the way for others.","财富"],
+["一切美好正在向我奔赴。","Everything beautiful is rushing toward me.","爱情"],
+["我每天都在靠近理想的自己。","Every day I move closer to my ideal self.","事业"],
+["我睡前的最后一刻是平静的。","My last moment before sleep is peaceful.","健康"],
+["我值得拥有第二次机会。","I deserve second chances.","自信"],
+["钱在找我，我们正在互相靠近。","Money is looking for me; we are closing in.","财富"],
+["我的关系里没有猜忌，只有坦诚。","My relationships have no suspicion, only honesty.","爱情"],
+["我的工作带给我成就感和丰盛。","My work brings me fulfillment and abundance.","事业"],
+["健康的选择对我越来越容易。","Healthy choices get easier every day.","健康"],
+["我正在戒掉自我怀疑。","I am unlearning self-doubt.","自信"],
+["丰盛流经我，也停留在我的生活里。","Abundance flows through me and stays with me.","财富"],
+["爱如约而至，恰到好处。","Love arrives exactly on time.","爱情"],
+["我以最好的状态迎接每一次考试与面试。","I show up at my best for every test and interview.","事业"],
+["我的思考清晰，决定果断。","My mind is clear and my decisions firm.","健康"],
+["我的人生由我定义。","My life is defined by me.","自信"],
+["我的努力终将兑现成结果。","My efforts will cash in as results.","事业"],
+["我值得奖学金和荣誉。","I deserve scholarships and honors.","事业"],
+["我的努力正在复利。","My efforts are compounding.","事业"],
+["我在事业越来越自信。","I grow more confident in my career.","事业"],
+["我感谢我的身体每一天的付出。","I thank my body for its work every day.","健康"],
+["我值得被庆祝。","I deserve to be celebrated.","自信"],
+["我的财富故事正在变得精彩。","My wealth story is getting exciting.","财富"],
+["我吸引的爱让我成为更好的自己。","The love I attract makes me better.","爱情"],
+["我的学习效率一天比一天高。","My learning efficiency rises every day.","事业"],
+["我正在学会与压力共处。","I am learning to live well with stress.","健康"],
+["我正在显化我的理想人生。","I am manifesting my ideal life.","自信"],
+["钱喜欢我，我也喜欢钱。","Money likes me, and I like money.","财富"],
+["我在爱里慢慢长大。","I am growing gently in love.","爱情"],
+["我的每一步都算数。","Every step I take counts.","事业"],
+["我值得休息，也值得出发。","I deserve rest, and I deserve to set out again.","健康"],
+["我拥有让生活富足的全部资源。","I own all the resources for an abundant life.","财富"],
+["我值得从心动开始的长久。","I deserve a love that lasts beyond the spark.","爱情"],
+["成功只是一步之遥。","Success is just one step away.","事业"],
+["我的免疫强大。","My immunity is strong.","健康"],
+["我吸引与我同频的美好。","I attract the beauty that matches my frequency.","自信"],
+["我以感恩之心开始每一天。","I start each day with gratitude.","财富"],
+["对的人一眼就认出我。","The right person will recognize me at first sight.","爱情"],
+["知识在我脑中有序生长。","Knowledge grows in order in my mind.","事业"],
+["我睡前原谅今天，明天重新出发。","I forgive today before sleep and start anew tomorrow.","健康"],
+["我的存在本身就是价值。","My existence itself is valuable.","自信"],
+["机会和贵人正在向我靠近。","Opportunities and mentors are drawing near.","事业"],
+["我的爱是有分量的，被认真对待。","My love carries weight and is taken seriously.","爱情"],
+["我的身体越来越轻盈。","My body grows lighter every day.","健康"],
+["我正在成为财富的通道。","I am becoming a channel of wealth.","财富"],
+["我在关系里感到安全和自由。","I feel safe and free in my relationship.","爱情"],
+["我享受学习，学习也回馈我。","I enjoy learning, and learning rewards me.","事业"],
+["我的内心住着一个温柔而坚定的人。","Inside me lives a gentle and firm soul.","健康"],
+["我值得拥有安全感。","I deserve to feel secure.","自信"],
+["我的每一天都值得认真对待。","Every day of mine deserves to be taken seriously.","财富"],
+["我的爱情不需要向任何人解释。","My love owes no explanations to anyone.","爱情"],
+["我今天的专注，就是明天的成就。","Today's focus is tomorrow's achievement.","事业"],
+["我的疲惫正在离开我的身体。","My fatigue is leaving my body.","健康"],
+["我值得拥有我想要的人生。","I deserve the life I want.","自信"],
+["财富是我的自然状态。","Wealth is my natural state.","财富"],
+["我正在被温柔地爱着。","I am being loved gently.","爱情"],
+["我的坚持正在被奖励。","My persistence is being rewarded.","事业"],
+["我的心情由我选择。","My mood is my choice.","健康"],
+["我值得拥有一切美好的事物。","I deserve all beautiful things.","自信"],
+["我的财运正在打开。","My financial fortune is opening up.","财富"],
+["爱不需要我委曲求全。","Love never asks me to shrink myself.","爱情"],
+["我的创造被世界看见。","My creations are seen by the world.","事业"],
+["我正在排出毒素，吸收美好。","I release toxins and absorb beauty.","健康"],
+["我的名字值得被记住。","My name deserves to be remembered.","自信"],
+["我的每一份才能都在为我创造收入。","Every talent I own is creating income.","财富"],
+["我的感情稳定而温暖。","My relationship is stable and warm.","爱情"],
+["我在事业上被信任。","I am trusted in my career.","事业"],
+["我的身体值得被善待。","My body deserves kindness.","健康"],
+["我正在活成自己的理想型。","I am becoming my own ideal type.","自信"]
+];
+(function(){
+  var d=new Date();
+  var day=Math.floor(d.getTime()/86400000);
+  var q=Q[day%Q.length];
+  var w="日一二三四五六"[d.getDay()];
+  document.getElementById("date").textContent=d.getFullYear()+" 年 "+(d.getMonth()+1)+" 月 "+d.getDate()+" 日 · 星期"+w;
+  document.getElementById("quote").textContent="「"+q[0]+"」";
+  document.getElementById("en").textContent=q[1];
+  document.getElementById("theme").textContent="今日主题 · "+q[2];
+})();
+</script>
+</body></html>
