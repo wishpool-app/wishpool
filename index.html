@@ -345,6 +345,10 @@
     </div>
     <div id="journalList" style="margin-top:4px"></div>
 
+    <div class="glass setrow" style="background:linear-gradient(135deg,rgba(214,164,52,.22),rgba(255,214,110,.05));border:1px solid rgba(255,214,110,.35);cursor:pointer" onclick="openEarn()">
+      <div><div class="sl" id="earnLbl" style="color:var(--gold)"></div><div class="sd" id="earnDesc"></div></div>
+      <div style="font-size:26px">💼</div>
+    </div>
     <div class="sec-title" id="setSec"></div>
     <div class="glass setrow">
       <div><div class="sl" id="remLbl"></div><div class="sd" id="remDesc"></div></div>
@@ -406,7 +410,7 @@ zh:{
  streakDay:'天',moodLbl:'今天的能量状态',
  jPh:'今天，我感受到／做到了……',checkin:'📝 完成今日打卡',
  journalEmpty:'还没有打卡记录<br>今天就是最好的开始',
- setSec:'⚙️ 设置',remLbl:'每日提醒',remDesc:'每天固定时间提醒你回来看愿望',
+ earnLbl:'💼 分享赚钱 · 每单你拿 24%',earnDesc:'把许愿池发给朋友，成交即分账 · 卖一张年卡赚 ¥54',earnTitle:'💼 推广大使 · 分享赚钱',earnSub:'你分享 → 朋友购买 → 平台自动把 24% 打给你',earnTable:'<table style="width:100%;font-size:12.5px;border-collapse:collapse;background:rgba(255,255,255,.04)"><tr style="color:var(--faint)"><td style="padding:8px 12px">商品</td><td>价格</td><td style="color:var(--gold);font-weight:700">你每单赚</td></tr><tr><td style="padding:8px 12px">7 天会员</td><td>¥28</td><td style="color:var(--gold);font-weight:700">¥6.72</td></tr><tr><td style="padding:8px 12px">年度会员</td><td>¥228</td><td style="color:var(--gold);font-weight:700">¥54.72</td></tr><tr><td style="padding:8px 12px">终身卡</td><td>¥68</td><td style="color:var(--gold);font-weight:700">¥16.32</td></tr></table>',earnSteps:'<b style="color:var(--gold)">三步开始赚钱：</b><br>① 注册/登录面包多 mbd.pub（佣金进钱包，随时提现支付宝）<br>② 打开商品页 → 点「推荐这个作品」→ 复制你的专属链接<br>③ 链接发朋友圈 / 同学群 / 私聊 — 有人下单，24% 自动到账',earnRule:'规则全公开：18 岁以上 · 无任何门槛费 · 一级返佣（你推荐的用户再推荐，与你无关）· 佣金由面包多平台自动结算',earnCta:'🎯 去领取我的推荐链接',setSec:'⚙️ 设置',remLbl:'每日提醒',remDesc:'每天固定时间提醒你回来看愿望',
  bkLbl:'数据备份',bkDesc:'导出愿望与打卡记录，换手机也不丢',
  affIntro:'📿 肯定语根据你的愿望与目标每日生成。读出来，或点 ⭐ 收藏，随时重温。',
  affTag:'今日为你生成 · 每日刷新',affRefresh:'🔄 换一批（每日 1 次免费）',
@@ -416,7 +420,7 @@ zh:{
  progIntro:'🧘 引导式显化课程：每天一节，跟着语音走进你想要的人生。完成 7 天，愿望更清晰。',
  progStart:'开始第 1 天',progGo:'继续 · 第 {n} 天',progDone:'✓ 已完成 · 回顾',progDay:'第 {n} 天 / 7',
  progMark:'完成本节',progAll:'🎉 恭喜完成全部 7 天！',
- footer:'愿望与日记保存在你自己的设备上<br><a href="/manifestation-quotes.html" style="color:inherit">显化语大全</a> · <a href="/how-to-wish.html" style="color:inherit">许愿指南</a> · <a href="/manifestation-journal.html" style="color:inherit">显化日记</a> · <a href="/new-year-wishes.html" style="color:inherit">新年愿望</a> · <a href="/exam-wishes.html" style="color:inherit">考研许愿</a> · <a href="/zodiac-wishes.html" style="color:inherit">星座许愿</a> · <a href="/daily-affirmation.html" style="color:inherit">今日显化语</a><br>许愿池 WISHING POOL · make it happen',
+ footer:'愿望与日记保存在你自己的设备上<br><a href="/manifestation-quotes.html" style="color:inherit">显化语大全</a> · <a href="/how-to-wish.html" style="color:inherit">许愿指南</a> · <a href="/manifestation-journal.html" style="color:inherit">显化日记</a> · <a href="/new-year-wishes.html" style="color:inherit">新年愿望</a> · <a href="/exam-wishes.html" style="color:inherit">考研许愿</a> · <a href="/zodiac-wishes.html" style="color:inherit">星座许愿</a> · <a href="/daily-affirmation.html" style="color:inherit">今日显化语</a> · <a href="javascript:openEarn()" style="color:var(--gold)">💼 分享赚钱</a><br>许愿池 WISHING POOL · make it happen',
  quizSub:'个性化你的显化体验',
  moods:[['😞','低落'],['😐','平静'],['🙂','不错'],['😄','很好'],['🤩','满格']],
  payTitle:'解锁「许愿池 · 无限」',payDesc:'无限生成「未来的你」语音信与肯定语<br>多门显化课程同时进行 · 解锁全部仪式',
@@ -458,7 +462,7 @@ en:{
  streakDay:'days',moodLbl:'Today\'s energy',
  jPh:'Today I felt... / I did...',checkin:'📝 Check in today',
  journalEmpty:'No entries yet.<br>Today is the perfect start',
- setSec:'⚙️ Settings',remLbl:'Daily reminder',remDesc:'A gentle nudge to revisit your wishes every day',
+ earnLbl:'💼 Earn by Sharing · 24% per sale',earnDesc:'Share Wishing Pool — every purchase pays you automatically',earnTitle:'💼 Ambassador Program · Earn by Sharing',earnSub:'You share → a friend buys → the platform pays you 24% automatically',earnTable:'<table style="width:100%;font-size:12.5px;border-collapse:collapse;background:rgba(255,255,255,.04)"><tr style="color:var(--faint)"><td style="padding:8px 12px">Plan</td><td>Price</td><td style="color:var(--gold);font-weight:700">You earn</td></tr><tr><td style="padding:8px 12px">7-day</td><td>¥28</td><td style="color:var(--gold);font-weight:700">¥6.72</td></tr><tr><td style="padding:8px 12px">Annual</td><td>¥228</td><td style="color:var(--gold);font-weight:700">¥54.72</td></tr><tr><td style="padding:8px 12px">Lifetime</td><td>¥68</td><td style="color:var(--gold);font-weight:700">¥16.32</td></tr></table>',earnSteps:'<b style="color:var(--gold)">Three steps to start earning:</b><br>① Create a free Mbd.pub account (commission goes to your wallet, withdraw anytime)<br>② Open any product page → tap "Recommend this work" → copy your exclusive link<br>③ Post the link anywhere — every sale pays you 24% automatically',earnRule:'Fully transparent rules: 18+ · no entry fee · single-tier commission · settled automatically by the Mbd.pub platform',earnCta:'🎯 Get my referral link',setSec:'⚙️ Settings',remLbl:'Daily reminder',remDesc:'A gentle nudge to revisit your wishes every day',
  bkLbl:'Backup & restore',bkDesc:'Export your wishes and check-ins — they follow you anywhere',
  affIntro:'📿 Affirmations are generated daily from your wishes and goals. Read them out loud, or tap ⭐ to save.',
  affTag:'Generated for you today · refreshes daily',affRefresh:'🔄 New batch (1 free per day)',
@@ -468,7 +472,7 @@ en:{
  progIntro:'🧘 Guided manifestation programs: one session a day, walking you into the life you want. Finish 7 days and your wish gets clearer.',
  progStart:'Start Day 1',progGo:'Continue · Day {n}',progDone:'✓ Completed · revisit',progDay:'Day {n} / 7',
  progMark:'Mark session complete',progAll:'🎉 All 7 days complete!',
- footer:'Wishes and journal are stored on your device<br><a href="/manifestation-quotes.html" style="color:inherit">200 Affirmations</a> · <a href="/how-to-wish.html" style="color:inherit">How to Wish</a> · <a href="/manifestation-journal.html" style="color:inherit">Journal Guide</a> · <a href="/new-year-wishes.html" style="color:inherit">New Year Wishes</a> · <a href="/exam-wishes.html" style="color:inherit">Exam Wishes</a> · <a href="/zodiac-wishes.html" style="color:inherit">Zodiac Wishes</a> · <a href="/daily-affirmation.html" style="color:inherit">Daily Quote</a><br>WISHING POOL · make it happen',
+ footer:'Wishes and journal are stored on your device<br><a href="/manifestation-quotes.html" style="color:inherit">200 Affirmations</a> · <a href="/how-to-wish.html" style="color:inherit">How to Wish</a> · <a href="/manifestation-journal.html" style="color:inherit">Journal Guide</a> · <a href="/new-year-wishes.html" style="color:inherit">New Year Wishes</a> · <a href="/exam-wishes.html" style="color:inherit">Exam Wishes</a> · <a href="/zodiac-wishes.html" style="color:inherit">Zodiac Wishes</a> · <a href="/daily-affirmation.html" style="color:inherit">Daily Quote</a> · <a href="javascript:openEarn()" style="color:var(--gold)">💼 Earn</a><br>WISHING POOL · make it happen',
  quizSub:'Personalize your manifestation',
  moods:[['😞','Low'],['😐','Calm'],['🙂','Okay'],['😄','Great'],['🤩','Peak']],
  payTitle:'Unlock Wishing Pool Unlimited',payDesc:'Unlimited future-self letters & affirmations<br>Multiple programs at once · all rituals unlocked',
@@ -683,6 +687,8 @@ function applyLang(){
   document.getElementById('moodLbl').textContent=T('moodLbl');
   document.getElementById('jinput').placeholder=T('jPh');
   document.getElementById('checkinBtn').textContent=T('checkin');
+  document.getElementById('earnLbl').textContent=T('earnLbl');
+  document.getElementById('earnDesc').textContent=T('earnDesc');
   document.getElementById('setSec').textContent=T('setSec');
   document.getElementById('remLbl').textContent=T('remLbl');
   document.getElementById('remDesc').textContent=T('remDesc');
@@ -1156,6 +1162,18 @@ async function redeem(){
   }
 }
 function goBuy(){window.open(PAY_LINKS[planIdx],'_blank')}
+function openEarn(){
+  const m=document.createElement('div');m.className='mask on';
+  m.innerHTML='<div class="glass sheet" style="border-radius:22px;max-width:400px;padding:20px;text-align:left">'+
+   '<div style="font-size:18px;font-weight:700;color:var(--gold);text-align:center">'+T('earnTitle')+'</div>'+
+   '<div style="font-size:12.5px;color:var(--muted);margin-top:6px;text-align:center">'+T('earnSub')+'</div>'+
+   '<div style="margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12)">'+T('earnTable')+'</div>'+
+   '<div style="margin-top:14px;font-size:13px;line-height:2">'+T('earnSteps')+'</div>'+
+   '<div style="margin-top:12px;font-size:11px;color:var(--faint);line-height:1.8">'+T('earnRule')+'</div>'+
+   '<button class="btn" style="margin-top:16px" onclick="window.open(\''+PAY_LINKS[1]+'\',\'_blank\')">'+T('earnCta')+'</button>'+
+   '<button class="btn ghost" style="margin-top:8px" onclick="this.closest(\'.mask\').remove()">'+T('close')+'</button></div>';
+  document.body.appendChild(m);
+}
 let planIdx=1;
 function openPay(){renderPay();document.getElementById('payMask').classList.add('on')}
 function closePay(){document.getElementById('payMask').classList.remove('on')}
