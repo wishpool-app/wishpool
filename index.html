@@ -254,6 +254,11 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   }
+
+/* 付费墙精细化：毛玻璃预览 */
+.story{position:relative}
+.lockBlur{filter:blur(9px);opacity:.8;user-select:none;-webkit-user-select:none;pointer-events:none}
+.lockCover{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(10,15,35,.42);backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px);border-radius:18px;text-align:center}
 </style>
 <link rel="alternate" type="application/rss+xml" title="许愿池 WishPool" href="https://wishpool.xin/feed.xml">
 <!-- 百度统计 -->
@@ -758,6 +763,20 @@ function pickOpt(oi){
   },350);
 }
 if(!state.profile)openQuiz();
+/* 会员到期提醒：到期前 3 天 */
+function checkExpiry(){
+  try{
+    if(state.sub&&state.sub.exp&&isFinite(state.sub.exp)){
+      const days=Math.ceil((state.sub.exp-Date.now())/DAY);
+      if(days>=0&&days<=3){
+        setTimeout(()=>{
+          toast(L==='zh'?'👑 会员还有 '+days+' 天到期，续费后显化信不断更':'👑 Membership expires in '+days+' day'+(days>1?'s':'')+', renew to keep your letters');
+        },2600);
+      }
+    }
+  }catch(e){}
+}
+checkExpiry();
 
 /* ================= 语音 ================= */
 let speaking=false;
@@ -785,7 +804,6 @@ if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
 function genDaily(){
   const w=state.wishes.find(x=>!x.done);
   if(!w){toast(tq(3));return}
-  if(!isUnlocked()&&state.genCount>=FREE_LIMIT){openPay();return}
   const story={wish:w.text,cat:w.cat,text:futureStory(w),ts:Date.now(),fav:false};
   state.wishes[state.wishes.indexOf(w)].story=story;
   state.genCount++;state.lastDaily=todayKey();save();
@@ -797,14 +815,25 @@ function genDaily(){
 }
 function storyCardHTML(s,idx){
   const c=catOf(s.cat);
-  return '<span class="badge">💌 '+T('fromFuture')+' · '+c.ic+' '+c.n[L==='zh'?0:1]+'</span>'+
+  const locked=!isUnlocked()&&state.genCount>=FREE_LIMIT;
+  let h='<span class="badge">💌 '+T('fromFuture')+' · '+c.ic+' '+c.n[L==='zh'?0:1]+'</span>'+
    '<button class="fav-btn '+(s.fav?'on':'')+'" style="position:absolute;top:16px;right:16px" onclick="favStory('+idx+',this)">⭐</button>'+
    '<h3>'+T('about')+'「'+esc(s.wish)+'」</h3>'+
-   '<div class="st">'+esc(s.text)+'</div>'+
+   '<div class="st'+(locked?' lockBlur':'')+'">'+esc(s.text)+'</div>'+
    '<div class="sfoot">'+
    '<button class="playbtn" onclick="if(speaking)stopSpeak();else speak(this.closest(\'.story\').querySelector(\'.st\').textContent)">'+T('play')+'</button>'+
    '<div class="mini-ops"><button class="mini-op" onclick="regenStory('+idx+')">'+T('regen')+'</button>'+
    '<span style="font-size:11px;color:var(--faint)">'+fmt(s.ts)+'</span></div></div>';
+  if(locked){
+    h+='<div class="lockCover">'+
+     '<div style="font-size:32px">🔒</div>'+
+     '<div style="font-size:15.5px;font-weight:800;color:var(--gold)">'+(L==='zh'?'完整的信已经生成':'Your letter is ready')+'</div>'+
+     '<div style="font-size:12px;color:#fff;opacity:.92;max-width:270px;line-height:1.8">'+(L==='zh'?'你已累计生成 '+state.genCount+' 封来信，开通会员后全部可看、可重写、可收藏':'You have generated '+state.genCount+' letters. Unlock to read, rewrite and save them all')+'</div>'+
+     '<button class="btn" onclick="openPay()" style="margin-top:6px">'+(L==='zh'?'解锁全部来信 · ¥28 起':'Unlock all letters · from ¥28')+'</button>'+
+     '<div style="font-size:10.5px;color:var(--faint)">'+(L==='zh'?'周卡 ¥28 · 年卡 ¥228 · 终身 ¥68':'Week ¥28 · Year ¥228 · Life ¥68')+'</div>'+
+     '</div>';
+  }
+  return h;
 }
 function renderStories(){
   const el=document.getElementById('storyList');
@@ -822,7 +851,6 @@ function favStory(idx,btn){
   toast(s.fav?tq(11):tq(12));renderFavs();
 }
 function regenStory(idx){
-  if(!isUnlocked()&&state.genCount>=FREE_LIMIT){openPay();return}
   const w=state.wishes.filter(x=>x.story).reverse()[idx];
   if(!w)return;
   w.story={wish:w.text,cat:w.cat,text:futureStory(w),ts:Date.now(),fav:w.story.fav};
