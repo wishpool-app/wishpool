@@ -107,6 +107,9 @@
     border:1px solid var(--line);color:var(--muted);transition:.2s;white-space:nowrap}
   .cat.on{color:#1a0f3d;font-weight:600;border-color:transparent;
     background:linear-gradient(90deg,var(--gold),var(--gold2));box-shadow:0 3px 14px rgba(255,217,122,.3)}
+  .idea{flex:0 0 auto;padding:5px 11px;border-radius:16px;font-size:12px;cursor:pointer;
+    border:1px dashed rgba(255,217,122,.45);color:rgba(255,225,160,.85);transition:.2s;white-space:nowrap}
+  .idea:active{background:rgba(255,217,122,.18)}
   textarea{width:100%;background:rgba(7,3,19,.55);border:1px solid var(--line);border-radius:14px;
     color:var(--text);font-size:15px;line-height:1.7;padding:13px;min-height:88px;resize:none;outline:none;font-family:inherit}
   textarea:focus{border-color:var(--line2);box-shadow:0 0 16px rgba(157,123,255,.30)}
@@ -296,6 +299,7 @@ var _hmt = _hmt || [];
     </div>
     <div class="glass input-card">
       <div class="cats" id="cats"></div>
+      <div class="cats" id="ideas" style="margin-bottom:10px"></div>
       <textarea id="input" maxlength="140"></textarea>
       <div class="input-foot">
         <span class="hint" id="hint"></span>
@@ -444,7 +448,7 @@ zh:{
  progIntro:'🧘 引导式显化课程：每天一节，跟着语音走进你想要的人生。完成 7 天，愿望更清晰。',
  progStart:'开始第 1 天',progGo:'继续 · 第 {n} 天',progDone:'✓ 已完成 · 回顾',progDay:'第 {n} 天 / 7',
  progMark:'完成本节',progAll:'🎉 恭喜完成全部 7 天！',
- footer:'愿望与日记保存在你自己的设备上<br><a href="/manifestation-quotes.html" style="color:inherit">显化语大全</a> · <a href="/how-to-wish.html" style="color:inherit">许愿指南</a> · <a href="/manifestation-journal.html" style="color:inherit">显化日记</a> · <a href="/new-year-wishes.html" style="color:inherit">新年愿望</a> · <a href="/exam-wishes.html" style="color:inherit">考研许愿</a> · <a href="/zodiac-wishes.html" style="color:inherit">星座许愿</a> · <a href="/manifestation-really-works.html" style="color:inherit">显化是真的吗</a> · <a href="/final-week-wishes.html" style="color:inherit">期末许愿</a> · <a href="/birthday-wish-ideas.html" style="color:inherit">生日愿望</a> · <a href="/earn-online.html" style="color:inherit">💼 分享赚钱</a> · <a href="/online-side-hustles.html" style="color:inherit">网上兼职</a> · <a href="/manifestation-app.html" style="color:inherit">Manifestation App</a> · <a href="/wish-app.html" style="color:inherit">Wish App</a> · <a href="/daily-affirmation.html" style="color:inherit">今日显化语</a> · <a href="javascript:openEarn()" style="color:var(--gold)">💼 分享赚钱</a><br>许愿池 WISHING POOL · make it happen',
+ footer:'愿望与日记保存在你自己的设备上<br><a href="/manifestation-quotes.html" style="color:inherit">显化语大全</a> · <a href="/how-to-wish.html" style="color:inherit">许愿指南</a> · <a href="/manifestation-journal.html" style="color:inherit">显化日记</a> · <a href="/new-year-wishes.html" style="color:inherit">新年愿望</a> · <a href="/exam-wishes.html" style="color:inherit">考研许愿</a> · <a href="/zodiac-wishes.html" style="color:inherit">星座许愿</a> · <a href="/manifestation-really-works.html" style="color:inherit">显化是真的吗</a> · <a href="/final-week-wishes.html" style="color:inherit">期末许愿</a> · <a href="/new-year-eve-wishes.html" style="color:inherit">跨年愿望</a> · <a href="/birthday-wish-ideas.html" style="color:inherit">生日愿望</a> · <a href="/earn-online.html" style="color:inherit">💼 分享赚钱</a> · <a href="/online-side-hustles.html" style="color:inherit">网上兼职</a> · <a href="/manifestation-app.html" style="color:inherit">Manifestation App</a> · <a href="/wish-app.html" style="color:inherit">Wish App</a> · <a href="/daily-affirmation.html" style="color:inherit">今日显化语</a> · <a href="javascript:openEarn()" style="color:var(--gold)">💼 分享赚钱</a><br>许愿池 WISHING POOL · make it happen',
  quizSub:'个性化你的显化体验',
  moods:[['😞','低落'],['😐','平静'],['🙂','不错'],['😄','很好'],['🤩','满格']],
  payTitle:'解锁「许愿池 · 无限」',payDesc:'无限生成「未来的你」语音信与肯定语<br>多门显化课程同时进行 · 解锁全部仪式',
@@ -496,7 +500,7 @@ en:{
  progIntro:'🧘 Guided manifestation programs: one session a day, walking you into the life you want. Finish 7 days and your wish gets clearer.',
  progStart:'Start Day 1',progGo:'Continue · Day {n}',progDone:'✓ Completed · revisit',progDay:'Day {n} / 7',
  progMark:'Mark session complete',progAll:'🎉 All 7 days complete!',
- footer:'Wishes and journal are stored on your device<br><a href="/manifestation-quotes.html" style="color:inherit">200 Affirmations</a> · <a href="/how-to-wish.html" style="color:inherit">How to Wish</a> · <a href="/manifestation-journal.html" style="color:inherit">Journal Guide</a> · <a href="/new-year-wishes.html" style="color:inherit">New Year Wishes</a> · <a href="/exam-wishes.html" style="color:inherit">Exam Wishes</a> · <a href="/zodiac-wishes.html" style="color:inherit">Zodiac Wishes</a> · <a href="/369-manifestation-method.html" style="color:inherit">369 Method</a> · <a href="/55x5-manifestation.html" style="color:inherit">55x5 Method</a> · <a href="/earn-online.html" style="color:inherit">Affiliate</a> · <a href="/make-money-online-no-money.html" style="color:inherit">Make Money Online</a> · <a href="/manifestation-app.html" style="color:inherit">Manifestation App</a> · <a href="/wish-app.html" style="color:inherit">Wish App</a> · <a href="/daily-affirmation.html" style="color:inherit">Daily Quote</a> · <a href="javascript:openEarn()" style="color:var(--gold)">💼 Earn</a><br>WISHING POOL · make it happen',
+ footer:'Wishes and journal are stored on your device<br><a href="/manifestation-quotes.html" style="color:inherit">200 Affirmations</a> · <a href="/how-to-wish.html" style="color:inherit">How to Wish</a> · <a href="/manifestation-journal.html" style="color:inherit">Journal Guide</a> · <a href="/new-year-wishes.html" style="color:inherit">New Year Wishes</a> · <a href="/exam-wishes.html" style="color:inherit">Exam Wishes</a> · <a href="/zodiac-wishes.html" style="color:inherit">Zodiac Wishes</a> · <a href="/369-manifestation-method.html" style="color:inherit">369 Method</a> · <a href="/55x5-manifestation.html" style="color:inherit">55x5 Method</a> · <a href="/christmas-wishes.html" style="color:inherit">Christmas Wishes</a> · <a href="/new-year-eve-wishes.html" style="color:inherit">NYE Wishes</a> · <a href="/earn-online.html" style="color:inherit">Affiliate</a> · <a href="/make-money-online-no-money.html" style="color:inherit">Make Money Online</a> · <a href="/manifestation-app.html" style="color:inherit">Manifestation App</a> · <a href="/wish-app.html" style="color:inherit">Wish App</a> · <a href="/daily-affirmation.html" style="color:inherit">Daily Quote</a> · <a href="javascript:openEarn()" style="color:var(--gold)">💼 Earn</a><br>WISHING POOL · make it happen',
  quizSub:'Personalize your manifestation',
  moods:[['😞','Low'],['😐','Calm'],['🙂','Okay'],['😄','Great'],['🤩','Peak']],
  payTitle:'Unlock Wishing Pool Unlimited',payDesc:'Unlimited future-self letters & affirmations<br>Multiple programs at once · all rituals unlocked',
@@ -535,6 +539,42 @@ const CATS=[
 let curCat='money';
 const catOf=id=>CATS.find(c=>c.id===id)||CATS[4];
 const FREE_LIMIT=3;
+
+/* 灵感模板：点击一键填入；m=[月份]，命中的排最前（承接季节 SEO 流量） */
+const IDEAS={
+ zh:[
+  {t:'🧧 存下第一笔钱',c:'money',m:[12,1],w:'今年年底前，我存下第一笔属于我的钱，账户里的数字每天都很踏实。'},
+  {t:'📚 期末全部通过',c:'growth',m:[12,1,6],w:'这个期末，我每一科都顺利通过，查分那天每个数字都让我微笑。'},
+  {t:'🎆 跨年愿望',c:'other',m:[12,1],w:'跨年那一刻，我许下这个愿望：新的一年，我成为更喜欢自己的自己。'},
+  {t:'🎂 生日愿望',c:'other',m:[12],w:'吹灭蜡烛那一刻，我许愿：接下来这一年，顺利、健康、被爱包围。'},
+  {t:'💌 遇见对的人',c:'love',m:[12,2],w:'我遇见一个让我安心的人，我们聊天不用猜、沉默不尴尬，刚刚好。'},
+  {t:'💼 拿到心仪 offer',c:'career',m:[11,12,3,4],w:'我拿到了那份心仪的工作，面试官说：你正是我们在找的人。'},
+  {t:'🌱 养成早起习惯',c:'growth',m:[1],w:'我连续 21 天在 7 点前起床，清晨的时间属于我自己。'},
+  {t:'✈️ 带爸妈去旅行',c:'other',m:[12,1,7,8],w:'我牵着爸妈的手走进机场，这是他们第一次因为我的努力去看世界。'}
+ ],
+ en:[
+  {t:'🧧 Save my first $1,000',c:'money',m:[12,1],w:'By the end of this year, I have saved my first $1,000 — and it feels solid.'},
+  {t:'📚 Pass all finals',c:'growth',m:[12,1,6],w:'I pass every final this term, and grades day makes me smile at every number.'},
+  {t:'🎆 New Year wish',c:'other',m:[12,1],w:'At midnight I wish this: in the new year, I become someone I truly like.'},
+  {t:'🎄 Christmas wish',c:'other',m:[12],w:'This Christmas, I wish for calm mornings, kind people, and steady progress.'},
+  {t:'💌 Meet the right one',c:'love',m:[12,2],w:'I meet someone who feels like home — easy to talk to, easy to be with.'},
+  {t:'💼 Land my dream offer',c:'career',m:[11,12,3,4],w:'I land the offer I wanted. They say: you are exactly who we were looking for.'},
+  {t:'🌱 Wake up early',c:'growth',m:[1],w:'I wake up before 7 for 21 days straight, and mornings finally belong to me.'},
+  {t:'✈️ Travel with family',c:'other',m:[12,1,7,8],w:'I walk through the airport with my parents — their first trip paid for by me.'}
+ ]
+};
+function renderIdeas(){
+  const m=new Date().getMonth()+1;
+  const list=IDEAS[L==='zh'?'zh':'en'].slice().sort((a,b)=>((b.m||[]).includes(m)?1:0)-((a.m||[]).includes(m)?1:0));
+  const el=document.getElementById('ideas');
+  if(el)el.innerHTML=list.map((x,i)=>'<span class="idea" onclick="pickIdea('+i+')">'+x.t+'</span>').join('');
+  window._ideas=list;
+}
+function pickIdea(i){
+  const x=(window._ideas||[])[i];if(!x)return;
+  input.value=x.w;document.getElementById('cnt').textContent=x.w.length;
+  pickCat(x.c);input.focus();
+}
 
 const QUOTES={
  zh:["我值得拥有一切我想要的。","宇宙正在为你安排，<b>只需保持相信</b>。","你许下的每一个愿望，都是给未来的自己下的订单。","放下焦虑，<b>愿望已经在路上</b>。","今天，向宇宙清晰地说出你要什么。","你不需要知道<b>怎么实现</b>，只需要知道它会发生。","感恩已经拥有的，<b>更多正在到来</b>。","想象它已实现的样子，并带着那份心情生活。","你的注意力在哪里，能量就在哪里。","所谓显化，就是<b>先成为</b>，再拥有。"],
@@ -695,6 +735,7 @@ function applyLang(){
   document.getElementById('quote').innerHTML=QUOTES[L][new Date().getDate()%QUOTES[L].length];
   document.getElementById('quoteTag').textContent=T('quoteTag');
   document.getElementById('input').placeholder=T('inputPh');
+  renderIdeas();
   document.getElementById('hint').textContent=T('hint');
   document.getElementById('tossBtn').textContent=T('toss');
   document.getElementById('dailyBtn').textContent=T('daily');
@@ -736,7 +777,7 @@ function applyLang(){
   document.getElementById('footer').innerHTML=T('footer');
   document.querySelectorAll('.tabbar .tab').forEach((t,i)=>t.querySelector('.tt').textContent=T('tabs')[i]);
   document.title=L==='zh'?'许愿池 — 未来的你，每天回来给你打气':'Wishing Pool — Notes from your future self';
-  renderCats();renderFilters();renderWishes();renderStories();renderAffs();renderCustomAffs();renderProgs();renderMoods();renderJournal();renderFavs();
+  renderCats();renderIdeas();renderFilters();renderWishes();renderStories();renderAffs();renderCustomAffs();renderProgs();renderMoods();renderJournal();renderFavs();
   renderPlayBtns();
 }
 
