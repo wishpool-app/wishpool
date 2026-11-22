@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>股民忏悔室 · 大跌的日子，进来敲三下木鱼</title>
+<meta name="description" content="股民忏悔室：一个给散户的情绪出口。选你的亏损故事，敲三下木鱼，AI 大师为你开示。不荐股、不预测行情，只管让你笑着把这一页翻过去。纯娱乐，不构成任何投资建议。">
+<meta name="keywords" content="股民忏悔室,股市情绪,散户,解套,亏损,木鱼,电子木鱼,炒股心态">
+<link rel="canonical" href="https://wishpool.xin/stock-confession.html">
+<meta property="og:title" content="股民忏悔室 · 大跌的日子，进来敲三下木鱼">
+<meta property="og:description" content="给散户的情绪出口：写下你的亏损故事，敲三下木鱼，AI 大师开示。纯娱乐，不构成投资建议。">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"股民忏悔室","applicationCategory":"Entertainment","operatingSystem":"Web","description":"给散户的情绪宣泄娱乐页：忏悔亏损故事，敲木鱼，AI 大师幽默开示。不荐股不预测行情，不构成投资建议。","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+<style>
+:root{--gold:#e8c67a;--gold2:#b89347;--bg:#0d0a06;--card:#171209;--text:#e9dfc8;--dim:#8a7c5f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.9;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:24px 18px 90px}
+/* 烛光香炉区 */
+.shrine{text-align:center;padding:30px 0 10px;position:relative}
+.kline{font-size:11px;letter-spacing:2px;color:var(--dim)}
+h1{font-size:24px;margin:8px 0 4px;color:var(--gold);font-weight:800;letter-spacing:2px}
+.sub{font-size:13px;color:var(--dim)}
+.flame{width:14px;height:22px;margin:26px auto 4px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  background:radial-gradient(circle at 50% 70%,#fff3c4,#ffb84d 55%,#e8641f 85%,transparent);
+  filter:blur(.4px);animation:flick 1.6s ease-in-out infinite alternate;box-shadow:0 0 24px 8px rgba(255,170,60,.25)}
+@keyframes flick{0%{transform:scaleY(.92) scaleX(1.05);opacity:.9}100%{transform:scaleY(1.08) scaleX(.95);opacity:1}}
+.candle{width:10px;height:26px;margin:0 auto;background:linear-gradient(#f3e2bd,#d9c08c);border-radius:3px}
+.incense{font-size:26px;opacity:.85;margin-top:6px}
+/* 表单 */
+.card{background:var(--card);border:1px solid rgba(232,198,122,.22);border-radius:16px;padding:18px 16px;margin-top:20px}
+.lbl{font-size:13px;color:var(--gold);margin-bottom:8px;font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{padding:7px 13px;border-radius:18px;font-size:13px;border:1px solid rgba(232,198,122,.3);color:var(--dim);cursor:pointer;transition:.15s;white-space:nowrap}
+.opt.on{color:#1a1206;font-weight:700;background:linear-gradient(90deg,var(--gold),var(--gold2));border-color:transparent}
+textarea{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(232,198,122,.25);border-radius:12px;color:var(--text);font-size:14px;line-height:1.7;padding:12px;min-height:74px;resize:none;outline:none;font-family:inherit;margin-top:8px}
+textarea:focus{border-color:var(--gold2)}
+/* 叩首按钮 */
+.knock{display:block;width:100%;margin-top:18px;padding:17px;border:none;border-radius:999px;cursor:pointer;
+  font-size:17px;font-weight:800;letter-spacing:3px;color:#1a1206;
+  background:linear-gradient(135deg,#f0cf8a,#c69a3f);box-shadow:0 6px 22px rgba(200,150,60,.35);transition:.15s}
+.knock:active{transform:scale(.97)}
+.count{display:flex;justify-content:space-between;margin-top:14px;font-size:12px;color:var(--dim)}
+.count b{color:var(--gold)}
+/* 开示卡 */
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.mask.on{display:flex}
+.reveal{background:linear-gradient(160deg,#1c1508,#241a0a 60%,#1c1508);border:1px solid rgba(232,198,122,.5);border-radius:20px;max-width:400px;width:100%;padding:26px 22px;text-align:center;animation:rise .35s ease}
+@keyframes rise{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.reveal .tag{font-size:12px;color:var(--dim);letter-spacing:3px}
+.reveal .koan{font-size:17px;color:#f3e6c8;line-height:2.1;margin:16px 0;text-align:left}
+.reveal .koan b{color:var(--gold)}
+.reveal .merit{font-size:13px;color:var(--gold);margin:6px 0 14px}
+.rbtns{display:flex;gap:10px}
+.rbtns button,.rbtns a{flex:1;padding:11px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;border:none}
+.again{background:rgba(232,198,122,.14);color:var(--gold)}
+.save{background:linear-gradient(135deg,#f0cf8a,#c69a3f);color:#1a1206}
+.shareTip{font-size:11.5px;color:var(--dim);margin-top:12px}
+canvas{display:none}
+/* 忏悔墙 */
+.wall{margin-top:26px}
+.wall h2{font-size:16px;color:var(--gold);letter-spacing:1px}
+.witem{background:rgba(255,255,255,.035);border-left:2px solid var(--gold2);border-radius:0 10px 10px 0;padding:10px 14px;margin:10px 0;font-size:13.5px;color:#d9cfae}
+.witem .who{font-size:11px;color:var(--dim);margin-top:3px}
+.disclaim{margin-top:34px;font-size:11px;color:#6a5f45;line-height:1.9;border-top:1px solid rgba(232,198,122,.15);padding-top:14px}
+a{color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:rgba(30,24,12,.95);border:1px solid rgba(232,198,122,.4);color:#f3e6c8;font-size:13px;padding:10px 20px;border-radius:12px;opacity:0;transition:.25s;z-index:99;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+<link rel="alternate" type="application/rss+xml" title="许愿池 WishPool" href="https://wishpool.xin/feed.xml">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?31f0a55adb5210a1bf9476449d1ba48c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="shrine">
+    <div class="kline">▼ ▼ ▼ ━ ▼ ━ ━ ▼</div>
+    <h1>股民忏悔室</h1>
+    <div class="sub">大跌的日子，进来敲三下木鱼</div>
+    <div class="flame"></div><div class="candle"></div>
+    <div class="incense">🪷</div>
+  </div>
+
+  <div class="card">
+    <div class="lbl">一、这波你亏到哪个档位了？</div>
+    <div class="opts" id="lossOpts"></div>
+    <div class="lbl" style="margin-top:16px">二、忏悔理由（选一个最扎心的）</div>
+    <div class="opts" id="sinOpts"></div>
+    <div class="lbl" style="margin-top:16px">三、想对 K 线说的话（可不填）</div>
+    <textarea id="story" maxlength="60" placeholder="例：7 万全仓，现在只剩 1 万 4……"></textarea>
+    <button class="knock" onclick="repent()">🙏 叩 首 忏 悔</button>
+    <div class="count"><span>本机功德 <b id="merit">0</b></span><span>木鱼已敲 <b id="knocks">0</b> 下</span></div>
+  </div>
+
+  <div class="wall">
+    <h2>🕯️ 施主们的忏悔（精选）</h2>
+    <div id="wall"></div>
+  </div>
+
+  <div class="disclaim">
+    ⚠️ 本页是一个<b>纯情绪娱乐产品</b>：不荐股、不预测行情、不含任何金融产品与广告，所有"开示"均为行为金融学常识的幽默演绎，不构成任何投资建议。市场有风险，投资需谨慎。愿施主止损有道，本金常在。<br><br>
+    内容含 AI 生成成分 · 图片卡片可长按保存<br>
+    <a href="/">许愿池 WishPool</a> · 写下愿望，收到一封来自未来的信
+  </div>
+</div>
+
+<div class="mask" id="mask" onclick="if(event.target===this)closeMask()">
+  <div class="reveal">
+    <div class="tag">—— AI 大师开示 ——</div>
+    <div class="koan" id="koan"></div>
+    <div class="merit" id="meritLine"></div>
+    <div class="rbtns">
+      <button class="again" onclick="closeMask()">再忏一次</button>
+      <button class="save" onclick="saveCard()">保存忏悔卡</button>
+    </div>
+    <div class="shareTip">保存后发群里，让亏得比你多的人也来敲两下 🪷</div>
+  </div>
+</div>
+<canvas id="cardCv" width="900" height="1200"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ 数据 ============ */
+const LOSSES=['-10% 以内','-10%~-30%','-30%~-50%','-50% 以上','已清仓离场','还在回本路上'];
+const SINS=[
+ ['追涨杀跌','高买低卖，来回收割自己'],
+ ['一把梭哈','听了个消息，满仓干进去'],
+ ['拿不住','一卖它就涨，一买它就跌'],
+ ['抄底抄在半山腰','底下面还有底，地下还有海'],
+ ['回本就卖','刚解套就跑，卖完翻倍'],
+ ['死扛不止损','从短线扛成长线，从长线扛成股东'],
+ ['加了杠杆','涨的时候是天使，跌的时候是催命'],
+ ['频繁交易','手续费交得比本金亏损还勤快']
+];
+const WALL=[
+ {t:'7 万全仓干进去 4 年，前天终于"清仓"了——清的是仓，不清的是回忆。',who:'一位不愿透露姓名的老股民'},
+ {t:'大师，我不求涨，我就求它别在我割完的第二天涨。',who:'绿了三年的施主'},
+ {t:'别人恐惧我贪婪，别人贪婪我更贪婪，现在别人解套了，我还在山岗上放哨。',who:'站岗八年老兵'},
+ {t:'我把止损线设在了心里，结果心里的线也被跌破了。',who:'-38% 的施主'},
+ {t:'买之前：价值投资，十年不动。买之后：跌 15%，这公司不行了。',who:'伪价值投资者'},
+ {t:'我老婆问我钱去哪了，我说存在银行，确实存在一家叫 A 股的银行。',who:'家庭理财避障师'},
+ {t:'复盘的时候什么都知道，开盘的时候什么都不记得。',who:'盘中失忆症患者'},
+ {t:'-85%，大师说要笑对人生，我做到了，我现在天天笑，笑着笑着就哭了。',who:'笑得最大声的施主'},
+ {t:'我不是在炒股，我是在给市场做慈善，而且坚持定投。',who:'慈善家'},
+ {t:'拿了两年的票终于涨停了，我激动地打开账户——它在跌停板上面趴着，我拿反了。',who:'反向指标本人'}
+];
+const OPEN_A=['施主，','善哉，','善哉善哉。','来，先喝口热茶。','老衲看过了。'];
+const OPEN_B=['你亏的不是钱，是学费——学费已经交了，课还是要上完的。','K 线本无心，涨跌皆是影。你盯着红绿，红绿也在盯着你。','市场永远在，本金不常有。留得青山在，不怕没柴烧。','亏损是市场收走的最贵的一堂课，可惜大部分人只记住了疼，没记住课。','浮亏不是亏，是市场借走的；真亏，是你亲手割掉的。'];
+const MID={
+ '追涨杀跌':'你追的不是涨，是别人的从容；你杀的不是跌，是自己的耐心。高买低卖这个动作，本质是把「情绪」当成了交易策略。',
+ '一把梭哈':'满仓者易断，空仓者常清。把命运押在一条消息上，这不是投资，是许愿——许愿我们更专业，但也别把子弹一次打光。',
+ '拿不住':'一卖就涨，说明你和它缘分未尽，只是时机未到。拿不住的根源不是纪律差，是你从没想清楚当初为什么买它。',
+ '抄底抄在半山腰':'你抄的不是底，是自己的侥幸。真正的底只有一个特征：等你不敢抄的时候，它才出现。',
+ '回本就卖':'回本就卖，卖完翻倍——这不是运气差，是「损失厌恶」在替你做决定：你卖的不是股票，是难受。',
+ '死扛不止损':'从短线扛成长线，从长线扛成股东。止损不是认输，是给下一局留本钱。舍不得子弹的人，打不完一场仗。',
+ '加了杠杆':'杠杆放大盈利之前，先放大的是你的心跳。涨的时候它是天使，跌的时候它是催命符。本金在，机会就在。',
+ '频繁交易':'手续费交得比亏损还勤快，说明你每一次操作都很有「手感」、很没「算数」。少动，是散户唯一免费的策略。'
+};
+const END_A=['把这一页翻过去，明天该吃饭吃饭。','你的功德已到账，市场那边，随缘。','木鱼敲完了，手机可以放下了。','痛是真的痛，但过去是真的过去。'];
+const END_B=['止损有道，本金常在。','愿施主下一次开仓，先想清楚退出。','愿你回本的那天，还记得今天这一课。','明天太阳照常升起，K 线照常波动，你照常是你。'];
+
+/* ============ 状态 ============ */
+const KEY='gumin_chanhui_v1';
+let S={merit:0,knocks:0,myWall:[]};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){}
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ============ 渲染 ============ */
+let curLoss=0,curSin=0;
+function renderOpts(){
+  document.getElementById('lossOpts').innerHTML=LOSSES.map((t,i)=>'<span class="opt'+(i===curLoss?' on':'')+'" onclick="curLoss='+i+';renderOpts()">'+t+'</span>').join('');
+  document.getElementById('sinOpts').innerHTML=SINS.map((s,i)=>'<span class="opt'+(i===curSin?' on':'')+'" onclick="curSin='+i+';renderOpts()" title="'+s[1]+'">'+s[0]+'</span>').join('');
+}
+function renderWall(){
+  const mine=S.myWall.map(w=>'<div class="witem">'+esc(w.t)+'<div class="who">🕯️ 本机施主 · '+new Date(w.ts).toLocaleDateString()+'</div></div>').join('');
+  document.getElementById('wall').innerHTML=WALL.map(w=>'<div class="witem">'+esc(w.t)+'<div class="who">🕯️ '+w.who+'</div></div>').join('')+mine;
+  document.getElementById('merit').textContent=S.merit;
+  document.getElementById('knocks').textContent=S.knocks;
+}
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+let lastKoan='',lastLoss='',lastSin='';
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
+
+/* ============ 木鱼音效（Web Audio 合成，零素材零版权） ============ */
+let AC=null;
+function woodfish(){
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.setValueAtTime(880,AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(220,AC.currentTime+.09);
+    g.gain.setValueAtTime(.5,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.12);
+    o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+.13);
+  }catch(e){}
+}
+
+/* ============ 忏悔主流程 ============ */
+function repent(){
+  woodfish();S.knocks++;S.merit++;save();
+  lastLoss=LOSSES[curLoss];lastSin=SINS[curSin][0];
+  lastKoan=pick(OPEN_A)+pick(OPEN_B)+'<b>'+lastSin+'？</b>'+MID[lastSin]+pick(END_A)+pick(END_B);
+  const story=document.getElementById('story').value.trim();
+  if(story){S.myWall.unshift({t:story,ts:Date.now()});S.myWall=S.myWall.slice(0,5);save()}
+  document.getElementById('koan').innerHTML=lastKoan;
+  document.getElementById('meritLine').textContent='🙏 本次忏悔：'+lastLoss+' · '+lastSin+' · 功德 +1（累计 '+S.merit+'）';
+  renderWall();
+  document.getElementById('mask').classList.add('on');
+  // 连敲三下的节奏感
+  setTimeout(woodfish,350);setTimeout(woodfish,700);
+}
+function closeMask(){document.getElementById('mask').classList.remove('on')}
+
+/* ============ 忏悔卡（canvas 生成，可长按保存） ============ */
+function wrapText(ctx,text,x,y,maxW,lh){
+  let line='',yy=y;
+  for(const ch of text){
+    if(ctx.measureText(line+ch).width>maxW){ctx.fillText(line,x,yy);line=ch;yy+=lh}
+    else line+=ch;
+  }
+  if(line)ctx.fillText(line,x,yy);
+  return yy+lh;
+}
+function saveCard(){
+  const cv=document.getElementById('cardCv'),ctx=cv.getContext('2d');
+  const W=900,H=1200;
+  // 背景
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#171008');bg.addColorStop(.5,'#221708');bg.addColorStop(1,'#171008');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  // 描边
+  ctx.strokeStyle='rgba(232,198,122,.55)';ctx.lineWidth=3;
+  ctx.strokeRect(36,36,W-72,H-72);
+  ctx.strokeStyle='rgba(232,198,122,.25)';ctx.lineWidth=1;
+  ctx.strokeRect(50,50,W-100,H-100);
+  // 顶部
+  ctx.textAlign='center';ctx.fillStyle='#e8c67a';
+  ctx.font='700 52px -apple-system,PingFang SC,sans-serif';
+  ctx.fillText('股 民 忏 悔 室',W/2,170);
+  ctx.fillStyle='#8a7c5f';ctx.font='24px -apple-system,PingFang SC,sans-serif';
+  ctx.fillText('大 跌 的 日 子 ，敲 三 下 木 鱼',W/2,225);
+  // 烛光
+  ctx.font='64px sans-serif';ctx.fillText('🪷',W/2,330);
+  // 开示正文（纯文本，去掉 <b>）
+  const plain=lastKoan.replace(/<b>/g,'「').replace(/<\/b>/g,'」').replace(/<[^>]+>/g,'');
+  ctx.textAlign='left';ctx.fillStyle='#f0e4c4';
+  ctx.font='30px -apple-system,PingFang SC,sans-serif';
+  const yy=wrapText(ctx,plain,90,440,W-180,54);
+  // 档位
+  ctx.fillStyle='#e8c67a';ctx.font='700 30px -apple-system,PingFang SC,sans-serif';
+  ctx.fillText('🙏 本次忏悔：'+lastLoss+' · '+lastSin,90,yy+60);
+  // 木鱼行
+  ctx.fillStyle='#8a7c5f';ctx.font='26px -apple-system,PingFang SC,sans-serif';
+  ctx.fillText('木鱼 ×3 已敲 · 功德 +1 · 纯娱乐，不构成投资建议',90,yy+130);
+  // 二维码
+  const qr=new Image();
+  qr.onload=()=>{
+    ctx.drawImage(qr,W/2-90,yy+190,180,180);
+    ctx.textAlign='center';ctx.fillStyle='#e8c67a';ctx.font='700 26px -apple-system,PingFang SC,sans-serif';
+    ctx.fillText('扫码进入 · 许愿池 WishPool',W/2,yy+410);
+    ctx.fillStyle='#6a5f45';ctx.font='22px -apple-system,PingFang SC,sans-serif';
+    ctx.fillText('wishpool.xin',W/2,yy+450);
+    out();
+  };
+  qr.onerror=out;
+  qr.src=QR;
+  function out(){
+    const a=document.createElement('a');
+    a.href=cv.toDataURL('image/png');
+    a.download='chanhui-card.png';
+    if(/(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent)){
+      const w=window.open('');
+      if(w){w.document.write('<img src="'+a.href+'" style="max-width:100%">');w.document.title='长按图片保存忏悔卡'}
+      else toast('请允许弹窗，或长按保存');
+    }else{a.click();toast('已保存忏悔卡 🙏')}
+  }
+}
+renderOpts();renderWall();
+</script>
+<script>
+/* 二维码 base64（wishpool.xin，qrcode 库预生成） */
+const QR='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAAEiCAIAAADS3EjhAAAFBUlEQVR4nO3dsXEUQRBAUUQpAHxyIXhywSeDxZU1hRh+9ezee/7pTqv7NYa6et6u6/oClL5OfwB4PplBTmaQkxnkZAY5mUFOZpCTGeRkBjmZQU5mkJMZ5GQGOZlBTmaQkxnkZAY5mUFOZpB733nx928//tfnOMSv3z+jn7x+Vuv33XnOOz9552n4bnzkNIOczCAnM8jJDHIyg5zMICczyMkMcjKD3NYUyFo3UbFjZzqhm8Z4NWc+jW5yxWkGOZlBTmaQkxnkZAY5mUFOZpCTGeRkBrlwCmSt+497N2EwtRvj1XZy3PG7seY0g5zMICczyMkMcjKDnMwgJzPIyQxyMoPc2BQIH03d23LmTo7ncZpBTmaQkxnkZAY5mUFOZpCTGeRkBjmZQc4UyCecuVfDHTfnc5pBTmaQkxnkZAY5mUFOZpCTGeRkBjmZQW5sCuSOMwRnbuzYed/uM++443djzWkGOZlBTmaQkxnkZAY5mUFOZpCTGeRkBrlwCuTMzRk7puYt7vjated9N9acZpCTGeRkBjmZQU5mkJMZ5GQGOZlBTmaQe7uua/ozPEQ32bAzq9F53saOjtMMcjKDnMwgJzPIyQxyMoOczCAnM8jJDHJbu0DuuKNi6t6WKWdOkKxN7SDp/oJOM8jJDHIyg5zMICczyMkMcjKDnMwgJzPIhbtA7jjnceZejanZhantJlO65+w0g5zMICczyMkMcjKDnMwgJzPIyQxyMoPcLadAOt2eiSmvNm9x5uSK0wxyMoOczCAnM8jJDHIyg5zMICczyMkMcuEUyNrzbv1Ym5qJed6T3OFGGHgsmUFOZpCTGeRkBjmZQU5mkJMZ5GQGua0pkDM3dpy5DeLMSY4znXnjj10gcDSZQU5mkJMZ5GQGOZlBTmaQkxnkZAa5950XT/3Hfep/+Wtn3oAztQvkzD0iU38FpxnkZAY5mUFOZpCTGeRkBjmZQU5mkJMZ5MJdIGfOPZz5vs+7t+V5u0/sAoGjyQxyMoOczCAnM8jJDHIyg5zMICczyG1NgazdcUZkx/M2Z0z9Rs+bmHGaQU5mkJMZ5GQGOZlBTmaQkxnkZAY5mUHu0F0gUzMinTNnF+74JNemJmbWnGaQkxnkZAY5mUFOZpCTGeRkBjmZQU5mkAt3gTzPHacxunmaqa0qa2f+vk4zyMkMcjKDnMwgJzPIyQxyMoOczCAnM8i977z41TZJnLmh5MxPdeYdN1OcZpCTGeRkBjmZQU5mkJMZ5GQGOZlBTmaQ25oCWTvzP/1nTq7sTHI8b3PGlO4zO80gJzPIyQxyMoOczCAnM8jJDHIyg5zMIBdOgaxN3YGyo/vMd7xr5sx5mh3dX8FpBjmZQU5mkJMZ5GQGOZlBTmaQkxnkZAa5sSmQO7rjfMnO+97x9z3zJhqnGeRkBjmZQU5mkJMZ5GQGOZlBTmaQkxnkTIF8wpn7S6b2iOz85J2baKZmU+wCgaPJDHIyg5zMICczyMkMcjKDnMwgJzPIjU2BTG1l2NHNLuy8dupJ7szETM2mTM2XOM0gJzPIyQxyMoOczCAnM8jJDHIyg5zMIPd2Xdc/v3jqHpPOzgzB1Pt2ExVr3bM68yYau0DgaDKDnMwgJzPIyQxyMoOczCAnM8jJDHJbUyDA33CaQU5mkJMZ5GQGOZlBTmaQkxnkZAY5mUFOZpCTGeRkBjmZQU5mkJMZ5GQGOZlBTmaQkxnk/gCyTKo1nGoJsgAAAABJRU5ErkJggg==';
+</script>
+</body>
+</html>
