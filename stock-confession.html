@@ -28,6 +28,37 @@ h1{font-size:24px;margin:8px 0 4px;color:var(--gold);font-weight:800;letter-spac
 @keyframes flick{0%{transform:scaleY(.92) scaleX(1.05);opacity:.9}100%{transform:scaleY(1.08) scaleX(.95);opacity:1}}
 .candle{width:10px;height:26px;margin:0 auto;background:linear-gradient(#f3e2bd,#d9c08c);border-radius:3px}
 .incense{font-size:26px;opacity:.85;margin-top:6px}
+/* ===== 神龛动画区 ===== */
+.altar{text-align:center;margin-top:14px;position:relative}
+.smokebox{position:relative;height:44px;width:60px;margin:0 auto}
+.smokebox i{position:absolute;left:26px;bottom:0;width:8px;height:8px;border-radius:50%;
+  background:rgba(220,210,190,.35);filter:blur(4px);animation:smoke 3.2s linear infinite}
+.smokebox i:nth-child(2){animation-delay:1.1s;left:20px}
+.smokebox i:nth-child(3){animation-delay:2.2s;left:32px}
+@keyframes smoke{0%{transform:translateY(0) scale(.7);opacity:0}15%{opacity:.75}100%{transform:translateY(-42px) translateX(9px) scale(2.1);opacity:0}}
+.altarrow{display:flex;align-items:flex-end;justify-content:center;gap:12px}
+.candlearm{padding-bottom:2px}
+.candle.c2{width:9px;height:22px}
+.flame.f2,.flame.f3{margin:0 auto 2px;width:11px;height:17px;animation-duration:1.1s,.9s}
+.flame.f3{animation-delay:.5s}
+.altarboard{background:linear-gradient(160deg,#1a1207,#241a0a);border:1px solid rgba(232,198,122,.45);
+  border-radius:10px;padding:10px 12px 6px;width:180px;box-shadow:0 0 26px rgba(255,170,60,.13)}
+.kbars{display:flex;align-items:flex-end;gap:3px;height:64px}
+.kbars i{flex:1;border-radius:1px 1px 0 0;transform-origin:bottom;animation:grow .8s ease-out backwards}
+.kbars i.up{background:linear-gradient(#e05c5c,#b23a3a)}
+.kbars i.down{background:linear-gradient(#3aa06a,#257049)}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.klabel{font-size:10px;color:#8a7c5f;letter-spacing:1px;margin-top:5px}
+.worship{font-size:34px;margin-top:8px;height:44px;line-height:44px}
+.worship.bow{animation:bow .42s ease-in-out}
+@keyframes bow{
+  0%{transform:translateY(0) rotate(0)}
+  45%{transform:translateY(16px) rotate(28deg) scale(.92)}
+  100%{transform:translateY(0) rotate(0)}
+}
+.mfloat{position:fixed;font-size:15px;font-weight:700;color:#f0cf8a;pointer-events:none;z-index:60;
+  text-shadow:0 0 12px rgba(240,190,90,.6);animation:mfloat 1.4s ease-out forwards}
+@keyframes mfloat{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-64px);opacity:0}}
 /* 表单 */
 .card{background:var(--card);border:1px solid rgba(232,198,122,.22);border-radius:16px;padding:18px 16px;margin-top:20px}
 .lbl{font-size:13px;color:var(--gold);margin-bottom:8px;font-weight:700}
@@ -86,8 +117,21 @@ var _hmt = _hmt || [];
     <div class="kline">▼ ▼ ▼ ━ ▼ ━ ━ ▼</div>
     <h1>股民忏悔室</h1>
     <div class="sub">大跌的日子，进来敲三下木鱼</div>
-    <div class="flame"></div><div class="candle"></div>
-    <div class="incense">🪷</div>
+
+    <!-- 神龛：香炉青烟 + 双烛台 + K线供桌 + 磕头小人 -->
+    <div class="altar">
+      <div class="smokebox"><i></i><i></i><i></i></div>
+      <div class="altarrow">
+        <div class="candlearm"><div class="flame f2"></div><div class="candle c2"></div></div>
+        <div class="altarboard">
+          <div class="kbars" id="kbars"></div>
+          <div class="klabel">今日大盘 · 已供奉</div>
+        </div>
+        <div class="candlearm"><div class="flame f3"></div><div class="candle c2"></div></div>
+      </div>
+      <div class="worship" id="worship">🙇</div>
+      <div class="incense">🙏</div>
+    </div>
   </div>
 
   <div class="card">
@@ -122,7 +166,7 @@ var _hmt = _hmt || [];
       <button class="again" onclick="closeMask()">再忏一次</button>
       <button class="save" onclick="saveCard()">保存忏悔卡</button>
     </div>
-    <div class="shareTip">保存后发群里，让亏得比你多的人也来敲两下 🪷</div>
+    <div class="shareTip">保存后发群里，让亏得比你多的人也来敲两下 🙏</div>
   </div>
 </div>
 <canvas id="cardCv" width="900" height="1200"></canvas>
@@ -205,9 +249,44 @@ function woodfish(){
   }catch(e){}
 }
 
+/* ============ K 线供桌（随机涨跌，最后一根收红 = 跌多涨少的幽默） ============ */
+function buildKbars(){
+  const box=document.getElementById('kbars');if(!box)return;
+  let h='';
+  for(let i=0;i<14;i++){
+    const up=i===13||Math.random()<.32; // 最后一只大红，其余偏绿
+    const ht=18+Math.round(Math.random()*44);
+    h+='<i class="'+(up?'up':'down')+'" style="height:'+ht+'px;animation-delay:'+(i*45)+'ms"></i>';
+  }
+  box.innerHTML=h;
+}
+
+/* ============ 功德飘字 ============ */
+function meritFloat(){
+  const el=document.createElement('div');
+  el.className='mfloat';el.textContent='🙏 功德 +1';
+  el.style.left=(window.innerWidth/2-30+Math.round(Math.random()*60-30))+'px';
+  el.style.top=(window.innerHeight*.42)+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1400);
+}
+
+/* ============ 磕头动画（三连叩首，同步木鱼） ============ */
+function knockThree(cb){
+  const w=document.getElementById('worship');if(!w){cb();return}
+  let n=0;
+  const one=()=>{
+    woodfish();S.knocks++;S.merit++;meritFloat();save();
+    document.getElementById('merit').textContent=S.merit;
+    document.getElementById('knocks').textContent=S.knocks;
+    w.classList.remove('bow');void w.offsetWidth;w.classList.add('bow');
+    if(++n<3)setTimeout(one,440);else setTimeout(cb,420);
+  };
+  one();
+}
+
 /* ============ 忏悔主流程 ============ */
 function repent(){
-  woodfish();S.knocks++;S.merit++;save();
   lastLoss=LOSSES[curLoss];lastSin=SINS[curSin][0];
   lastKoan=pick(OPEN_A)+pick(OPEN_B)+'<b>'+lastSin+'？</b>'+MID[lastSin]+pick(END_A)+pick(END_B);
   const story=document.getElementById('story').value.trim();
@@ -215,9 +294,7 @@ function repent(){
   document.getElementById('koan').innerHTML=lastKoan;
   document.getElementById('meritLine').textContent='🙏 本次忏悔：'+lastLoss+' · '+lastSin+' · 功德 +1（累计 '+S.merit+'）';
   renderWall();
-  document.getElementById('mask').classList.add('on');
-  // 连敲三下的节奏感
-  setTimeout(woodfish,350);setTimeout(woodfish,700);
+  knockThree(()=>{document.getElementById('mask').classList.add('on');buildKbars()});
 }
 function closeMask(){document.getElementById('mask').classList.remove('on')}
 
@@ -250,7 +327,7 @@ function saveCard(){
   ctx.fillStyle='#8a7c5f';ctx.font='24px -apple-system,PingFang SC,sans-serif';
   ctx.fillText('大 跌 的 日 子 ，敲 三 下 木 鱼',W/2,225);
   // 烛光
-  ctx.font='64px sans-serif';ctx.fillText('🪷',W/2,330);
+  ctx.font='64px sans-serif';ctx.fillText('🙏',W/2,330);
   // 开示正文（纯文本，去掉 <b>）
   const plain=lastKoan.replace(/<b>/g,'「').replace(/<\/b>/g,'」').replace(/<[^>]+>/g,'');
   ctx.textAlign='left';ctx.fillStyle='#f0e4c4';
@@ -285,7 +362,7 @@ function saveCard(){
     }else{a.click();toast('已保存忏悔卡 🙏')}
   }
 }
-renderOpts();renderWall();
+renderOpts();renderWall();buildKbars();
 </script>
 <script>
 /* 二维码 base64（wishpool.xin，qrcode 库预生成） */
