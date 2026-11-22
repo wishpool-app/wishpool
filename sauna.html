@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>安静桑拿 · 给累了一天的你片刻安静（在线桑拿房）</title>
+<meta name="description" content="安静桑拿：一间线上的扁柏木桑拿房。往石头上浇水、坐下、调呼吸、打招呼——没有聊天，没有语音，只有蒸汽的声音。累了一天，进来安静地待几分钟。免费免注册。">
+<meta name="keywords" content="安静桑拿,在线桑拿,解压,放松,冥想,白噪音,3D小游戏,steam,治愈">
+<link rel="canonical" href="https://wishpool.xin/sauna.html">
+<meta property="og:title" content="安静桑拿 · 给累了一天的你片刻安静">
+<meta property="og:description" content="一间线上扁柏桑拿房：浇水、坐下、调呼吸、打招呼。没有聊天没有语音，只有蒸汽声。">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"安静桑拿","applicationCategory":"Entertainment","operatingSystem":"Web","description":"一间 3D 在线桑拿房：往石头上浇水、坐下、调呼吸、和房间里的小鸡打招呼。没有聊天没有语音，温度湿度实时变化，纯放松解压娱乐产品。免费免注册。","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"安静桑拿是什么？","acceptedAnswer":{"@type":"Answer","text":"安静桑拿（wishpool.xin/sauna.html）是一间 3D 在线桑拿房小游戏：你可以往桑拿石上浇水、坐下休息、跟着圆圈调呼吸、和房间里的小鸡打招呼。没有聊天、没有语音，只有蒸汽和炉火的白噪音。灵感来自走红的韩国线上安静空间（安静寺、Sauna Goyo 等）。"}},
+{"@type":"Question","name":"安静桑拿怎么玩？","acceptedAnswer":{"@type":"Answer","text":"四个动作：① 浇水——木瓢把水浇上桑拿石，蒸汽腾起，湿度上升；② 坐下——小鸡坐到扁柏木凳上，再点一次站起来；③ 调呼吸——跟随圆圈 4 秒吸气 4 秒呼气；④ 打招呼——小鸡会朝你挥手。房间温度会从 82°C 慢慢爬到 87°C，湿度随浇水变化。"}},
+{"@type":"Question","name":"安静桑拿收费吗？是真人聊天室吗？","acceptedAnswer":{"@type":"Answer","text":"完全免费、无需注册。这里没有聊天也没有语音，房间里的其他「客人」是氛围演出，你的操作数据只保存在你自己的手机上，不上传任何信息。纯放松娱乐产品，页面含 AI 生成内容。"}},
+{"@type":"Question","name":"手机能玩吗？卡怎么办？","acceptedAnswer":{"@type":"Answer","text":"手机浏览器直接打开即可，建议用较新的 Chrome / Safari / Edge。3D 画面需要 WebGL 支持，如果提示无法打开，换最新版浏览器即可。页面轻量，普通手机也能流畅运行。"}}]}
+</script>
+<style>
+:root{--wood:#c98d54;--dark:#161009;--panel:rgba(24,16,9,.92);--amber:#f0a04a;--amber2:#d97f2e;--text:#f2e7d8;--dim:#a08d72;--yellow:#ffe14d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#1a120a;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text)}
+#c3d{position:fixed;inset:0;display:block}
+.nogl{position:fixed;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;line-height:2;color:var(--dim);z-index:5}
+/* ===== 顶部 HUD ===== */
+.hud{position:fixed;top:12px;left:12px;background:var(--panel);border:1px solid rgba(240,160,74,.28);border-radius:14px;padding:8px 12px;z-index:3;backdrop-filter:blur(6px);max-width:152px;font-size:11px}
+.hud .brand{font-size:11px;letter-spacing:2px;color:var(--amber);font-weight:800}
+.hud .mode{font-size:12.5px;color:var(--text);margin-top:2px}
+.hud .mode b{color:var(--amber)}
+.hud .stat{font-size:11px;color:var(--dim);margin-top:3px;line-height:1.7}
+.hud .stat b{color:var(--text)}
+.warmbar{height:5px;border-radius:99px;background:rgba(255,255,255,.1);margin-top:6px;overflow:hidden}
+.warmfill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#d97f2e,#ffb45e);transition:width 1s linear}
+.warmlbl{font-size:9.5px;color:var(--dim);margin-top:3px}
+/* ===== 事件横幅 ===== */
+.event{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(20,13,7,.88);border:1px solid rgba(240,160,74,.35);color:var(--text);font-size:13px;padding:8px 18px;border-radius:999px;opacity:0;transition:.4s;z-index:4;white-space:nowrap;max-width:92vw}
+.event.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:520px){.event{bottom:auto;top:14px;transform:translateX(-50%) translateY(-8px)}.event.show{transform:translateX(-50%) translateY(0)}}
+/* ===== 角色气泡 ===== */
+.bubble{position:fixed;background:#fff;color:#3a2a14;font-size:13px;font-weight:700;padding:8px 14px;border-radius:14px;z-index:3;display:none;max-width:220px;text-align:center;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+.bubble:after{content:'';position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;border-bottom:0}
+/* ===== 底部动作栏 ===== */
+.actions{position:fixed;bottom:16px;left:0;right:0;display:flex;gap:7px;justify-content:center;padding:0 10px;z-index:3}
+.act{background:var(--yellow);color:#3a2a10;border:none;border-radius:999px;font-size:14.5px;font-weight:900;padding:12px 13px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);letter-spacing:1px;transition:.12s}
+.act:active{transform:scale(.92)}
+
+.morebtn{position:fixed;right:12px;bottom:74px;z-index:3;background:rgba(24,16,9,.9);border:1px solid rgba(240,160,74,.35);color:var(--amber);border-radius:12px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer}
+/* ===== 入场卡 ===== */
+.entry{position:fixed;inset:0;z-index:10;background:radial-gradient(ellipse at 50% 30%,#2a1c0f,#160e07 70%);display:flex;align-items:center;justify-content:center;padding:22px}
+.entry .card{background:rgba(28,19,10,.9);border:1px solid rgba(240,160,74,.3);border-radius:20px;max-width:400px;width:100%;padding:26px 22px;text-align:center}
+.entry .en{font-size:11px;letter-spacing:3px;color:var(--dim);font-weight:800}
+.entry h1{font-size:27px;margin:6px 0 2px;color:var(--amber);letter-spacing:4px;font-weight:900}
+.entry .tag{font-size:13.5px;color:#cdbb9f;margin:10px 0 4px;line-height:1.9}
+.hatlbl{font-size:12px;color:var(--dim);margin:16px 0 8px}
+.hats{display:flex;gap:9px;justify-content:center}
+.hat{flex:1;max-width:82px;background:rgba(255,255,255,.05);border:1.5px solid rgba(240,160,74,.25);border-radius:13px;padding:10px 4px 8px;cursor:pointer;font-size:11px;color:var(--dim);transition:.15s}
+.hat .ic{font-size:21px;display:block;margin-bottom:3px}
+.hat.on{border-color:var(--amber);color:var(--amber);background:rgba(240,160,74,.12)}
+.enter{display:block;width:100%;margin-top:18px;padding:15px;border:none;border-radius:999px;cursor:pointer;font-size:17px;font-weight:900;letter-spacing:6px;color:#2a1505;background:linear-gradient(135deg,#ffb45e,#d97f2e);box-shadow:0 6px 22px rgba(217,127,46,.4)}
+.enter:active{transform:scale(.97)}
+.entry .note{font-size:10.5px;color:#7d6c53;margin-top:12px;line-height:1.8}
+/* ===== 呼吸遮罩 ===== */
+.bmask{position:fixed;inset:0;background:rgba(10,6,3,.82);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;z-index:20}
+.bmask.on{display:flex}
+.bcircle{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1.5px solid rgba(240,160,74,.5);background:radial-gradient(circle at 50% 40%,rgba(240,160,74,.18),rgba(240,160,74,.04));
+  font-size:15px;color:var(--amber);font-weight:800;letter-spacing:3px;transition:transform 3.9s cubic-bezier(.45,0,.55,1)}
+.bcircle.in{transform:scale(1.55)}
+.btip{font-size:12.5px;color:var(--dim)}
+.bstop{background:none;border:1px solid rgba(240,160,74,.4);color:var(--amber);border-radius:999px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer}
+/* ===== 更多面板 ===== */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:15;align-items:flex-end;justify-content:center}
+.sheet.on{display:flex}
+.sheet .box{background:#1c130a;border-radius:20px 20px 0 0;max-width:480px;width:100%;padding:20px 20px 34px;font-size:13px;line-height:2;color:#cdbb9f}
+.sheet h3{color:var(--amber);margin:0 0 8px;font-size:15px}
+.sheet a{color:var(--amber)}
+.sheet .x{float:right;background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(14px);background:rgba(24,16,9,.95);border:1px solid rgba(240,160,74,.4);color:var(--text);font-size:13px;padding:10px 20px;border-radius:12px;opacity:0;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?31f0a55adb5210a1bf9476449d1ba48c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<canvas id="c3d"></canvas>
+<div class="nogl" id="nogl">🧖 这台浏览器的 3D 画面打不开。<br>请换最新版的 Chrome 或 Safari 再来安静一下。</div>
+
+<div class="hud" id="hud" style="display:none">
+  <div class="brand">QUIET SAUNA</div>
+  <div class="mode">干式桑拿 <b id="temp">82.0°C</b> · 扁柏</div>
+  <div class="stat">湿度 <b id="humi">55%</b> · 此刻此处 <b>1</b> 人<br>你来过 <b id="visits">1</b> 次</div>
+  <div class="warmbar"><div class="warmfill" id="warmfill"></div></div>
+  <div class="warmlbl" id="warmlbl">身体预热中…</div>
+</div>
+
+<div class="event" id="event"></div>
+<div class="bubble" id="bubble"></div>
+
+<div class="actions" id="actions" style="display:none">
+  <button class="act" onclick="doPour()">💧 浇水</button>
+  <button class="act" id="sitBtn" onclick="doSit()">🧎 坐下</button>
+  <button class="act" onclick="doBreath()">🫧 调呼吸</button>
+  <button class="act" onclick="doGreet()">👋 打招呼</button>
+</div>
+<button class="morebtn" id="moreBtn" style="display:none" onclick="toggleSheet()">⋯ 更多</button>
+
+<div class="entry" id="entry">
+  <div class="card">
+    <div class="en">QUIET SAUNA</div>
+    <h1>安 静 桑 拿</h1>
+    <div class="tag">给累了一天的你，片刻的安静。<br>没有聊天，没有语音，只有蒸汽的声音。</div>
+    <div class="hatlbl">挑个头饰</div>
+    <div class="hats" id="hats">
+      <div class="hat on" data-h="none"><span class="ic">🥚</span>无</div>
+      <div class="hat" data-h="buns"><span class="ic">😗</span>丸子头</div>
+      <div class="hat" data-h="cap"><span class="ic">🧢</span>桑拿帽</div>
+      <div class="hat" data-h="towel"><span class="ic">🧣</span>毛巾头巾</div>
+    </div>
+    <button class="enter" onclick="enterSauna()">进 桑 拿 房</button>
+    <div class="note">建议戴耳机 · 里面很安静 · 免费，不用注册<br>含 AI 生成内容 · 数据只存在你自己的手机上</div>
+  </div>
+</div>
+
+<div class="bmask" id="bmask">
+  <div class="bcircle" id="bcircle">准备</div>
+  <div class="btip" id="btip">跟着圆圈：吸气 4 秒，呼气 4 秒</div>
+  <button class="bstop" onclick="stopBreath()">好了，继续安静</button>
+</div>
+
+<div class="sheet" id="sheet" onclick="if(event.target===this)toggleSheet()">
+  <div class="box">
+    <button class="x" onclick="toggleSheet()">✕</button>
+    <h3>🧖 安静桑拿</h3>
+    💧 <b>浇水</b>：木瓢把水浇上桑拿石，蒸汽腾起，湿度上升<br>
+    🧎 <b>坐下</b>：坐上扁柏木凳，再点一次站起来<br>
+    🫧 <b>调呼吸</b>：跟着圆圈一吸一呼<br>
+    👋 <b>打招呼</b>：小鸡会朝你挥手（它不会说话，这里没有语音）<br>
+    温度会从 82°C 慢慢爬到 87°C，看守人偶尔会来浇水。待一会儿，身体就热透了。<br><br>
+    <b>同一片安静：</b><br>
+    <a href="https://wishpool.xin/treehole.html">🌙 深夜树洞</a> · 说给夜晚听的心事<br>
+    <a href="/wooden-fish.html">🪵 在线电子木鱼</a> · 敲木鱼攒功德<br>
+    <a href="/stock-confession.html">🙏 股民忏悔室</a> · 散户情绪出口<br>
+    <a href="/">🔮 许愿池 WishPool</a> · 写下愿望，收到一封来自未来的信<br><br>
+    <span style="font-size:11px;color:#7d6c53">纯放松娱乐产品，不是医疗服务。本页无服务器：你的操作只保存在本机。含 AI 生成内容。</span>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="/vendor/three.min.js"></script>
+<script>
+/* ================= 数据 ================= */
+const KEY='sauna_anjing_v1';
+let S={visits:0,hat:'none',breaths:0,warm:0};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){}
+S.visits++;localStorage.setItem(KEY,JSON.stringify(S));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400)}
+document.getElementById('visits').textContent=S.visits;
+
+/* ================= 头饰选择 ================= */
+document.getElementById('hats').addEventListener('click',e=>{
+  const h=e.target.closest('.hat');if(!h)return;
+  document.querySelectorAll('.hat').forEach(x=>x.classList.remove('on'));
+  h.classList.add('on');S.hat=h.dataset.h;localStorage.setItem(KEY,JSON.stringify(S));
+  if(CHAR)applyHat();
+});
+
+/* ================= 音效 ================= */
+let AC=null,humGain=null,musicOn=false,padNodes=[];
+function initAudio(){
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    // 炉火低鸣：循环噪声 + 低通
+    const len=AC.sampleRate*2,buf=AC.createBuffer(1,len,AC.sampleRate),d=buf.getChannelData(0);
+    let last=0;
+    for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.2}
+    const src=AC.createBufferSource();src.buffer=buf;src.loop=true;
+    const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=180;
+    humGain=AC.createGain();humGain.gain.value=.05;
+    src.connect(lp).connect(humGain).connect(AC.destination);src.start();
+    // 慢和声垫（音乐开关）
+    [110,164.8,220,277.2].forEach((f,i)=>{
+      const o=AC.createOscillator(),g=AC.createGain();
+      o.type='sine';o.frequency.value=f;g.gain.value=0;
+      o.connect(g).connect(AC.destination);o.start();
+      padNodes.push({o,g,base:.012+i*.004});
+    });
+  }catch(e){}
+}
+function hiss(){
+  try{
+    if(!AC)return;
+    const len=AC.sampleRate*1.1,buf=AC.createBuffer(1,len,AC.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);
+    const src=AC.createBufferSource();src.buffer=buf;
+    const bp=AC.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1400;bp.Q.value=.8;
+    const g=AC.createGain();g.gain.value=.22;
+    src.connect(bp).connect(g).connect(AC.destination);src.start();
+  }catch(e){}
+}
+function chime(f,dur,vol){
+  try{
+    if(!AC)return;
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.setValueAtTime(f,AC.currentTime);
+    g.gain.setValueAtTime(vol,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+    o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+dur+.05);
+  }catch(e){}
+}
+function toggleMusic(){
+  musicOn=!musicOn;
+  padNodes.forEach((p,i)=>{p.g.gain.setTargetAtTime(musicOn?p.base:0,AC.currentTime,.8)});
+  toast(musicOn?'🎵 轻音乐已开（很轻的那种）':'🔇 音乐关了，只剩蒸汽声');
+}
+
+/* ================= 三维场景 ================= */
+let renderer,scene,camera,CHAR,CHARPARTS={},LADLE,STEAM,steamVel=[],clock,t=0;
+let sitting=false,sitT=0,waveT=-1,pourT=-1,entered=false;
+let temp=82.0,humi=55,warm=0;
+const SIT_POS={x:-1.78,y:1.09,z:-1.2,ry:.95};
+function woodTex(w,h,base,dark,vertical){
+  const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+  const c=cv.getContext('2d');
+  c.fillStyle=base;c.fillRect(0,0,w,h);
+  for(let i=0;i<26;i++){
+    c.strokeStyle='rgba('+(dark)+','+(0.05+Math.random()*.12)+')';
+    c.lineWidth=1+Math.random()*2.2;
+    c.beginPath();
+    if(vertical){const x=Math.random()*w;c.moveTo(x,0);c.bezierCurveTo(x+8,h*.3,x-8,h*.6,x+4,h)}
+    else{const y=Math.random()*h;c.moveTo(0,y);c.bezierCurveTo(w*.3,y+8,w*.6,y-8,w,y+4)}
+    c.stroke();
+  }
+  // 板缝
+  c.strokeStyle='rgba(60,35,15,.4)';c.lineWidth=2;
+  for(let i=1;i<6;i++){
+    if(vertical){c.beginPath();c.moveTo(w/6*i,0);c.lineTo(w/6*i,h);c.stroke()}
+    else{c.beginPath();c.moveTo(0,h/6*i);c.lineTo(w,h/6*i);c.stroke()}
+  }
+  const tx=new THREE.CanvasTexture(cv);
+  tx.wrapS=tx.wrapT=THREE.RepeatWrapping;
+  return tx;
+}
+function steamTex(){
+  const cv=document.createElement('canvas');cv.width=64;cv.height=64;
+  const c=cv.getContext('2d');
+  const g=c.createRadialGradient(32,32,2,32,32,30);
+  g.addColorStop(0,'rgba(255,250,240,.75)');g.addColorStop(.5,'rgba(255,248,238,.28)');g.addColorStop(1,'rgba(255,248,238,0)');
+  c.fillStyle=g;c.fillRect(0,0,64,64);
+  return new THREE.CanvasTexture(cv);
+}
+function windowTex(){
+  const cv=document.createElement('canvas');cv.width=512;cv.height=320;
+  const c=cv.getContext('2d');
+  const g=c.createLinearGradient(0,0,0,320);
+  g.addColorStop(0,'#9fc4e8');g.addColorStop(.65,'#d8e6ee');g.addColorStop(1,'#e8e0ce');
+  c.fillStyle=g;c.fillRect(0,0,512,320);
+  // 远山两叠
+  c.fillStyle='#8fae9a';
+  c.beginPath();c.moveTo(0,240);c.lineTo(120,150);c.lineTo(230,235);c.lineTo(340,140);c.lineTo(470,225);c.lineTo(512,190);c.lineTo(512,320);c.lineTo(0,320);c.fill();
+  c.fillStyle='#6d8f7d';
+  c.beginPath();c.moveTo(0,290);c.lineTo(180,205);c.lineTo(320,285);c.lineTo(430,215);c.lineTo(512,270);c.lineTo(512,320);c.lineTo(0,320);c.fill();
+  c.fillStyle='rgba(255,244,210,.9)';
+  c.beginPath();c.arc(400,70,26,0,7);c.fill();
+  return new THREE.CanvasTexture(cv);
+}
+function makeChar(){
+  const g=new THREE.Group();
+  const white=new THREE.MeshStandardMaterial({color:0xf7f2e6,roughness:.85});
+  const orange=new THREE.MeshStandardMaterial({color:0xe8a13c,roughness:.7});
+  const black=new THREE.MeshStandardMaterial({color:0x2a2015,roughness:.5});
+  const body=new THREE.Mesh(new THREE.SphereGeometry(.36,20,16),white);
+  body.scale.set(1,1.08,.92);body.position.y=.42;g.add(body);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.27,20,16),white);
+  head.position.y=.92;g.add(head);
+  const beak=new THREE.Mesh(new THREE.ConeGeometry(.075,.16,10),orange);
+  beak.rotation.x=Math.PI/2;beak.position.set(0,.9,.27);g.add(beak);
+  const eyeL=new THREE.Mesh(new THREE.SphereGeometry(.032,8,8),black);
+  eyeL.position.set(-.09,.97,.235);g.add(eyeL);
+  const eyeR=eyeL.clone();eyeR.position.x=.09;g.add(eyeR);
+  const wingL=new THREE.Mesh(new THREE.SphereGeometry(.15,12,10),white);
+  wingL.scale.set(.5,1,.8);wingL.position.set(-.35,.44,.05);g.add(wingL);
+  const wingR=wingL.clone();wingR.position.x=.35;g.add(wingR);
+  const footL=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),orange);
+  footL.scale.set(1,.55,1.25);footL.position.set(-.13,.05,.05);g.add(footL);
+  const footR=footL.clone();footR.position.x=.13;g.add(footR);
+  // 头饰（进入后按选择添加）
+  const hatGrp=new THREE.Group();
+  hatGrp.add(new THREE.Mesh(new THREE.SphereGeometry(.02,6,6),white)); // 占位
+  const buns=new THREE.Group();
+  const b1=new THREE.Mesh(new THREE.SphereGeometry(.09,10,8),white);b1.position.set(-.12,1.12,0);
+  const b2=b1.clone();b2.position.x=.12;buns.add(b1);b2&&buns.add(b2);
+  const cap=new THREE.Mesh(new THREE.SphereGeometry(.24,14,10,0,Math.PI*2,0,Math.PI/2.2),new THREE.MeshStandardMaterial({color:0x6f9463,roughness:.8}));
+  cap.position.y=1.0;cap.rotation.x=-.12;
+  const towel=new THREE.Mesh(new THREE.TorusGeometry(.17,.065,10,18),white);
+  towel.position.y=1.05;towel.rotation.x=Math.PI/2.35;
+  const hatObjs={'buns':buns,'cap':cap,'towel':towel};
+  g.add(hatGrp);
+  g.userData={body,head,eyeL,eyeR,wingL,wingR,hatGrp,hatObjs};
+  return g;
+}
+function applyHat(){
+  const hg=CHAR.userData.hatGrp;
+  while(hg.children.length)hg.remove(hg.children[0]);
+  const o=CHAR.userData.hatObjs[S.hat];
+  if(o)hg.add(o);
+}
+function init3D(){
+  const cvs=document.getElementById('c3d');
+  try{
+    renderer=new THREE.WebGLRenderer({canvas:cvs,antialias:true});
+  }catch(e){document.getElementById('nogl').style.display='flex';return}
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.outputEncoding=THREE.sRGBEncoding;
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x140d06);
+  scene.fog=new THREE.Fog(0x1a1006,8,17);
+  camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,30);
+  camera.position.set(.55,1.72,4.15);
+  camera.lookAt(-.35,1.18,-1.4);
+  // 灯光
+  scene.add(new THREE.AmbientLight(0xffd9b0,.5));
+  const warm=new THREE.PointLight(0xffc080,1.0,10);
+  warm.position.set(0,2.55,-1.2);scene.add(warm);
+  const cool=new THREE.DirectionalLight(0xbcd4ee,.35);
+  cool.position.set(1.5,2.2,-3);scene.add(cool);
+  const wood=woodTex(512,512,'#c8955c','80,45,18',false);
+  const woodV=woodTex(512,512,'#b9824c','75,42,16',true);
+  const matWall=new THREE.MeshStandardMaterial({map:wood,roughness:.9});
+  const matFloor=new THREE.MeshStandardMaterial({map:woodV,roughness:.95});
+  // 地板
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(6,9.6),matFloor);
+  floor.rotation.x=-Math.PI/2;floor.position.set(0,0,-.2);scene.add(floor);
+  // 墙
+  const back=new THREE.Mesh(new THREE.PlaneGeometry(6,3.2),matWall);back.position.set(0,1.6,-3.6);scene.add(back);
+  const left=new THREE.Mesh(new THREE.PlaneGeometry(9.6,3.2),matWall);left.rotation.y=Math.PI/2;left.position.set(-3,1.6,-.2);scene.add(left);
+  const right=new THREE.Mesh(new THREE.PlaneGeometry(9.6,3.2),matWall);right.rotation.y=-Math.PI/2;right.position.set(3,1.6,-.2);scene.add(right);
+  const ceil=new THREE.Mesh(new THREE.PlaneGeometry(6,9.6),matWall);ceil.rotation.x=Math.PI/2;ceil.position.set(0,3.2,-.2);scene.add(ceil);
+  // 窗（后墙右侧）
+  const win=new THREE.Mesh(new THREE.PlaneGeometry(1.9,1.15),new THREE.MeshBasicMaterial({map:windowTex()}));
+  win.position.set(.95,1.85,-3.57);scene.add(win);
+  const frameM=new THREE.MeshStandardMaterial({color:0x5a3a1e,roughness:.7});
+  [[1.9,.07],[1.9,.07]].forEach((s,i)=>{const f=new THREE.Mesh(new THREE.BoxGeometry(s[0],s[1],.06),frameM);f.position.set(.95,i? 1.85-.61:1.85+.61,-3.55);scene.add(f)});
+  [[.07,1.15],[.07,1.15]].forEach((s,i)=>{const f=new THREE.Mesh(new THREE.BoxGeometry(s[0],s[1],.06),frameM);f.position.set(i?.95+.95:.95-.95,1.85,-3.55);scene.add(f)});
+  const mid=new THREE.Mesh(new THREE.BoxGeometry(.04,1.15,.05),frameM);mid.position.set(.95,1.85,-3.55);scene.add(mid);
+  // 长凳（左侧两层）
+  const benchM=new THREE.MeshStandardMaterial({map:woodTex(512,128,'#d3a468','85,48,20',false),roughness:.85});
+  const mkBench=(x,y,z,len)=>{
+    const b=new THREE.Mesh(new THREE.BoxGeometry(.62,.09,len),benchM);
+    b.position.set(x,y,z);scene.add(b);
+    const lg=new THREE.Mesh(new THREE.BoxGeometry(.5,y,.14),benchM);
+    lg.position.set(x,y/2,z-len/2+.1);scene.add(lg);
+    const lg2=lg.clone();lg2.position.z=z+len/2-.1;scene.add(lg2);
+  };
+  mkBench(-1.55,.45,-1.0,3.6);   // 下层
+  mkBench(-1.95,1.02,-1.0,3.6); // 上层
+  // 炉子+石头（右后）
+  const stove=new THREE.Mesh(new THREE.BoxGeometry(.9,.72,.7),new THREE.MeshStandardMaterial({color:0x2e2a26,roughness:.6,metalness:.3}));
+  stove.position.set(1.3,.36,-2.85);scene.add(stove);
+  const stoneM=new THREE.MeshStandardMaterial({color:0x3c3835,roughness:.9});
+  for(let i=0;i<14;i++){
+    const st=new THREE.Mesh(new THREE.IcosahedronGeometry(.1+Math.random()*.07,0),stoneM);
+    st.position.set(1.1+Math.random()*.42,.78+Math.random()*.22,-3.0+Math.random()*.3);
+    st.rotation.set(Math.random()*3,Math.random()*3,Math.random()*3);
+    scene.add(st);
+  }
+  // 水桶+木瓢
+  const bucketM=new THREE.MeshStandardMaterial({map:woodTex(128,128,'#a9743e','70,40,15',false),roughness:.8});
+  const bucket=new THREE.Mesh(new THREE.CylinderGeometry(.17,.14,.26,14),bucketM);
+  bucket.position.set(1.85,.13,-2.3);scene.add(bucket);
+  const water=new THREE.Mesh(new THREE.CircleGeometry(.14,14),new THREE.MeshStandardMaterial({color:0x6f9fc4,roughness:.2}));
+  water.rotation.x=-Math.PI/2;water.position.set(1.85,.265,-2.3);scene.add(water);
+  LADLE=new THREE.Group();
+  const handle=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.5,8),bucketM);
+  handle.rotation.z=Math.PI/3;handle.position.set(0,.08,0);LADLE.add(handle);
+  const scoop=new THREE.Mesh(new THREE.SphereGeometry(.075,10,8),bucketM);
+  scoop.scale.set(1,.5,.75);scoop.position.set(-.2,.16,0);LADLE.add(scoop);
+  LADLE.position.set(1.85,.3,-2.28);scene.add(LADLE);
+  // 吊灯
+  const cord=new THREE.Mesh(new THREE.CylinderGeometry(.008,.008,.5,6),new THREE.MeshStandardMaterial({color:0x222}));
+  cord.position.set(0,2.95,-1.2);scene.add(cord);
+  const lamp=new THREE.Mesh(new THREE.SphereGeometry(.11,12,10),new THREE.MeshStandardMaterial({color:0xf6d9a8,emissive:0xffc070,emissiveIntensity:.7,roughness:.4}));
+  lamp.position.set(0,2.62,-1.2);scene.add(lamp);
+  // 小鸡
+  CHAR=makeChar();applyHat();
+  CHAR.position.set(.15,0,-1.5);CHAR.rotation.y=Math.PI*.92; // 面向镜头
+  scene.add(CHAR);
+  // 蒸汽粒子
+  const geo=new THREE.BufferGeometry();
+  const N=140,pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    pos[i*3]=1.3+(Math.random()-.5)*.3;
+    pos[i*3+1]=1.0+Math.random()*1.6;
+    pos[i*3+2]=-2.85+(Math.random()-.5)*.3;
+    steamVel.push({y:.14+Math.random()*.22,x:(Math.random()-.5)*.05,life:Math.random()});
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const pm=new THREE.PointsMaterial({size:.34,map:steamTex(),transparent:true,depthWrite:false,opacity:.55});
+  STEAM=new THREE.Points(geo,pm);scene.add(STEAM);
+  // 阴影假面
+  const shTex=(function(){const cv=document.createElement('canvas');cv.width=cv.height=64;const c=cv.getContext('2d');const g=c.createRadialGradient(32,32,2,32,32,30);g.addColorStop(0,'rgba(0,0,0,.4)');g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(0,0,64,64);return new THREE.CanvasTexture(cv)})();
+  const sh=new THREE.Mesh(new THREE.PlaneGeometry(.9,.9),new THREE.MeshBasicMaterial({map:shTex,transparent:true,depthWrite:false}));
+  sh.rotation.x=-Math.PI/2;sh.position.set(.15,.01,-1.5);scene.add(sh);CHAR.userData.shadow=sh;
+  addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+  clock=new THREE.Clock();
+  loop();
+}
+/* 动画循环 */
+function loop(){
+  requestAnimationFrame(loop);
+  if(!renderer)return;
+  const dt=Math.min(clock.getDelta(),.05);t+=dt;
+  // 相机呼吸
+  camera.position.x=.55+Math.sin(t*.28)*.07;
+  camera.position.y=1.5+Math.sin(t*.5)*.02;
+  camera.lookAt(-.35,1.18,-1.4);
+  // 角色：待机呼吸/眨眼/挥手/坐下插值
+  const u=CHAR.userData;
+  u.body.scale.y=1.08+Math.sin(t*1.7)*.015;
+  u.head.position.y=.92+Math.sin(t*1.7)*.008;
+  const blink=(t%3.7)<.13?0.12:1;
+  u.eyeL.scale.y=u.eyeR.scale.y=blink;
+  if(waveT>=0){
+    waveT+=dt;
+    u.wingR.rotation.z=Math.sin(waveT*10)*.9-.4;
+    u.wingR.position.y=.44+Math.sin(waveT*10)*.06;
+    if(waveT>1.6){waveT=-1;u.wingR.rotation.z=0;u.wingR.position.y=.44}
+  }
+  if(pourT>=0){
+    pourT+=dt;
+    LADLE.rotation.z=-Math.sin(Math.min(pourT*2.4,Math.PI))*1.3;
+    LADLE.position.y=.3+Math.sin(Math.min(pourT*2.4,Math.PI))*.25;
+    if(pourT>.8)pourT=-1;
+  }
+  const tgt=sitting?{x:SIT_POS.x,y:SIT_POS.y,z:SIT_POS.z,ry:SIT_POS.ry}:{x:.15,y:0,z:-1.5,ry:Math.PI*.92};
+  CHAR.position.lerp(new THREE.Vector3(tgt.x,tgt.y,tgt.z),sitting?.045:.08);
+  CHAR.rotation.y+=(tgt.ry-CHAR.rotation.y)*.08;
+  if(!sitting)CHAR.position.y=tgt.y+Math.abs(Math.sin(t*1.2))*.012;
+  CHAR.userData.shadow.position.set(CHAR.position.x,sitting?SIT_POS.y+.008:.01,CHAR.position.z);
+  CHAR.userData.shadow.scale.setScalar(sitting?1.15:1);
+  // 蒸汽
+  const p=STEAM.geometry.attributes.position.array;
+  for(let i=0;i<steamVel.length;i++){
+    const v=steamVel[i];
+    p[i*3+1]+=v.y*dt;p[i*3]+=v.x*dt+Math.sin(t*.8+i)*.0007;
+    v.life+=dt*.4;
+    if(v.life>1){v.life=0;p[i*3]=1.3+(Math.random()-.5)*.3;p[i*3+1]=1.0;p[i*3+2]=-2.85+(Math.random()-.5)*.3}
+  }
+  STEAM.geometry.attributes.position.needsUpdate=true;
+  STEAM.material.opacity=.42+Math.min(.4,humi/200);
+  // 温湿度
+  temp=Math.min(87,temp+dt*.06);
+  humi=Math.max(55,humi-dt*.5);
+  document.getElementById('temp').textContent=temp.toFixed(1)+'°C';
+  document.getElementById('humi').textContent=Math.round(humi)+'%';
+  if(entered){
+    warm=Math.min(100,warm+dt*1.05);
+    document.getElementById('warmfill').style.width=warm+'%';
+    document.getElementById('warmlbl').textContent=warm>=100?'身体热透了 · 明天再来安静一下':'身体预热中… '+Math.round(warm)+'%';
+    if(warm>=100&&!S._warmToast){S._warmToast=1;toast('🧖 身体热透了，汗出得很安静。明天记得再来。')}
+  }
+  renderer.render(scene,camera);
+}
+/* ================= 四个动作 ================= */
+function doPour(){
+  if(pourT<0)pourT=0;
+  hiss();
+  temp=Math.min(87,temp+.6);humi=Math.min(99,humi+9);
+  // 蒸汽爆发
+  const p=STEAM.geometry.attributes.position.array;
+  for(let i=0;i<steamVel.length;i++){
+    if(Math.random()<.6){p[i*3+1]=1.0+Math.random()*.2;steamVel[i].life=0;steamVel[i].y=.4+Math.random()*.5}
+  }
+  STEAM.geometry.attributes.position.needsUpdate=true;
+  if(navigator.vibrate)navigator.vibrate(18);
+  showEvent(pick(['水浇上石头了，「滋——」','蒸汽腾起来，什么都看不清了一瞬','好大的蒸汽，像一朵云落在肩膀上']));
+}
+function doSit(){
+  sitting=!sitting;
+  document.getElementById('sitBtn').textContent=sitting?'🧍 站起来':'🧎 坐下';
+  chime(sitting?520:430,.3,.18);
+  if(sitting)showEvent(pick(['坐下了。木凳是温的。','汗慢慢出来了，不着急。','上层座位，蒸汽刚好飘到脸上']));
+  localStorage.setItem(KEY,JSON.stringify(S));
+}
+function doGreet(){
+  if(waveT<0)waveT=0;
+  chime(660,.4,.2);
+  const lines=['今天的汗，出得很安静。','你来了。蒸汽都是暖的。','不用说话，点头就行。','安静的人，先坐好。','外面再吵，这里很静。','窗户那边的山，今天也在。'];
+  showBubble(pick(lines));
+}
+/* 呼吸 */
+let bOn=false,bT=null,bPh=0;
+function doBreath(){
+  bOn=true;bPh=0;
+  document.getElementById('bmask').classList.add('on');
+  const step=()=>{
+    const c=document.getElementById('bcircle');
+    if(bPh%2===0){c.textContent='吸——';c.classList.add('in')}
+    else{
+      c.textContent='呼——';c.classList.remove('in');
+      S.breaths++;chime(520,.7,.12);
+      document.getElementById('btip').textContent='第 '+Math.ceil(bPh/2)+' 次呼吸 · 体温和心情都顺了';
+      localStorage.setItem(KEY,JSON.stringify(S));
+    }
+    bPh++;bT=setTimeout(step,4000);
+  };
+  step();
+}
+function stopBreath(){
+  bOn=false;clearTimeout(bT);
+  document.getElementById('bmask').classList.remove('on');
+  document.getElementById('bcircle').classList.remove('in');
+  document.getElementById('bcircle').textContent='准备';
+  document.getElementById('btip').textContent='跟着圆圈：吸气 4 秒，呼气 4 秒';
+  toast('呼吸顺了。继续安静一会儿 🫧');
+}
+/* 事件横幅 */
+function showEvent(m){
+  const e=document.getElementById('event');
+  e.textContent=m;e.classList.add('show');
+  clearTimeout(e._h);e._h=setTimeout(()=>e.classList.remove('show'),3800);
+}
+/* 气泡（跟随角色头顶） */
+function showBubble(txt){
+  const b=document.getElementById('bubble');
+  b.textContent=txt;b.style.display='block';
+  const v=new THREE.Vector3(CHAR.position.x,CHAR.position.y+1.35,CHAR.position.z).project(camera);
+  b.style.left=Math.max(10,Math.min(innerWidth-230,(v.x*.5+.5)*innerWidth-110))+'px';
+  b.style.top=Math.max(60,(-v.y*.5+.5)*innerHeight-30)+'px';
+  clearTimeout(b._h);b._h=setTimeout(()=>b.style.display='none',2600);
+}
+/* 更多面板 */
+function toggleSheet(){document.getElementById('sheet').classList.toggle('on')}
+/* 自动氛围事件 */
+function scheduleEvents(){
+  const evs=[
+    ()=>{doPourAuto();showEvent('看守人往石头上浇了水 💧')},
+    ()=>showEvent('有人在角落安静地擦了把汗'),
+    ()=>showEvent('窗外一朵云慢慢飘过去了'),
+    ()=>showEvent('隔壁的人打了个无声的哈欠'),
+    ()=>showEvent('木凳轻微「咔」了一声，很安心'),
+    ()=>{doPourAuto();showEvent('有人往石头上多舀了一瓢水')}
+  ];
+  const go=()=>{
+    if(entered)pick(evs)();
+    setTimeout(go,18000+Math.random()*22000);
+  };
+  setTimeout(go,12000);
+}
+function doPourAuto(){if(pourT<0)pourT=0;hiss();temp=Math.min(87,temp+.5);humi=Math.min(99,humi+7)}
+/* ================= 进入 ================= */
+function enterSauna(){
+  localStorage.setItem(KEY,JSON.stringify(S));
+  document.getElementById('entry').style.display='none';
+  document.getElementById('hud').style.display='block';
+  document.getElementById('actions').style.display='flex';
+  document.getElementById('moreBtn').style.display='block';
+  initAudio();
+  entered=true;
+  showEvent('你进来了。门在身后轻轻合上。');
+  scheduleEvents();
+}
+/* ================= 启动 ================= */
+document.getElementById('hud').style.display='none';
+init3D();
+if(!renderer)document.getElementById('nogl').style.display='flex';
+</script>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none"><span id="busuanzi_value_site_pv"></span></span><span id="busuanzi_container_page_pv" style="display:none"><span id="busuanzi_value_page_pv"></span></span>
+</body>
+</html>
