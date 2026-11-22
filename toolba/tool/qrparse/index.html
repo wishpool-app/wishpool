@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="baidu-site-verification" content="codeva-hUFNaq0gw" />
+<meta name="theme-color" content="#4f46e5">
+<title>二维码解析 - 免费在线工具 | 工具吧</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://toolba.cn/tool/qrparse/">
+<meta property="og:url" content="https://toolba.cn/tool/qrparse/">
+<meta name="description" content="免费在线二维码解析。从图片中识别二维码内容。无需注册、无需下载，浏览器本地处理，文件不上传服务器，保护隐私。">
+<meta name="keywords" content="二维码解析,在线工具,免费">
+<meta property="og:title" content="二维码解析 - 免费在线工具 | 工具吧">
+<meta property="og:description" content="图片、文本、开发、计算、AI 八大类 65 个实用工具，本地处理不上传，保护隐私。">
+<meta property="og:type" content="website">
+<style>
+/* ============ 设计系统 ============ */
+:root{
+  --primary:#4f46e5;--primary-2:#7c3aed;--primary-soft:rgba(79,70,229,.08);
+  --bg:#f6f7fb;--card:#ffffff;--card-2:#f8fafc;
+  --text:#0f172a;--muted:#64748b;--faint:#94a3b8;
+  --border:#e5e9f2;--border-strong:#d7dde9;
+  --ok:#059669;--err:#dc2626;
+  --ring:0 0 0 3px rgba(99,102,241,.18);
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06);
+  --shadow-md:0 8px 24px -10px rgba(15,23,42,.14),0 2px 6px rgba(15,23,42,.05);
+  --shadow-lg:0 24px 60px -24px rgba(15,23,42,.25);
+  --r:16px;--r-sm:10px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --primary:#818cf8;--primary-2:#a78bfa;--primary-soft:rgba(129,140,248,.14);
+    --bg:#0a0f1e;--card:#121927;--card-2:#0f1523;
+    --text:#e6eaf2;--muted:#8b94a7;--faint:#5d6779;
+    --border:#232b3d;--border-strong:#2e3850;
+    --ok:#34d399;--err:#f87171;
+    --ring:0 0 0 3px rgba(129,140,248,.25);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+    --shadow-md:0 8px 24px -10px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.35);
+    --shadow-lg:0 24px 60px -24px rgba(0,0,0,.7);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(680px 340px at 12% -6%,rgba(99,102,241,.16),transparent 62%),
+  radial-gradient(760px 380px at 88% -12%,rgba(236,72,153,.11),transparent 62%),
+  radial-gradient(600px 340px at 50% 112%,rgba(20,184,166,.09),transparent 62%)}
+::selection{background:rgba(99,102,241,.25)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:99px;border:2px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ============ 顶栏 ============ */
+header{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:12px clamp(16px,4vw,28px);
+  background:var(--card);
+  background:color-mix(in srgb,var(--card) 82%,transparent);
+  backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);
+  border-bottom:1px solid var(--border);
+}
+.logo{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;letter-spacing:.5px;cursor:pointer;white-space:nowrap;user-select:none}
+.logo-mark{
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:15px;font-weight:800;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  box-shadow:0 3px 10px rgba(79,70,229,.4);transition:transform .25s;
+}
+.logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06)}
+.logo span{background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.search-box{position:relative;flex:1;min-width:200px;max-width:440px}
+.search-box svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.search-box kbd{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--faint);
+  border:1px solid var(--border);border-radius:6px;padding:1px 7px;background:var(--card-2);font-family:inherit;pointer-events:none;
+}
+#search{
+  width:100%;padding:10px 40px 10px 36px;border:1px solid var(--border);border-radius:999px;font-size:14px;
+  background:var(--card-2);color:var(--text);transition:.2s;
+}
+#search::placeholder{color:var(--faint)}
+#search:focus{outline:none;border-color:var(--primary);background:var(--card);box-shadow:var(--ring)}
+
+/* ============ 版心 / 首屏 ============ */
+.wrap{max-width:1060px;margin:0 auto;padding:20px clamp(16px,4vw,24px) 40px}
+.hero{text-align:center;padding:44px 10px 26px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--primary);
+  background:var(--primary-soft);  border:1px solid var(--border);
+  border:1px solid color-mix(in srgb,var(--primary) 22%,transparent);
+  border-radius:999px;padding:5px 14px;margin-bottom:18px;
+}
+.hero h1{font-size:clamp(24px,4.6vw,38px);font-weight:800;letter-spacing:-.5px;line-height:1.3}
+.hero h1 .grad{background:linear-gradient(120deg,var(--primary),var(--primary-2) 60%,#ec4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--muted);font-size:15px;margin-top:10px;max-width:560px;margin-left:auto;margin-right:auto}
+.hero-stats{display:flex;justify-content:center;gap:clamp(14px,4vw,44px);margin-top:26px;flex-wrap:wrap}
+.hero-stats .hs{text-align:center}
+.hero-stats b{display:block;font-size:clamp(18px,3vw,24px);font-weight:800;font-variant-numeric:tabular-nums;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stats span{font-size:12px;color:var(--faint)}
+/* 新功能横幅 */
+.new-banner{display:flex;align-items:center;gap:12px;margin:26px auto 0;max-width:760px;
+  padding:14px 16px;border-radius:14px;text-decoration:none;color:inherit;
+  background:linear-gradient(135deg,rgba(14,159,110,.10),rgba(13,148,136,.05));
+  border:1px solid rgba(14,159,110,.35);transition:.18s;box-shadow:var(--shadow-sm)}
+.new-banner:hover{border-color:var(--primary);transform:translateY(-1px)}
+.nb-ic{flex:none;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0e9f6e,#0d9488);color:#fff}
+.nb-ic svg{width:21px;height:21px}
+.nb-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.nb-tx b{font-size:14px;letter-spacing:.2px}
+.nb-tx i{font-size:12px;color:var(--faint);font-style:normal;line-height:1.4}
+.nb-go{flex:none;font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap}
+@media(max-width:520px){.nb-tx i{display:none}.nb-go{font-size:12px}}
+
+/* ============ 分类与工具卡片 ============ */
+.cat-title{
+  margin:30px 0 12px;font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:9px;letter-spacing:.2px;
+}
+.cat-title .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.cat-title small{font-size:12px;font-weight:500;color:var(--faint);background:var(--card-2);border:1px solid var(--border);border-radius:999px;padding:1px 9px}
+.dot-img{background:#f97316}.dot-text{background:#10b981}.dot-dev{background:#6366f1}.dot-qr{background:#8b5cf6}
+.dot-calc{background:#3b82f6}.dot-color{background:#ec4899}.dot-misc{background:#14b8a6}.dot-ai{background:#a855f7}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tool-card{
+  display:flex;align-items:flex-start;gap:11px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;
+  box-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 26px -22px rgba(15,23,42,.35);
+  transition:transform .18s,box-shadow .18s,border-color .18s;
+  animation:rise .45s cubic-bezier(.2,.7,.3,1) both;animation-delay:calc(var(--i,0)*22ms);
+}
+.tool-card:hover{transform:translateY(-3px);border-color:var(--primary);border-color:color-mix(in srgb,var(--primary) 45%,var(--border));box-shadow:var(--shadow-md)}
+.tool-card:active{transform:translateY(-1px)}
+.tool-card:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+.tc-ico{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:19px;flex:none;margin-top:1px;
+}
+.tc-ico svg{width:19px;height:19px}
+.c-img{background:rgba(249,115,22,.12);color:#ea580c}.c-text{background:rgba(16,185,129,.12);color:#059669}
+.c-dev{background:rgba(99,102,241,.13);color:#4f46e5}.c-qr{background:rgba(139,92,246,.13);color:#7c3aed}
+.c-calc{background:rgba(59,130,246,.12);color:#2563eb}.c-color{background:rgba(236,72,153,.12);color:#db2777}
+.c-misc{background:rgba(20,184,166,.12);color:#0d9488}.c-ai{background:rgba(168,85,247,.13);color:#9333ea}
+@media(prefers-color-scheme:dark){
+  .c-img{color:#fb923c}.c-text{color:#34d399}.c-dev{color:#818cf8}.c-qr{color:#a78bfa}
+  .c-calc{color:#60a5fa}.c-color{color:#f472b6}.c-misc{color:#2dd4bf}.c-ai{color:#c084fc}
+}
+.tc-main{min-width:0;flex:1}
+.tool-card b{font-size:14.5px;display:block;font-weight:700;letter-spacing:.1px}
+.tool-card span{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tool-card.hidden{display:none}
+#noRes{display:none;text-align:center;color:var(--muted);padding:46px 10px;font-size:14px}
+#noRes b{display:block;font-size:30px;margin-bottom:10px}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ============ 工具面板 ============ */
+.tpanel{
+  display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:clamp(18px,3.5vw,30px);box-shadow:var(--shadow-md);margin:16px auto 0;max-width:900px;
+}
+.tpanel.active{display:block;animation:rise .35s cubic-bezier(.2,.7,.3,1) both}
+.back{
+  display:inline-flex;align-items:center;gap:5px;margin-bottom:16px;font-size:13px;font-weight:600;
+}
+.p-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
+.p-head .tc-ico{width:46px;height:46px;border-radius:14px;flex:none;margin-top:1px}
+.p-head .tc-ico svg{width:23px;height:23px}
+.p-head .p-title{min-width:0}
+.p-head .p-title h2{margin:0}
+.p-head .p-title .desc{margin:5px 0 0;max-width:620px}
+.tpanel h2{font-size:clamp(19px,3vw,22px);font-weight:800;letter-spacing:-.2px;margin-bottom:4px}
+.tpanel .desc{color:var(--muted);font-size:13.5px;margin-bottom:20px;max-width:640px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.row label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+
+/* ============ 按钮 / 输入控件 ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;border:none;
+  padding:9px 18px;border-radius:var(--r-sm);font-size:14px;font-weight:600;letter-spacing:.2px;cursor:pointer;
+  box-shadow:0 2px 8px rgba(79,70,229,.32);transition:.18s;
+}
+.btn:hover{filter:brightness(1.09);transform:translateY(-1px);box-shadow:0 5px 14px rgba(79,70,229,.4)}
+.btn:active{transform:translateY(0) scale(.98);filter:brightness(.98)}
+.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--border-strong);box-shadow:var(--shadow-sm)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--primary);filter:none}
+input[type=file]{font-size:13px;max-width:100%;color:var(--muted)}
+input[type=file]::file-selector-button{
+  margin-right:12px;border:none;color:#fff;padding:8px 15px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));transition:.18s;font-family:inherit;
+}
+input[type=file]::file-selector-button:hover{filter:brightness(1.09)}
+input[type=number],input[type=text],input[type=date],input[type=datetime-local],input[type=password],select{
+  min-height:38px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:14px;
+  background:var(--card);color:var(--text);font-variant-numeric:tabular-nums;transition:.18s;
+}
+input[type=number]:hover,input[type=text]:hover,input[type=date]:hover,select:hover{border-color:var(--border-strong)}
+input[type=range]{vertical-align:middle;accent-color:var(--primary)}
+input[type=checkbox],input[type=radio]{accent-color:var(--primary);width:15px;height:15px;cursor:pointer}
+textarea{
+  width:100%;min-height:150px;border:1px solid var(--border);border-radius:var(--r-sm);padding:13px;font-size:14px;
+  resize:vertical;font-family:inherit;background:var(--card);color:var(--text);line-height:1.6;transition:.18s;
+}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:var(--ring)}
+select{cursor:pointer}
+input[type=color]{
+  width:48px;height:38px;padding:3px;border:1px solid var(--border);border-radius:var(--r-sm);
+  background:var(--card);cursor:pointer;appearance:none;-webkit-appearance:none;transition:.18s;
+}
+input[type=color]:hover{border-color:var(--border-strong)}
+input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+input[type=color]::-webkit-color-swatch{border:none;border-radius:7px}
+input[type=color]::-moz-color-swatch{border:none;border-radius:7px}
+
+/* ============ 结果展示 ============ */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:14px 0}
+.stat{background:var(--card-2);border:1px solid var(--border);border-radius:12px;padding:13px 8px;text-align:center;transition:.18s}
+.stat:hover{border-color:var(--border-strong)}
+.stat b{display:block;font-size:21px;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.result{margin-top:12px;font-size:14px;white-space:pre-wrap;word-break:break-all;font-variant-numeric:tabular-nums}
+.result.ok{color:var(--ok);font-weight:600}
+.result.err{color:var(--err);font-weight:600}
+.preview{max-width:100%;border:1px solid var(--border);border-radius:12px;margin-top:10px;background:
+  repeating-conic-gradient(var(--card-2) 0 25%,transparent 0 50%) 0 0/16px 16px}
+.out-box{
+  background:var(--card-2);border:1px solid var(--border);border-radius:12px;padding:13px;font-size:14px;margin-top:10px;
+  white-space:pre-wrap;word-break:break-all;min-height:20px;line-height:1.6;
+}
+.out-box:empty::before,.result:empty::before{content:"结果会显示在这里";color:var(--faint);font-size:13px}
+.fp{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:2px 0}
+.fp .fp-btn{
+  display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;
+  padding:9px 16px;border-radius:var(--r-sm);font-size:13.5px;font-weight:600;
+  box-shadow:0 2px 8px rgba(79,70,229,.3);transition:.18s;
+}
+.fp .fp-btn:hover{filter:brightness(1.09);transform:translateY(-1px)}
+.fp-name{font-size:13px;color:var(--faint);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fp-name.has{color:var(--text);font-weight:500}
+.diff-del{background:rgba(220,38,38,.1);color:var(--err);display:block;border-radius:4px;padding:0 4px}
+.diff-add{background:rgba(5,150,105,.1);color:var(--ok);display:block;border-radius:4px;padding:0 4px}
+.swatches{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sw{
+  width:88px;height:58px;border-radius:12px;cursor:pointer;position:relative;
+  box-shadow:var(--shadow-sm);transition:transform .18s,box-shadow .18s;
+}
+.sw:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.sw span{position:absolute;bottom:5px;left:7px;font-size:11px;background:rgba(255,255,255,.88);color:#0f172a;padding:1px 6px;border-radius:5px;font-weight:600}
+
+/* ============ AI 对话 ============ */
+.chat-box{
+  height:340px;overflow-y:auto;background:var(--card-2);border:1px solid var(--border);border-radius:14px;
+  padding:14px;margin-bottom:10px;font-size:14px;
+}
+.chat-box .me{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;padding:9px 13px;
+  border-radius:14px 14px 3px 14px;display:inline-block;margin:6px 0;max-width:85%;float:right;clear:both;
+}
+.chat-box .ai{
+  background:var(--card);border:1px solid var(--border);padding:9px 13px;border-radius:14px 14px 14px 3px;
+  display:inline-block;margin:6px 0;max-width:85%;float:left;clear:both;white-space:pre-wrap;box-shadow:var(--shadow-sm);
+}
+
+/* ============ 关于区（SEO 内容） ============ */
+.about-box{
+  margin-top:24px;background:var(--card-2);border:1px solid var(--border);border-radius:14px;
+  padding:clamp(16px,3vw,22px);
+}
+.about-box h3{font-size:15px;margin-bottom:8px;color:var(--text);font-weight:700;display:flex;align-items:center;gap:7px}
+.about-box h3::before{content:"";width:4px;height:15px;border-radius:99px;background:linear-gradient(180deg,var(--primary),var(--primary-2))}
+.about-box p{font-size:13.5px;color:var(--muted);margin-bottom:10px;line-height:1.75}
+.about-box .faq{margin-bottom:12px;padding-left:12px;border-left:2px solid var(--border)}
+.about-box .faq b{font-size:13.5px;color:var(--text);display:block;margin-bottom:3px;font-weight:600}
+.about-box .faq p{font-size:13px;color:var(--muted);margin:0}
+.about-box .rel{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.about-box .rel a{
+  font-size:12.5px;font-weight:500;color:var(--primary);background:var(--card);border:1px solid var(--border);
+  border-radius:999px;padding:5px 13px;text-decoration:none;transition:.18s;
+}
+.about-box .rel a:hover{border-color:var(--primary);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+
+/* ============ 页脚 / Toast ============ */
+footer{
+  text-align:center;color:var(--faint);font-size:12.5px;padding:34px 10px 40px;line-height:1.9;
+  border-top:1px solid var(--border);margin-top:30px;
+}
+footer .f-logo{font-weight:800;color:var(--muted);font-size:13px}
+.toast{
+  position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);
+  background:rgba(15,23,42,.92);color:#fff;padding:11px 20px;border-radius:999px;font-size:13px;font-weight:500;
+  opacity:0;pointer-events:none;transition:.3s cubic-bezier(.2,.7,.3,1);z-index:99;box-shadow:var(--shadow-lg);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:86vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-color-scheme:dark){.toast{background:rgba(30,38,58,.94);border:1px solid var(--border)}}
+
+/* ============ 无 JS 降级页 ============ */
+noscript .about-box{margin-top:16px}
+noscript h2{font-size:17px;margin:18px 0 8px}
+noscript .btn{margin-top:10px;text-decoration:none}
+
+/* ============ 移动端 ============ */
+@media(max-width:640px){
+  .hero{padding:30px 6px 18px}
+  .hero p{font-size:13.5px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:9px}
+  .tool-card{padding:12px;gap:9px}
+  .tc-ico{width:33px;height:33px}
+  .p-head{gap:11px}
+  .p-head .tc-ico{width:38px;height:38px;border-radius:12px}
+  .p-head .tc-ico svg{width:20px;height:20px}
+  .back{padding:7px 13px;font-size:12.5px;margin-bottom:14px}
+  .cat-title{margin-top:24px}
+  header{gap:10px}
+  .search-box{min-width:0;flex-basis:100%;order:3}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"工具吧","url":"https://toolba.cn/","description":"68 个免费在线工具，图片压缩、格式转换、JSON格式化、二维码生成、AI助手，本地处理不上传文件。","inLanguage":"zh-CN","potentialAction":{"@type":"SearchAction","target":"https://toolba.cn/?q={search_term_string}","query-input":"required name=search_term_string"}}
+</script>
+<script type="application/ld+json">
+[
+ {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "二维码解析",
+  "url": "https://toolba.cn/tool/qrparse/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+   "@type": "Offer",
+   "price": "0",
+   "priceCurrency": "CNY"
+  },
+  "description": "免费在线二维码解析。从图片中识别二维码内容。无需注册、无需下载，浏览器本地处理，文件不上传服务器，保护隐私。",
+  "inLanguage": "zh-CN",
+  "publisher": {
+   "@type": "Organization",
+   "name": "工具吧",
+   "url": "https://toolba.cn/"
+  }
+ },
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "二维码解析收费吗？",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "不收费。工具吧（toolba.cn）的所有工具都免费开放，无需注册账号、不限使用次数，也没有功能限制。"
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "我的数据会被上传吗？",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "不会。这个二维码解析完全在你的浏览器本地运行，输入的文字和上传的文件都不会离开你的设备，关闭页面后服务器上也不会留有任何记录。"
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "手机上能用吗？",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "可以。工具吧针对手机浏览器做了专门适配，iPhone 和安卓手机都能直接使用，不需要安装任何 App。"
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "适合哪些场景？",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "适合把网址、联系方式变成二维码分享，或解析已有的二维码，例如：从图片中识别二维码内容。"
+    }
+   }
+  ]
+ },
+ {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+   {
+    "@type": "ListItem",
+    "position": 1,
+    "name": "工具吧",
+    "item": "https://toolba.cn/"
+   },
+   {
+    "@type": "ListItem",
+    "position": 2,
+    "name": "二维码解析",
+    "item": "https://toolba.cn/tool/qrparse/"
+   }
+  ]
+ }
+]
+</script>
+</head>
+<body>
+<header>
+  <div class="logo" onclick="goHome()"><span class="logo-mark">工</span>工具<span>吧</span></div>
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="search" type="text" placeholder="搜索 65 个工具：图片压缩 / 正则 / 房贷 / AI…" autocomplete="off">
+    <kbd>/</kbd>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="home">
+    <div class="hero">
+      <div class="hero-badge"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10" width="15" height="10.5" rx="2.2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>文件不上传 · 浏览器本地处理 · 免费无广告</div>
+      <h1>二维码解析 <span class="grad">在线免费</span></h1>
+      <p>从图片中识别二维码内容。无需注册、无需下载，浏览器本地处理，文件不上传服务器，保护隐私。</p>
+      <div class="hero-stats">
+        <div class="hs"><b>68</b><span>在线工具</span></div>
+        <div class="hs"><b>9</b><span>工具分类</span></div>
+        <div class="hs"><b>0</b><span>文件上传</span></div>
+        <div class="hs"><b>100%</b><span>永久免费</span></div>
+      </div>
+    </div>
+    <a class="new-banner" href="/baogao/">
+      <span class="nb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 13l2 2 3.5-3.5"/></svg></span>
+      <span class="nb-tx"><b>新上线 · 检测自查报告智能体</b><i>餐饮 / 酒店 / 美发 / 消防 · 答题 30 秒出专业自查报告</i></span>
+      <span class="nb-go">去看看 →</span>
+    </a>
+    <div id="catalog"></div>
+    <div id="noRes"><b><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg></b>没有找到匹配的工具，换个关键词试试？</div>
+  </div>
+  <div id="panels"></div>
+  <noscript><div class="wrap"><div class="hero"><h1>二维码解析 - 免费在线工具</h1><p>二维码解析是一款免费在线工具。无需下载安装软件、无需注册登录，打开网页就能使用；全部处理都在你的浏览器本地完成，数据不会上传到任何服务器，用完即走，隐私安全。</p></div><div class="about-box"><h3>工具介绍</h3><p>从图片中识别二维码内容</p><h3>常见问题</h3><div class="faq"><b>二维码解析收费吗？</b><p>不收费。工具吧（toolba.cn）的所有工具都免费开放，无需注册账号、不限使用次数，也没有功能限制。</p></div><div class="faq"><b>我的数据会被上传吗？</b><p>不会。这个二维码解析完全在你的浏览器本地运行，输入的文字和上传的文件都不会离开你的设备，关闭页面后服务器上也不会留有任何记录。</p></div><div class="faq"><b>手机上能用吗？</b><p>可以。工具吧针对手机浏览器做了专门适配，iPhone 和安卓手机都能直接使用，不需要安装任何 App。</p></div><div class="faq"><b>适合哪些场景？</b><p>适合把网址、联系方式变成二维码分享，或解析已有的二维码，例如：从图片中识别二维码内容。</p></div><h3>相关工具</h3><div class="rel"><a href="https://toolba.cn/tool/qrgen">二维码生成</a><a href="https://toolba.cn/tool/img2pdf">图片转 PDF</a></div><p><a class="btn" href="https://toolba.cn/">返回工具吧首页，查看全部 65 个免费工具</a></p></div></div></noscript>
+</div>
+
+<footer>
+  <div class="f-logo">工具吧 toolba.cn</div>
+  © <span id="yr"></span> 工具吧 · 所有处理均在浏览器本地完成，文件不上传服务器 · 隐私安全 · 永久免费
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 全局助手（各工具模块依赖） ===== */
+window.$=function(id){return document.getElementById(id)};
+window.TOOLS=[];window.PANELS=[];window.INITS=[];
+window.reg=function(id,cat,name,desc){TOOLS.push({id:id,cat:cat,name:name,desc:desc})};
+window.panelHTML=function(id,title,desc,body){PANELS.push('<div class="tpanel" id="t-'+id+'"><button class="btn ghost back" onclick="goHome()">← 返回工具列表</button><h2>'+title+'</h2><p class="desc">'+desc+'</p>'+body+'</div>')};
+window.init=function(fn){INITS.push(fn)};
+window.toast=function(m){var t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},1800);};
+window.fmtSize=function(n){return n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(2)+" MB";};
+window.dl=function(url,name){var a=document.createElement("a");a.href=url;a.download=name;a.click();};
+window.copyText=function(t){navigator.clipboard.writeText(t).then(function(){toast("已复制")});};
+window.loadImg=function(input,cb){
+  var f=input.files&&input.files[0];
+  if(!f){toast("请先选择图片");return;}
+  var r=new FileReader();
+  r.onload=function(){var img=new Image();img.onload=function(){cb(img,f,r.result);};img.src=r.result;};
+  r.readAsDataURL(f);
+};
+window.drawCanvas=function(img,w,h){var c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);return c;};
+window._libs={};
+window.loadLib=function(src){
+  if(window._libs[src])return window._libs[src];
+  window._libs[src]=new Promise(function(res,rej){
+    var s=document.createElement("script");s.src=src;s.async=true;
+    s.onload=function(){res();};s.onerror=function(){delete window._libs[src];rej(new Error("加载失败"));};
+    document.head.appendChild(s);
+  });
+  return window._libs[src];
+};
+window.CATS=[["img","图片工具"],["text","文本工具"],["dev","开发工具"],["qr","二维码与文档"],["calc","计算与生活"],["color","颜色设计"],["misc","更多实用"],["ai","AI 智能体"]];
+$("yr").textContent=new Date().getFullYear();
+</script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/tools-img.js"></script>
+<script src="/tools-text.js"></script>
+<script src="/tools-dev.js"></script>
+<script src="/tools-qr.js"></script>
+<script src="/tools-calc.js"></script>
+<script src="/tools-color.js"></script>
+<script src="/tools-misc.js"></script>
+<script src="/tools-ai.js"></script>
+<script src="/tools-extra.js"></script>
+<script src="/tools-seo.js"></script>
+<script>
+/* ===== 启动：注入面板、渲染目录、搜索、导航、路由 ===== */
+var HOME_TITLE=document.title;
+var HOME_DESC=(document.querySelector('meta[name="description"]')||{}).content||"";
+function setMeta(name,val,attr){
+  var el=document.querySelector('meta['+attr+'="'+name+'"]');
+  if(el)el.setAttribute("content",val);
+}
+function applyMeta(id){
+  var t=null,i;
+  for(i=0;i<TOOLS.length;i++){if(TOOLS[i].id===id){t=TOOLS[i];break;}}
+  var canon=document.querySelector('link[rel="canonical"]');
+  if(!t){
+    document.title=HOME_TITLE;
+    setMeta("description",HOME_DESC,"name");
+    setMeta("og:title",HOME_TITLE,"property");
+    setMeta("og:url","https://toolba.cn/","property");
+    if(canon)canon.setAttribute("href","https://toolba.cn/");
+    return;
+  }
+  var catName="";for(i=0;i<CATS.length;i++){if(CATS[i][0]===t.cat)catName=CATS[i][1];}
+  var title=t.name+" - 免费在线工具 | 工具吧";
+  var desc="免费在线"+t.name+"。"+t.desc+"。无需注册、无需下载，浏览器本地处理，文件不上传服务器，保护隐私。";
+  document.title=title;
+  setMeta("description",desc,"name");
+  setMeta("og:title",title,"property");
+  setMeta("og:url","https://toolba.cn/tool/"+id+"/","property");
+  if(canon)canon.setAttribute("href","https://toolba.cn/tool/"+id+"/");
+}
+function goHome(push){
+  document.querySelectorAll(".tpanel").forEach(function(p){p.classList.remove("active")});
+  $("home").style.display="block";window.scrollTo(0,0);
+  applyMeta(null);
+  if(push!==false)history.pushState({home:1},"","/");
+}
+function openTool(id,push){
+  $("home").style.display="none";
+  document.querySelectorAll(".tpanel").forEach(function(p){p.classList.remove("active")});
+  var p=$("t-"+id);if(p)p.classList.add("active");
+  window.scrollTo(0,0);
+  applyMeta(id);
+  if(push!==false)history.pushState({tool:id},"","/tool/"+id+"/");
+}
+function routeFromPath(){
+  var p=location.pathname;
+  if(p!=="/"&&p!=="/index.html"){
+    var m=p.match(/^\/tool\/([A-Za-z0-9_-]+)\/?$/);
+    if(m&&document.getElementById("t-"+m[1])){openTool(m[1],false);return true;}
+    history.replaceState(null,"","/");
+  }
+  return false;
+}
+/* ===== 矢量图标系统（统一描边风格） ===== */
+var ICON={
+compress:'<path d="M4 4l5.6 5.6M4 9.6V4h5.6"/><path d="M20 20l-5.6-5.6M20 14.4V20h-5.6"/>',
+swap:'<path d="M4 8h13M14 5l3 3-3 3"/><path d="M20 16H7M10 13l-3 3 3 3"/>',
+resize:'<path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M9 12h6"/>',
+rotate:'<path d="M3 12a9 9 0 1 0 2.7-6.4"/><path d="M3 4.2v5h5"/>',
+crop:'<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M2 6h14a2 2 0 0 1 2 2v14"/>',
+droplet:'<path d="M12 3.2s6 6.4 6 9.8a6 6 0 0 1-12 0c0-3.4 6-9.8 6-9.8z"/>',
+copyright:'<circle cx="12" cy="12" r="8.8"/><path d="M15.4 9.4a4 4 0 1 0 .1 5.3"/>',
+code:'<path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/>',
+star:'<path d="M12 3.5l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.5l-5.4 2.9 1-6.1L3.2 10l6.1-.9L12 3.5z"/>',
+hash:'<path d="M4 9h16M4 15h16M10 3.5L8 20.5M16 3.5l-2 17"/>',
+layers:'<path d="M12 3.5l8.5 4.6L12 12.7 3.5 8.1 12 3.5z"/><path d="M3.5 12.5L12 17l8.5-4.5"/><path d="M3.5 16.5L12 21l8.5-4.5"/>',
+type:'<path d="M5 7V5h14v2M12 5v14M9 19h6"/>',
+refresh:'<path d="M20 11a8 8 0 1 0-2.2 5.6"/><path d="M20 4.5V11h-6.5"/>',
+sort:'<path d="M4 7h9M4 12h14M4 17h7"/><path d="M18 13.5v6M15.5 17L18 19.5 20.5 17"/>',
+filter:'<path d="M4 5h16l-6 7.2V19l-4 2v-8.8L4 5z"/>',
+chat:'<path d="M21 12a8.5 8.5 0 0 1-12.3 7.6L4 21l1.5-4.6A8.5 8.5 0 1 1 21 12z"/>',
+filetext:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M8.5 13h7M8.5 17h4.5"/>',
+dice:'<rect x="3" y="3" width="18" height="18" rx="3.2"/><circle cx="8.6" cy="8.6" r="1.1"/><circle cx="15.4" cy="15.4" r="1.1"/><circle cx="12" cy="12" r="1.1"/>',
+compare:'<path d="M8 4v16M16 4v16M8 9.5h8M8 14.5h8"/>',
+braces:'<path d="M9 4c-2.2 0-2.6 1.4-2.6 3.2 0 1.6-.7 2.4-2.4 2.4v4.8c1.7 0 2.4.8 2.4 2.4 0 1.8.4 3.2 2.6 3.2"/><path d="M15 4c2.2 0 2.6 1.4 2.6 3.2 0 1.6.7 2.4 2.4 2.4v4.8c-1.7 0-2.4.8-2.4 2.4 0 1.8-.4 3.2-2.6 3.2"/>',
+link:'<path d="M10.5 13.5a4.5 4.5 0 0 0 6.4 0l2-2a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4 0l-2 2a4.5 4.5 0 0 0 6.4 6.4l1-1"/>',
+lock:'<rect x="4.5" y="10" width="15" height="10.5" rx="2.2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+filehash:'<rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/>',
+asterisk:'<path d="M12 4.5v15M5.5 8.2l13 7.6M18.5 8.2l-13 7.6"/>',
+brackets:'<path d="M9.5 5L5 12l4.5 7M14.5 5L19 12l-4.5 7"/>',
+binary:'<rect x="3.5" y="3.5" width="7" height="7" rx="1.4"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.4"/><path d="M5.5 5.5h1.5v3M5.5 8.5H7M15.5 15.5H18M15.5 18.5h2"/>',
+idcard:'<rect x="3" y="5" width="18" height="14" rx="2.2"/><circle cx="9" cy="11" r="2"/><path d="M6 15.5c.9-1.6 5.1-1.6 6 0M14.5 10h4M14.5 13.5h3"/>',
+key:'<circle cx="8.5" cy="12" r="4"/><path d="M12.5 12H21M17.5 12v3.5M20.5 12v2.5"/>',
+clock:'<circle cx="12" cy="12" r="8.8"/><path d="M12 7.2V12l3.3 2"/>',
+table:'<rect x="3" y="4" width="18" height="16" rx="2.2"/><path d="M3 9.5h18M9.5 9.5V20M15 9.5V20"/>',
+qr:'<rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><path d="M14 14h3.6v3.6H14zM20.4 14h.01M14 20.4h.01M20.4 20.4h.01"/>',
+search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/>',
+filedown:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M12 11.5v6M9.5 15l2.5 2.5L14.5 15"/>',
+wifi:'<path d="M4.5 11.5a11 11 0 0 1 15 0M8 15a6.5 6.5 0 0 1 8 0M10.8 18.2a1.8 1.8 0 0 1 2.4 0"/><circle cx="12" cy="20.3" r=".8"/>',
+barcode:'<path d="M4.5 5v14M7.5 5v14M10.5 5v10M13.5 5v14M16.5 5v10M19.5 5v14"/>',
+home:'<path d="M4 10.8L12 4l8 6.8V19a1.6 1.6 0 0 1-1.6 1.6h-3.9V15h-5v5.6H5.6A1.6 1.6 0 0 1 4 19v-8.2z"/>',
+receipt:'<path d="M6 3.5h12v17l-3-1.8-3 1.8-3-1.8-3 1.8v-17z"/><path d="M9 8h6M9 11.5h6M9 15h3.5"/>',
+activity:'<path d="M3 12.5h3.5L9 6l4 12 2.5-5.5H21"/>',
+calendar:'<rect x="3" y="5" width="18" height="16" rx="2.2"/><path d="M8 3v4M16 3v4M3 10h18"/>',
+cake:'<path d="M3.5 21h17M5.5 21v-6.5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2V21"/><path d="M12 12.5v-3M12 6.2v1M8.5 12.5v-2.3M15.5 12.5v-2.3"/>',
+trending:'<path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v5h-5"/>',
+ruler:'<rect x="2.5" y="8" width="19" height="8" rx="2"/><path d="M6.5 8v3.5M10.5 8v4.5M14.5 8v3.5M18.5 8v4.5"/>',
+target:'<circle cx="12" cy="12" r="8.8"/><circle cx="12" cy="12" r="4.8"/><circle cx="12" cy="12" r="1"/>',
+hourglass:'<path d="M7 3.5h10M7 20.5h10M8 3.5v3.8L12 11l4-3.7V3.5M8 20.5v-3.8L12 13l4 3.7v3.8"/>',
+yuan:'<path d="M6.5 4.5L12 11l5.5-6.5M12 11v8M8 13h8M8 16.5h8"/>',
+palette:'<path d="M12 3.2a8.8 8.8 0 0 0 0 17.6c1.5 0 2.2-1 2.2-2.1 0-2 1-2.6 3-2.6h1.2a3.2 3.2 0 0 0 3.2-3.2c0-5.4-4.3-9.7-9.6-9.7z"/><circle cx="8" cy="10.2" r="1.1"/><circle cx="12" cy="7.6" r="1.1"/><circle cx="15.8" cy="10" r="1.1"/>',
+brush:'<path d="M4 20.2c3.2-.9 6.2-3 9-5.8l-3.2-3.2c-2.8 2.8-4.9 5.8-5.8 9z"/><path d="M12.8 8.4l3-3a2.2 2.2 0 0 1 3.1 3.1l-3 3-3.1-3.1z"/>',
+rainbow:'<path d="M3 18.5a9 9 0 0 1 18 0"/><path d="M7 18.5a5 5 0 0 1 10 0"/><path d="M10.8 18.5a1.4 1.4 0 0 1 2.4 0"/>',
+shadow:'<rect x="3" y="3.5" width="12" height="12" rx="2.2"/><path d="M9 9.5h12v12H9z" opacity=".45"/>',
+speaker:'<path d="M4.5 10v4h2.8l4.7 4V6l-4.7 4H4.5z"/><path d="M15.5 9.2a4.2 4.2 0 0 1 0 5.6M18 6.8a7.8 7.8 0 0 1 0 10.4"/>',
+tomato:'<circle cx="12" cy="14" r="7"/><path d="M12 7c0-1.8 1.2-3 3-3M9.5 6.4L12 7.6l2.5-1.2"/>',
+globe:'<circle cx="12" cy="12" r="8.8"/><path d="M3.2 12h17.6M12 3.2c2.6 2.4 4 5.5 4 8.8s-1.4 6.4-4 8.8c-2.6-2.4-4-5.5-4-8.8s1.4-6.4 4-8.8z"/>',
+phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M11 18.5h2"/>',
+sparkles:'<path d="M11.5 3.5l1.9 4.8 4.8 1.9-4.8 1.9-1.9 4.8-1.9-4.8L4.8 10.2l4.8-1.9 1.9-4.8z"/><path d="M18.3 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2z"/>',
+gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2.8 12h2.6M18.6 12h2.6M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
+shuffle:'<path d="M3.5 6.5h3.1c1.4 0 2.7.8 3.4 2.1l4 7.3c.7 1.3 2 2.1 3.4 2.1h3.1"/><path d="M17 3.5l3.5 3-3.5 3M17 17.5l3.5 3-3.5 3"/>',
+ts:'<path d="M9.5 5L5 12l4.5 7M14.5 5L19 12l-4.5 7"/><path d="M12 9v6"/>',
+database:'<ellipse cx="12" cy="5.5" rx="7.5" ry="3"/><path d="M4.5 5.5v13c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-13"/><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/>',
+badge:'<path d="M12 3.2l7 2.8v5.9c0 4-2.9 7.3-7 8.9-4.1-1.6-7-4.9-7-8.9V6l7-2.8z"/><path d="M9.2 12.2l2 2 3.8-3.8"/>',
+alarm:'<circle cx="12" cy="13.2" r="7.8"/><path d="M12 9.4v4l2.8 1.7M5.2 3.4L2.6 6M18.8 3.4L21.4 6"/>',
+image:'<rect x="3" y="4" width="18" height="16" rx="2.4"/><circle cx="8.5" cy="9.2" r="1.6"/><path d="M21 15.5l-4.8-4.8L5.5 21"/>',
+contrast:'<circle cx="12" cy="12" r="8.8"/><path d="M12 3.2v17.6a8.8 8.8 0 0 0 0-17.6z" fill="currentColor" stroke="none"/>',
+dot:'<circle cx="12" cy="12" r="2"/>'
+};
+var TICON={
+comp:'compress',conv:'swap',resize:'resize',rotate:'rotate',crop:'crop',picker:'droplet',watermark:'copyright',b64img:'code',favicon:'star',
+count:'hash',dedup:'layers',case:'type',replace:'refresh',sortlines:'sort',trimlines:'filter',punct:'chat',md2html:'filetext',randomtext:'dice',diff:'compare',
+json:'braces',urlcodec:'link',b64:'lock',sha:'filehash',filehash:'filehash',regex:'asterisk',htmlesc:'brackets',radix:'binary',uuid:'idcard',pwd:'key',ts:'clock',csv:'table',
+qrgen:'qr',qrparse:'search',img2pdf:'filedown',qrwifi:'wifi',barcode:'barcode',
+mortgage:'home',tax:'receipt',bmi:'activity',datediff:'calendar',age:'cake',interest:'trending',unitconv:'ruler',randomnum:'target',countdown:'hourglass',rmbupper:'yuan',
+colorconv:'palette',palette:'brush',gradient:'rainbow',shadow:'shadow',
+tts:'speaker',pomodoro:'tomato',worldclock:'globe',deviceinfo:'phone',ai:'sparkles',
+yaml:'gear',xml2json:'shuffle',json2ts:'ts',sqlformat:'database',jwt:'badge',cron:'alarm',md5:'hash',px2rem:'ruler',imgmerge:'image',gray:'contrast'
+};
+function icoSvg(tid){
+  var body=ICON[TICON[tid]]||ICON.dot;
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+body+'</svg>';
+}
+(function(){
+  PANELS.forEach(function(h){$("panels").insertAdjacentHTML("beforeend",h);});
+  /* 给每个工具面板统一加上「图标 + 标题」页头 */
+  document.querySelectorAll(".tpanel").forEach(function(p){
+    var id=p.id.replace(/^t-/,""),t=null,i;
+    for(i=0;i<TOOLS.length;i++){if(TOOLS[i].id===id){t=TOOLS[i];break;}}
+    if(!t||p.querySelector(".p-head"))return;
+    var h2=p.querySelector("h2"),d=p.querySelector(".desc"),back=p.querySelector(".back");
+    if(!h2||!back)return;
+    var wrap=document.createElement("div");wrap.className="p-head";
+    var ic=document.createElement("div");ic.className="tc-ico c-"+t.cat;ic.innerHTML=icoSvg(id);
+    var box=document.createElement("div");box.className="p-title";
+    box.appendChild(h2);if(d)box.appendChild(d);
+    wrap.appendChild(ic);wrap.appendChild(box);
+    back.insertAdjacentElement("afterend",wrap);
+  });
+  INITS.forEach(function(f){try{f()}catch(e){console.error(e)}});
+  var catalog=$("catalog"),html="",n=0;
+  CATS.forEach(function(c){
+    var list=TOOLS.filter(function(t){return t.cat===c[0]});
+    if(!list.length)return;
+    html+='<div class="cat-block"><div class="cat-title"><span class="dot dot-'+c[0]+'"></span>'+c[1]+'<small>'+list.length+' 个</small></div><div class="grid">';
+    list.forEach(function(t){
+      html+='<div class="tool-card" tabindex="0" style="--i:'+(n++)+'" data-id="'+t.id+'" data-name="'+(t.name+" "+t.desc)+'">'
+           +'<div class="tc-ico c-'+t.cat+'">'+icoSvg(t.id)+'</div><div class="tc-main"><b>'+t.name+'</b><span>'+t.desc+'</span></div></div>';
+    });
+    html+='</div></div>';
+  });
+  catalog.innerHTML=html;
+  catalog.addEventListener("click",function(e){
+    var card=e.target.closest(".tool-card");if(card)openTool(card.getAttribute("data-id"));
+  });
+  catalog.addEventListener("keydown",function(e){
+    if(e.key!=="Enter"&&e.key!==" ")return;
+    var card=e.target.closest(".tool-card");
+    if(card){e.preventDefault();openTool(card.getAttribute("data-id"));}
+  });
+  $("search").addEventListener("input",function(e){
+    var q=e.target.value.trim().toLowerCase(),shown=0;
+    document.querySelectorAll("#catalog .tool-card").forEach(function(c){
+      var hit=!q||c.getAttribute("data-name").toLowerCase().indexOf(q)>=0;
+      c.classList.toggle("hidden",!hit);if(hit)shown++;
+    });
+    document.querySelectorAll("#catalog .cat-block").forEach(function(b){
+      var any=b.querySelector(".tool-card:not(.hidden)");
+      b.style.display=any?"":"none";
+    });
+    $("noRes").style.display=(q&&!shown)?"block":"none";
+  });
+  if(window.SEO){
+    TOOLS.forEach(function(t){
+      var d=SEO[t.id],p=document.getElementById("t-"+t.id);
+      if(!d||!p||p.querySelector(".about-box"))return;
+      var h='<div class="about-box"><h3>关于 '+t.name+'</h3><p>'+d.intro+'</p><h3>常见问题</h3>';
+      d.faqs.forEach(function(f){h+='<div class="faq"><b>'+f[0]+'</b><p>'+f[1]+'</p></div>';});
+      if(d.related.length){
+        h+='<h3>相关工具</h3><div class="rel">';
+        d.related.forEach(function(rid){
+          var rt=null;for(var i=0;i<TOOLS.length;i++){if(TOOLS[i].id===rid){rt=TOOLS[i];break;}}
+          if(rt)h+='<a href="/tool/'+rid+'/">'+rt.name+'</a>';
+        });
+        h+='</div>';
+      }
+      h+='</div>';
+      p.insertAdjacentHTML("beforeend",h);
+    });
+  }
+  window.addEventListener("popstate",function(){ if(!routeFromPath())goHome(false); });
+  routeFromPath();
+})();
+</script>
+<script>
+/* ===== 文件选择器美化（原生控件换成中文胶囊按钮） ===== */
+document.querySelectorAll('input[type=file]').forEach(function(inp){
+  if(inp.dataset.fp)return;inp.dataset.fp="1";
+  var wrap=document.createElement("div");wrap.className="fp";
+  var lab=document.createElement("span");lab.className="fp-btn";lab.textContent="选择文件";
+  var nm=document.createElement("span");nm.className="fp-name";nm.textContent="未选择文件";
+  inp.style.display="none";
+  inp.parentNode.insertBefore(wrap,inp);
+  wrap.appendChild(lab);wrap.appendChild(nm);wrap.appendChild(inp);
+  lab.addEventListener("click",function(){inp.click();});
+  inp.addEventListener("change",function(){
+    var n=inp.files?inp.files.length:0;
+    if(!n){nm.textContent="未选择文件";nm.classList.remove("has");return;}
+    nm.textContent=n>1?(n+" 个文件 · "+inp.files[0].name):inp.files[0].name;
+    nm.classList.add("has");
+  });
+});
+/* ===== 快捷键：/ 聚焦搜索，Esc 清空 ===== */
+document.addEventListener("keydown",function(e){
+  var tag=(document.activeElement||{}).tagName||"";
+  if(e.key==="/"&&tag!=="INPUT"&&tag!=="TEXTAREA"&&tag!=="SELECT"){
+    e.preventDefault();$("search").focus();
+  }else if(e.key==="Escape"&&document.activeElement===$("search")){
+    $("search").value="";$("search").dispatchEvent(new Event("input"));$("search").blur();
+  }
+});
+</script>
+<script>
+(function(){
+  var bp=document.createElement("script");
+  bp.src = window.location.protocol==="https:" ? "https://zz.bdstatic.com/linksubmit/push.js" : "http://push.zhanzhang.baidu.com/push.js";
+  var s=document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp,s);
+})();
+</script>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_pv" style="display:none"><span id="busuanzi_value_site_pv"></span></span><span id="busuanzi_container_page_pv" style="display:none"><span id="busuanzi_value_page_pv"></span></span></body>
+</html>
