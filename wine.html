@@ -58,6 +58,21 @@ h2 small{font-size:12px;color:var(--dim);font-weight:normal;margin-left:auto}
 /* footer */
 footer{margin-top:36px;text-align:center;font-size:11px;color:#6e5c44;padding:0 24px;line-height:1.8}
 footer .warn{color:#8a7355}
+/* referral banner */
+.refban{display:none;margin:14px 0 0;background:linear-gradient(135deg,rgba(232,164,74,.18),rgba(232,164,74,.06));border:1px solid var(--amber);border-radius:14px;padding:12px 14px;font-size:13px}
+.refban.on{display:block}
+.refban b{color:var(--amber2)}
+/* invite */
+.rule{font-size:12px;color:var(--dim);background:rgba(232,164,74,.06);border-radius:10px;padding:10px 12px;margin-bottom:6px}
+.rule b{color:var(--amber2)}
+.codeBig{font-size:26px;font-weight:700;color:var(--amber);text-align:center;letter-spacing:3px;margin:10px 0 4px}
+.invActs{display:flex;gap:10px;margin-top:10px}
+.invActs button{flex:1;border-radius:10px;font-size:14px;font-weight:600;padding:11px;border:none;cursor:pointer;font-family:inherit}
+.i-share{background:linear-gradient(135deg,#e8a44a,#d4842e);color:#1a1005}
+.i-poster{background:#2a1c0c;color:var(--amber2);border:1px solid var(--line)}
+.invStat{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--dim);margin-top:12px}
+.invStat button{background:none;border:1px dashed var(--line);color:var(--amber2);font-size:12px;border-radius:8px;padding:4px 10px;font-family:inherit}
+.pimg{width:100%;border-radius:12px;border:1px solid var(--line)}
 /* toast */
 .toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%) translateY(14px);background:#2b1d0c;border:1px solid var(--amber);color:var(--text);font-size:13px;padding:10px 20px;border-radius:12px;opacity:0;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap;max-width:92vw}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -89,6 +104,8 @@ footer .warn{color:#8a7355}
 
 <div class="wrap">
 
+  <div class="refban" id="refban"></div>
+
   <h2>🍶 在售酒品 <small>整箱起订</small></h2>
   <div id="prodList"></div>
 
@@ -110,14 +127,37 @@ footer .warn{color:#8a7355}
     <textarea id="fMsg" rows="2" placeholder="例如：想看看 XX 那款，年后要 30 箱"></textarea>
   </div>
 
+  <h2>🎯 老带新 · 这箱白喝 <small>买过一箱的进</small></h2>
+  <div class="f" id="invBox">
+    <div class="rule">已订过酒的看这里：<b>买过 1 箱</b> → 生成你的专属邀请码 → 发给朋友 → <b>朋友整箱下单成功 1 单，返你 1 箱的货款</b>。名额 <b>3 个</b>，3 个朋友都下单 = 这箱白喝。朋友也不吃亏：报你的码首单立减。仅限直接推荐的朋友（单层推荐，谢绝转介绍）。</div>
+    <div id="invForm">
+      <div class="grid">
+        <div><label>你的称呼</label><input id="iName" placeholder="如：王经理"></div>
+        <div><label>你的手机号 *</label><input id="iTel" type="tel" inputmode="tel" placeholder="订酒时用的号码"></div>
+      </div>
+      <div class="invActs" style="margin-top:14px"><button class="i-share" onclick="makeCode()">🎟️ 生成我的专属邀请码</button></div>
+    </div>
+    <div id="invDone" style="display:none">
+      <div style="text-align:center;font-size:12px;color:var(--dim)">你的专属邀请码（朋友下单时报这个码）</div>
+      <div class="codeBig" id="invCode"></div>
+      <div class="invActs">
+        <button class="i-poster" onclick="makePoster()">🖼️ 生成邀请卡</button>
+        <button class="i-share" onclick="shareInv()">💬 复制邀请文案</button>
+      </div>
+      <div class="invStat"><span id="invCount"></span><button onclick="markOrder()">✅ 朋友下单了，登记</button></div>
+    </div>
+  </div>
+
   <h2>❓ 常见问题</h2>
   <details class="faq"><summary>酒是正品吗？手续齐不齐？</summary><p>全部为正规渠道进货，进货凭证、检验报告、品牌授权文件齐全，可提供复印件或现场查验，交易可签购销合同、公对公转账、开具增值税发票。</p></details>
   <details class="faq"><summary>最少订多少？能送货吗？</summary><p>整箱起订，不限箱数；同城可送货上门，外地走物流（运费按距离另议或到付）。50 箱以上价格另谈。</p></details>
   <details class="faq"><summary>可以便宜到什么价？</summary><p>量大从优是真实的：10 箱、50 箱、100 箱是三个价格档，用的途和数量谈。价格表是参考区间，欢迎电话里直接砍。</p></details>
   <details class="faq"><summary>怎么验货？</summary><p>支持先验后付：当面清点箱数、查看瓶身批号与外箱日期一致、核对防伪，确认无误再付款。</p></details>
+  <details class="faq"><summary>老带新返现怎么算？</summary><p>买过 1 箱后生成专属邀请码，朋友整箱下单成功并付款后，返你 1 箱的货款（微信转账），每人最多 3 个名额。朋友报你的码首单立减。凭双方订单核对，单层推荐，不搞转介绍。</p></details>
 
   <footer>
     <p class="warn">未成年人禁止饮酒 · 饮酒有害健康 · 请适量饮酒 · 严禁酒后驾驶</p>
+    <p class="warn">老带新返现为单层推荐促销活动，仅限直接推荐且需以实际成交订单为准</p>
     <p>本页为正品行货整箱直供信息页 · 交易以实际签订合同为准</p>
   </footer>
 </div>
@@ -141,6 +181,15 @@ footer .warn{color:#8a7355}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="modal" id="posterM">
+  <div class="box">
+    <h3>邀请卡已生成</h3>
+    <div class="tip">长按图片保存到相册，发朋友圈 / 微信群 / 直接发给朋友都行</div>
+    <img class="pimg" id="posterImg" alt="邀请卡">
+    <div class="acts"><button class="close" onclick="document.getElementById('posterM').classList.remove('on')">关闭</button></div>
+  </div>
+</div>
 
 <script>
 /* ========= 你只需要改这里 =========
@@ -187,7 +236,8 @@ function submitForm(){
   var use=document.getElementById("fUse").value;
   var qty=document.getElementById("fQty").value;
   var msg=document.getElementById("fMsg").value.trim();
-  var txt="【订酒咨询】\n称呼："+name+"\n电话："+tel+"\n用途："+use+"\n数量："+qty+(msg?"\n备注："+msg:"");
+  var ref=null;try{ref=JSON.parse(localStorage.getItem("wineRef")||"null")}catch(e){}
+  var txt="【订酒咨询】\n称呼："+name+"\n电话："+tel+"\n用途："+use+"\n数量："+qty+(msg?"\n备注："+msg:"")+(ref?"\n推荐码："+ref.code+"（来自"+ref.who+"）":"");
   document.getElementById("msgBox").value=txt;
   document.getElementById("modal").classList.add("on");
 }
@@ -204,8 +254,91 @@ function copy(s){
 }
 function callUs(){location.href="tel:"+CFG.PHONE.replace(/[^0-9+]/g,"")}
 
+/* ===== 老带新（单层推荐 · 名额 3） ===== */
+var INVKEY="wineInv";
+function initRef(){
+  var u=new URLSearchParams(location.search);
+  var ref=u.get("ref"),who=u.get("who")||"朋友";
+  if(ref){
+    try{localStorage.setItem("wineRef",JSON.stringify({code:ref,who:who}))}catch(e){}
+  }
+  var r=null;try{r=JSON.parse(localStorage.getItem("wineRef")||"null")}catch(e){}
+  if(r&&r.code){
+    var b=document.getElementById("refban");
+    b.innerHTML="🎉 <b>"+r.who+"</b> 请你喝酒：下单时报 TA 的邀请码 <b>"+r.code+"</b>，你首单立减、TA 返一箱货款。已自动帮你带上推荐码，直接填表询价即可。";
+    b.classList.add("on");
+    document.getElementById("fMsg").placeholder="已自动带上推荐码 "+r.code+"，想了解的酒写这里";
+  }
+}
+function invCodeOf(tel,name){
+  var h=0;for(var i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))>>>0;
+  var L="ABCDEFGHJKMNPQRSTUVWXYZ";
+  return "JIU-"+tel.slice(-4)+"-"+L[h%20]+L[(h>>5)%20];
+}
+function makeCode(){
+  var name=document.getElementById("iName").value.trim();
+  var tel=document.getElementById("iTel").value.trim();
+  if(!name){toast("先填个称呼，邀请卡上要写");return}
+  if(!/^1\d{10}$/.test(tel.replace(/\s|-/g,""))){toast("填一下你订酒时用的手机号，用于核对订单");return}
+  var inv={code:invCodeOf(tel,name),name:name,tel:tel,n:0};
+  try{localStorage.setItem(INVKEY,JSON.stringify(inv))}catch(e){}
+  showInv(inv);
+}
+function getInv(){var inv=null;try{inv=JSON.parse(localStorage.getItem(INVKEY)||"null")}catch(e){}return inv}
+function showInv(inv){
+  document.getElementById("invForm").style.display="none";
+  document.getElementById("invDone").style.display="block";
+  document.getElementById("invCode").textContent=inv.code;
+  document.getElementById("invCount").textContent="已登记返现："+inv.n+" / 3 箱"+(inv.n>=3?" · 名额齐了，找我们收返现 🎉":"");
+}
+function shareInv(){
+  var inv=getInv();if(!inv)return;
+  var u=location.origin+location.pathname+"?ref="+encodeURIComponent(inv.code)+"&who="+encodeURIComponent(inv.name);
+  var txt="【"+inv.name+"】请你喝酒 🍺\n我订的整箱白酒（厂家直供、手续齐、可开发票），你报我的邀请码 "+inv.code+" 下单：你首单立减，我返一箱货款——兄弟，帮忙喝口免费的。\n👉 "+u+"\n（整箱起订 · "+location.host+"）";
+  copy(txt).then(function(){toast("邀请文案已复制，去微信发给朋友吧")});
+}
+function markOrder(){
+  var inv=getInv();if(!inv)return;
+  if(inv.n>=3){toast("名额已用完");return}
+  inv.n++;try{localStorage.setItem(INVKEY,JSON.stringify(inv))}catch(e){}
+  showInv(inv);
+  toast(inv.n>=3?"3 个名额齐了！凭订单找我们收返现 🎉":"已登记 "+inv.n+"/3，朋友订单核对后微信转你");
+}
+function makePoster(){
+  var inv=getInv();if(!inv)return;
+  var cv=document.createElement("canvas");cv.width=720;cv.height=960;
+  var g=cv.getContext("2d");
+  var gr=g.createLinearGradient(0,0,0,960);gr.addColorStop(0,"#241505");gr.addColorStop(1,"#120c05");
+  g.fillStyle=gr;g.fillRect(0,0,720,960);
+  g.strokeStyle="rgba(232,164,74,.5)";g.lineWidth=2;g.strokeRect(28,28,664,904);
+  g.textAlign="center";
+  g.fillStyle="#e8a44a";g.font="600 44px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
+  g.fillText("老 带 新 · 这 箱 白 喝",360,150);
+  g.fillStyle="#f3e8d8";g.font="26px 'PingFang SC',sans-serif";
+  g.fillText("正品行货 · 手续齐全 · 可开发票",360,200);
+  g.fillStyle="rgba(243,232,216,.7)";g.font="22px 'PingFang SC',sans-serif";
+  g.fillText("我的推荐人",360,300);
+  g.fillStyle="#f0b56a";g.font="600 56px 'PingFang SC',sans-serif";
+  g.fillText(inv.name,360,370);
+  g.fillStyle="rgba(243,232,216,.7)";g.font="22px 'PingFang SC',sans-serif";
+  g.fillText("下单时报这个邀请码",360,460);
+  g.fillStyle="#e8a44a";g.font="700 64px 'PingFang SC',sans-serif";
+  g.fillText(inv.code,360,540);
+  g.font="24px 'PingFang SC',sans-serif";g.fillStyle="#f3e8d8";
+  g.fillText("🎁 报码首单立减",360,640);
+  g.fillText("🍻 朋友下单，推荐人返一箱货款",360,690);
+  g.fillText("📦 整箱起订 · 可送货 · 可签合同",360,740);
+  g.fillStyle="rgba(168,148,120,.9)";g.font="20px 'PingFang SC',sans-serif";
+  g.fillText(location.host+"/wine.html",360,860);
+  g.fillText("未成年人禁止饮酒 · 请适量饮酒",360,900);
+  var d=document.getElementById("posterImg");d.src=cv.toDataURL("image/png");
+  document.getElementById("posterM").classList.add("on");
+}
+
 /* 入场提示 */
 window.addEventListener("load",function(){
+  initRef();
+  var inv=getInv();if(inv&&inv.code)showInv(inv);
   if(location.hash!=="#seen")setTimeout(function(){toast("👇 填电话询价，或直接打底部电话")},1500);
 });
 </script>
