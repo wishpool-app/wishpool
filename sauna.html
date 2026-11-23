@@ -15,7 +15,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"安静桑拿是什么？","acceptedAnswer":{"@type":"Answer","text":"安静桑拿（wishpool.xin/sauna.html）是一间 3D 在线汗蒸房小游戏，共有六个可以移动的场景：干式桑拿、冷汤、外气浴休息处、澡堂、露天浴池、宁静咖啡厅。你可以往桑拿石上浇水、跳进冷汤、躺在休息处吹风、搓泡泡、在露天浴池看星星、在咖啡厅翻书。没有聊天、没有语音。灵感来自走红的韩国线上安静空间（安静寺、Sauna Goyo 等）。"}},
-{"@type":"Question","name":"安静桑拿怎么玩？","acceptedAnswer":{"@type":"Answer","text":"底部动作栏会随地点变化：桑拿房里浇水、坐下、调呼吸、打招呼；点「📍 地点」打开地图走到别处——冷汤泡进去降温、休息处躺在躺椅上、澡堂搓泡泡冲水、露天浴池边泡边看星星、咖啡厅喝咖啡翻两页。身体温度是通的：桑拿里热透，去冷汤凉快，像真的汗蒸房一样循环。"}},
+{"@type":"Question","name":"安静桑拿怎么玩？","acceptedAnswer":{"@type":"Answer","text":"用左下角的摇杆（电脑用 WASD/方向键）在每个场景里自由走动，镜头第三人称跟随；走进冷汤或露天浴池的水里会自动泡进去。底部动作栏随地点变化：桑拿房浇水、坐下；休息处躺下；澡堂搓泡泡；咖啡厅喝咖啡翻书。点「📍 地点」打开地图换房间。身体温度是通的：桑拿里热透，去冷汤凉快，像真的汗蒸房一样循环。"}},
 {"@type":"Question","name":"安静桑拿收费吗？是真人聊天室吗？","acceptedAnswer":{"@type":"Answer","text":"完全免费、无需注册。这里没有聊天也没有语音，房间里的其他「客人」是氛围演出，你的操作数据只保存在你自己的手机上，不上传任何信息。纯放松娱乐产品，页面含 AI 生成内容。"}},
 {"@type":"Question","name":"手机能玩吗？卡怎么办？","acceptedAnswer":{"@type":"Answer","text":"手机浏览器直接打开即可，建议用较新的 Chrome / Safari / Edge。3D 画面需要 WebGL 支持，如果提示无法打开，换最新版浏览器即可。页面轻量，普通手机也能流畅运行。"}}]}
 </script>
@@ -102,6 +102,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1a120a;font-family:-a
 .fade.on{opacity:1;pointer-events:auto}
 .fade span{font-size:14px;color:var(--amber);letter-spacing:4px;opacity:0;transition:opacity .4s}
 .fade.on span{opacity:.9}
+/* ===== 走动摇杆 ===== */
+#joy{position:fixed;left:16px;bottom:168px;width:112px;height:112px;border-radius:50%;background:rgba(255,255,255,.07);border:1.5px solid rgba(240,160,74,.35);z-index:6;display:none;touch-action:none;backdrop-filter:blur(4px)}
+#joyk{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(240,160,74,.55);box-shadow:0 2px 10px rgba(0,0,0,.35);transition:transform .08s linear}
+#joy .jhint{position:absolute;left:0;right:0;top:-20px;text-align:center;font-size:10px;color:var(--dim);letter-spacing:1px}
 </style>
 <script>
 var _hmt = _hmt || [];
@@ -135,7 +139,7 @@ var _hmt = _hmt || [];
   <div class="card">
     <div class="en">QUIET SAUNA</div>
     <h1>安 静 桑 拿</h1>
-    <div class="tag">给累了一天的你，片刻的安静。<br>六个地方随你走动：桑拿房、冷汤、休息处、<br>澡堂、露天浴池、咖啡厅。没有聊天，没有语音。</div>
+    <div class="tag">给累了一天的你，片刻的安静。<br>六个 3D 场景用摇杆自由走动：桑拿房、冷汤、<br>休息处、澡堂、露天浴池、咖啡厅。没有聊天。</div>
     <div class="hatlbl">挑个头饰</div>
     <div class="hats" id="hats">
       <div class="hat on" data-h="none"><span class="ic">🥚</span>无</div>
@@ -172,7 +176,7 @@ var _hmt = _hmt || [];
     🚿 <b>澡堂</b>：搓泡泡、冲温水，把一天的灰搓掉<br>
     🌌 <b>露天浴池</b>：下着雪的夜里泡 41°C 的池子，抬头看星星<br>
     ☕ <b>宁静咖啡厅</b>：喝一口手冲，翻两页没人催的书<br><br>
-    点底部的 <b>📍 地点</b> 就能走动。身体温度是通的：热透了去冷汤，凉透了回桑拿。<br><br>
+    点 <b>📍 地点</b> 换房间，用左下摇杆（电脑用 WASD/方向键）在每个场景里到处走动——走进冷汤和露天浴池会自动泡进水里。身体温度是通的：热透了去冷汤，凉透了回桑拿。<br><br>
     <b>同一片安静：</b><br>
     <a href="https://wishpool.xin/treehole.html">🌙 深夜树洞</a> · 说给夜晚听的心事<br>
     <a href="/wooden-fish.html">🪵 在线电子木鱼</a> · 敲木鱼攒功德<br>
@@ -182,6 +186,7 @@ var _hmt = _hmt || [];
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<div id="joy"><span class="jhint">走动</span><div id="joyk"></div></div>
 <div class="fade" id="fade"><span>正 在 走 过 去 …</span></div>
 
 <script src="/vendor/three.min.js"></script>
@@ -266,10 +271,11 @@ function toggleMusic(){
 let renderer,scene,camera,CHAR,clock,t=0;
 let GROUP=null,STEAM=null,steamVel=[],steamCfg={origin:[1.3,1.0,-2.85],spread:.3,box:.3};
 let curId='sauna',cfgS=null;
-let POSE={x:.15,y:0,z:-1.5,ry:Math.PI*.92,rx:0};
+let POSE={x:.15,y:0,z:-1.5,ry:Math.PI*.92,rx:0,special:false};
 let waveT=-1,pourT=-1,entered=false,gazeT=0,gazeLook=null;
-let camLook=new THREE.Vector3(-.35,1.18,-1.4),camBase={x:.55,y:1.72,z:4.15};
+let camLook=new THREE.Vector3(-.35,1.18,-1.4),camBase={x:.55,y:1.75,z:4.15};
 let warm=S.warm||0,shownHot=false,shownCool=false,humiLive=55;
+let MOVE={x:0,z:0},keys={},walking=false,wading=false;
 let DYN={}; // 场景动态对象（鸭子/涟漪/风扇/雪花/泡泡/水柱…）
 
 function woodTex(w,h,base,dark,vertical){
@@ -363,6 +369,7 @@ function makeChar(){
   const footL=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),orange);
   footL.scale.set(1,.55,1.25);footL.position.set(-.13,.05,.05);g.add(footL);
   const footR=footL.clone();footR.position.x=.13;g.add(footR);
+  g.userData.footL=footL;g.userData.footR=footR;
   const hatGrp=new THREE.Group();
   hatGrp.add(new THREE.Mesh(new THREE.SphereGeometry(.02,6,6),white));
   const buns=new THREE.Group();
@@ -374,7 +381,7 @@ function makeChar(){
   towel.position.y=1.05;towel.rotation.x=Math.PI/2.35;
   const hatObjs={'buns':buns,'cap':cap,'towel':towel};
   g.add(hatGrp);
-  g.userData={body,head,eyeL,eyeR,wingL,wingR,hatGrp,hatObjs};
+  g.userData={body,head,eyeL,eyeR,wingL,wingR,hatGrp,hatObjs,footL,footR};
   return g;
 }
 function applyHat(){
@@ -770,6 +777,7 @@ const SCENES={
   sauna:{no:'1',name:'干式桑拿',sub:'柏木',temp:82.0,humi:55,bg:0x140d06,steam:{origin:[1.3,1.0,-2.85],spread:.3,box:.3,size:.34,max:.82},
     warm:1.05,warmLbl:'身体预热中…',
     cam:{pos:[.55,1.72,4.15],look:[-.35,1.18,-1.4]},char:{x:.15,y:0,z:-1.5,ry:.12},
+    bounds:{x1:-1.05,x2:2.45,z1:-2.3,z2:2.7},obstacles:[{x:1.3,z:-2.85,r:.8}],
     build:buildSauna,tick:tickSauna,
     actions:[['pour','💧 浇水'],['sit','🧎 坐下'],['breath','🫧 调呼吸'],['greet','👋 打招呼'],['loc','📍 地点']],
     greet:['今天的汗，出得很安静。','你来了。蒸汽都是暖的。','不用说话，点头就行。','安静的人，先坐好。','外面再吵，这里很静。','窗户那边的山，今天也在。'],
@@ -778,6 +786,7 @@ const SCENES={
   cold:{no:'2',name:'冷汤',sub:'蓝瓷砖',temp:8.0,humi:80,bg:0x0a1a24,steam:null,
     warm:-2.4,warmLbl:'身体在降温…',
     cam:{pos:[0,1.65,4.1],look:[0,.9,-1.1]},char:{x:.95,y:0,z:.55,ry:.25},
+    bounds:{x1:-2.4,x2:2.4,z1:-3.0,z2:2.7},obstacles:[],pool:{x:0,z:-1.1,r:1.5},
     build:buildCold,tick:tickCold,
     actions:[['soak','🏊 泡进去'],['splash','💦 泼水'],['breath','🫧 调呼吸'],['greet','👋 打招呼'],['loc','📍 地点']],
     greet:['凉——！瞬间清醒。','牙齿在打小鼓。','从头顶凉到脚底。','冷汤是最好的闹钟。','泡十秒就够了，真的。','鸭鸭比你先下来。'],
@@ -786,6 +795,7 @@ const SCENES={
   rest:{no:'3',name:'外气浴休息处',sub:'躺椅',temp:24.0,humi:45,bg:0x1c1509,steam:null,
     warm:-.5,warmLbl:'身体在慢慢凉下来…',
     cam:{pos:[0,1.6,4.0],look:[0,1.0,-1.3]},char:{x:.7,y:0,z:1.1,ry:-.15},
+    bounds:{x1:-2.3,x2:2.4,z1:-2.9,z2:2.8},obstacles:[{x:-1.5,z:.2,r:.55},{x:0,z:.2,r:.55},{x:1.5,z:.2,r:.55},{x:-2.4,z:-2.9,r:.45}],
     build:buildRest,tick:tickRest,
     actions:[['lie','🛋 躺下'],['breath','🫧 调呼吸'],['greet','👋 打招呼'],['loc','📍 地点']],
     greet:['风是刚出炉的。','躺着，什么都不想。','风扇转一圈，心事少一件。','天花板好白，好安静。','新空气，进肺里很舒服。','别刷手机了，躺一会儿。'],
@@ -794,6 +804,7 @@ const SCENES={
   wash:{no:'',name:'澡堂',sub:'温水 · 肥皂',temp:40.0,humi:70,bg:0x14201f,steam:{origin:[0,.6,-3.3],spread:1.2,box:1.2,size:.4,max:.5},
     warm:.4,warmLbl:'毛孔打开了…',
     cam:{pos:[0,1.65,4.0],look:[0,1.1,-2.2]},char:{x:.75,y:0,z:.9,ry:.15},
+    bounds:{x1:-2.3,x2:2.3,z1:-2.2,z2:2.6},obstacles:[{x:-1.5,z:-2.6,r:.4},{x:0,z:-2.6,r:.4},{x:1.5,z:-2.6,r:.4}],
     build:buildWash,tick:tickWash,
     actions:[['rub','🧼 搓泡泡'],['shower','🚿 冲一冲'],['breath','🫧 调呼吸'],['greet','👋 打招呼'],['loc','📍 地点']],
     greet:['泡泡在指缝里发光。','今天也辛苦了，搓一搓。','热水从头顶浇下来的时候，最好。','镜子里的自己，脸红了。','肥皂是燕麦味的。','把灰搓掉，把心事也搓掉。'],
@@ -802,6 +813,7 @@ const SCENES={
   open:{no:'',name:'露天浴池',sub:'雪夜',temp:41.0,humi:90,bg:0x060a18,steam:{origin:[0,.7,-1.1],spread:1.3,box:1.2,size:.32,max:.32},
     warm:.6,warmLbl:'温泉模式 · 慢慢热…',
     cam:{pos:[0,1.7,4.3],look:[0,1.1,-1.3]},char:{x:.95,y:0,z:.55,ry:.2},
+    bounds:{x1:-2.7,x2:2.7,z1:-3.2,z2:2.9},obstacles:[],pool:{x:0,z:-1.1,r:1.55},
     build:buildOpen,tick:tickOpen,
     actions:[['soak','♨️ 泡进去'],['splash','💦 泼水'],['stars','✨ 看星星'],['greet','👋 打招呼'],['loc','📍 地点']],
     greet:['雪落在肩膀上，不化。','池里是暖的，鼻尖是凉的。','那颗最亮的，是木星。','头顶的天空深得像海。','泡着泡着，忘了时间。','灯笼在为你守夜。'],
@@ -810,6 +822,7 @@ const SCENES={
   cafe:{no:'',name:'宁静咖啡厅',sub:'手冲 · 翻书',temp:22.0,humi:40,bg:0x171006,steam:{origin:[-1.1,.78,-1.3],spread:.06,box:.06,size:.16,max:.6},
     warm:-.3,warmLbl:'胃里暖暖的…',
     cam:{pos:[.6,1.6,3.5],look:[-.4,.95,-1.6]},char:{x:-.35,y:0,z:-.35,ry:.15},
+    bounds:{x1:-2.35,x2:1.9,z1:-2.5,z2:2.7},obstacles:[{x:-1.1,z:-1.3,r:.6},{x:.9,z:-.6,r:.6}],
     build:buildCafe,tick:tickCafe,
     actions:[['sip','☕ 喝一口'],['read','📖 翻两页'],['breath','🫧 调呼吸'],['greet','👋 打招呼'],['loc','📍 地点']],
     greet:['咖啡凉得比书慢。','这一页刚才读过，再读一遍也好。','窗外有人走过，伞是黄色的。','豆子是今天早上烘的。','灯光是蜂蜜色的。','不赶时间，坐多久都行。'],
@@ -849,7 +862,8 @@ function rebuildScene(id,first){
   curId=id;cfgS=cfg;S.scene=id;localStorage.setItem(KEY,JSON.stringify(S));
   DYN={};sitting=false;
   humiLive=cfg.humi;
-  POSE={x:cfg.char.x,y:cfg.char.y,z:cfg.char.z,ry:cfg.char.ry,rx:0};
+  POSE={x:cfg.char.x,y:cfg.char.y,z:cfg.char.z,ry:cfg.char.ry,rx:0,special:false};
+  walking=false;wading=false;
   if(GROUP)scene.remove(GROUP);
   GROUP=new THREE.Group();scene.add(GROUP);
   scene.background=new THREE.Color(cfg.bg);
@@ -889,8 +903,8 @@ function rebuildScene(id,first){
   CHAR.position.set(cfg.char.x,cfg.char.y,cfg.char.z);
   CHAR.rotation.set(0,cfg.char.ry,0);
   setupSteam(cfg.steam);
-  camBase={x:cfg.cam.pos[0],y:cfg.cam.pos[1],z:cfg.cam.pos[2]};
-  camLook.set(cfg.cam.look[0],cfg.cam.look[1],cfg.cam.look[2]);
+  camBase={x:cfg.char.x,y:1.75,z:cfg.char.z+3.4};
+  camLook.set(cfg.char.x,.95,cfg.char.z-.3);
   camera.position.set(camBase.x,camBase.y,camBase.z);
   renderActions(cfg.actions);
   document.getElementById('hudMode').innerHTML=cfg.name+' <b id="temp">'+cfg.temp.toFixed(1)+'°C</b> · '+cfg.sub;
@@ -930,6 +944,70 @@ const ACTIONS={
 function doAct(id){if(ACTIONS[id])ACTIONS[id]()}
 
 let sitting=false;
+/* 取消特殊姿态（走动时自动起身） */
+function resetPose(){
+  POSE={x:CHAR.position.x,y:0,z:CHAR.position.z,ry:CHAR.rotation.y,rx:0,special:false};
+  sitting=false;
+  renderActions(SCENES[curId].actions);
+}
+/* ================= 自由走动 ================= */
+function updateMove(dt){
+  let mx=MOVE.x,mz=MOVE.z;
+  if(keys['w']||keys['arrowup'])mz-=1;
+  if(keys['s']||keys['arrowdown'])mz+=1;
+  if(keys['a']||keys['arrowleft'])mx-=1;
+  if(keys['d']||keys['arrowright'])mx+=1;
+  let mag=Math.hypot(mx,mz);
+  if(mag>.12&&entered){
+    if(mag>1){mx/=mag;mz/=mag;mag=1}
+    if(POSE.special)resetPose();
+    const inPool=cfgS.pool&&Math.hypot(CHAR.position.x-cfgS.pool.x,CHAR.position.z-cfgS.pool.z)<cfgS.pool.r;
+    const sp=(inPool?.85:1.75)*Math.min(1,mag);
+    const nx=mx/Math.max(.001,Math.hypot(mx,mz)),nz=mz/Math.max(.001,Math.hypot(mx,mz));
+    CHAR.position.x+=nx*sp*dt;
+    CHAR.position.z+=nz*sp*dt;
+    // 边界与障碍
+    const b=cfgS.bounds;
+    if(b){CHAR.position.x=Math.min(b.x2,Math.max(b.x1,CHAR.position.x));CHAR.position.z=Math.min(b.z2,Math.max(b.z1,CHAR.position.z))}
+    (cfgS.obstacles||[]).forEach(o=>{
+      const dx=CHAR.position.x-o.x,dz=CHAR.position.z-o.z,d=Math.hypot(dx,dz);
+      if(d<o.r&&d>.001){CHAR.position.x=o.x+dx/d*o.r;CHAR.position.z=o.z+dz/d*o.r}
+    });
+    // 面向移动方向（走最短弧）
+    const tgt=Math.atan2(nx,nz);
+    let d=tgt-CHAR.rotation.y;d=Math.atan2(Math.sin(d),Math.cos(d));
+    CHAR.rotation.y+=d*Math.min(1,dt*10);
+    walking=true;
+  }else{
+    if(walking){POSE.x=CHAR.position.x;POSE.z=CHAR.position.z;POSE.y=CHAR.position.y;POSE.ry=CHAR.rotation.y}
+    walking=false;
+  }
+  // 走进水池自动变泡水
+  if(cfgS.pool&&!POSE.special){
+    const inW=cfgS.pool&&Math.hypot(CHAR.position.x-cfgS.pool.x,CHAR.position.z-cfgS.pool.z)<cfgS.pool.r;
+    if(inW&&!wading){wading=true;splashSnd();DYN._splashT=1;showEvent('哗——走进池子里了，好凉！')}
+    if(!inW&&wading){wading=false;CHAR.position.y=0}
+  }else if(!cfgS.pool&&wading){wading=false;CHAR.position.y=0}
+}
+/* 摇杆 */
+function initJoy(){
+  const joy=document.getElementById('joy'),knob=document.getElementById('joyk');
+  let jid=null;
+  const set=e=>{
+    const r=joy.getBoundingClientRect();
+    let dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+    const d=Math.hypot(dx,dy),m=Math.min(d,40);
+    if(d>.001){dx=dx/d*m;dy=dy/d*m}
+    knob.style.transform='translate('+dx+'px,'+dy+'px)';
+    MOVE.x=dx/40;MOVE.z=dy/40;
+  };
+  joy.addEventListener('pointerdown',e=>{jid=e.pointerId;try{joy.setPointerCapture(jid)}catch(_){}set(e)});
+  joy.addEventListener('pointermove',e=>{if(e.pointerId===jid)set(e)});
+  const end=e=>{if(e.pointerId===jid){jid=null;MOVE.x=MOVE.z=0;knob.style.transform='translate(0,0)'}};
+  joy.addEventListener('pointerup',end);joy.addEventListener('pointercancel',end);
+  addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1});
+  addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=0});
+}
 function doPour(){
   if(pourT<0)pourT=0;
   hiss();
@@ -949,11 +1027,11 @@ function burstSteam(){
 function doSit(){
   sitting=!sitting;
   if(curId==='sauna'&&sitting){
-    POSE={x:-1.78,y:1.09,z:-1.2,ry:-.3,rx:0};
+    POSE={x:-1.78,y:1.09,z:-1.2,ry:-.3,rx:0,special:true};
     chime(520,.3,.18);
     showEvent(pick(['坐下了。木凳是温的。','汗慢慢出来了，不着急。','上层座位，蒸汽刚好飘到脸上']));
   }else if(!sitting){
-    POSE={x:cfgS.char.x,y:cfgS.char.y,z:cfgS.char.z,ry:cfgS.char.ry,rx:0};
+    POSE={x:CHAR.position.x,y:0,z:CHAR.position.z,ry:CHAR.rotation.y,rx:0,special:false};
     chime(430,.3,.18);
   }
   renderActions(SCENES[curId].actions.map(a=>a[0]==='sit'?[ 'sit',sitting?'🧍 站起来':'🧎 坐下']:a));
@@ -964,18 +1042,19 @@ function doGreet(){
   showBubble(pick(cfgS.greet));
 }
 function doSoak(){
-  const inPool=POSE.y<0.3&&curId==='open'||POSE.z<0&&curId==='cold'&&POSE.y<.3;
   // 简单判定：当前是否已在池里
   const inside=(curId==='cold'&&(POSE.z<-0.2))||(curId==='open'&&(POSE.z<-0.2));
   splashSnd();
   burstSteam();
   if(!inside){
-    POSE={x:0,y:-.16,z:-1.1,ry:Math.PI,rx:0};
+    POSE={x:cfgS.pool.x,y:-.16,z:cfgS.pool.z,ry:0,rx:0,special:true};
+    wading=true;
     renderActions(SCENES[curId].actions.map(a=>a[0]==='soak'?['soak','🧍 上岸']:a));
     showEvent(curId==='cold'?'整个身体都没进去了，好凉！':'泡进 41°C 的池子，雪落在肩膀上');
     chime(392,.5,.16);
   }else{
-    POSE={x:cfgS.char.x,y:cfgS.char.y,z:cfgS.char.z,ry:cfgS.char.ry,rx:0};
+    POSE={x:cfgS.pool.x+2.0,y:0,z:cfgS.pool.z,ry:.4,rx:0,special:false};
+    wading=false;
     renderActions(SCENES[curId].actions.map(a=>a[0]==='soak'?['soak',curId==='cold'?'🏊 泡进去':'♨️ 泡进去']:a));
     showEvent('上岸了。脚底板是凉的。');
   }
@@ -993,12 +1072,12 @@ function doLie(){
   const lying=POSE.rx<-.5;
   if(!lying){
     const rc=DYN.recliners?DYN.recliners[1]:null;
-    POSE={x:0,y:.62,z:.15,ry:Math.PI*1.0,rx:-Math.PI*.42};
+    POSE={x:0,y:.62,z:.15,ry:0,rx:-Math.PI*.42,special:true};
     renderActions(SCENES[curId].actions.map(a=>a[0]==='lie'?['lie','🧍 坐起来']:a));
     chime(494,.4,.15);
     showEvent(pick(['躺下了。椅背刚好托住背。','风从头顶吹过去。','闭上眼也行，没人看见。']));
   }else{
-    POSE={x:cfgS.char.x,y:cfgS.char.y,z:cfgS.char.z,ry:cfgS.char.ry,rx:0};
+    POSE={x:CHAR.position.x,y:0,z:CHAR.position.z,ry:CHAR.rotation.y,rx:0,special:false};
     renderActions(SCENES[curId].actions.map(a=>a[0]==='lie'?['lie','🛋 躺下']:a));
   }
 }
@@ -1091,9 +1170,11 @@ function enterSauna(){
   document.getElementById('hud').style.display='block';
   document.getElementById('actions').style.display='flex';
   document.getElementById('moreBtn').style.display='block';
+  document.getElementById('joy').style.display='block';
+  if(!initJoy._done){initJoy();initJoy._done=true}
   initAudio();
   entered=true;
-  showEvent('你进来了。门在身后轻轻合上。');
+  showEvent('你进来了。摇杆或 WASD 随便走走，📍 地点换房间。');
   scheduleEvents();
 }
 /* ================= 动画主循环 ================= */
@@ -1101,9 +1182,16 @@ function loop(){
   requestAnimationFrame(loop);
   if(!renderer)return;
   const dt=Math.min(clock.getDelta(),.05);t+=dt;
-  // 相机呼吸（每场景基准位）
-  camera.position.x=camBase.x+Math.sin(t*.28)*.07;
+  // 第三人称跟随镜头
+  camBase.x+=(CHAR.position.x-camBase.x)*Math.min(1,dt*4);
+  camBase.z+=(CHAR.position.z+3.4-camBase.z)*Math.min(1,dt*4);
+  camBase.y=1.75;
+  camera.position.x=camBase.x+Math.sin(t*.28)*.04;
   camera.position.y=camBase.y+Math.sin(t*.5)*.02;
+  camera.position.z=camBase.z;
+  camLook.x+=(CHAR.position.x-camLook.x)*Math.min(1,dt*5);
+  camLook.y+=((wading?-.1:.95)-camLook.y)*Math.min(1,dt*5);
+  camLook.z+=((CHAR.position.z-.3)-camLook.z)*Math.min(1,dt*5);
   if(gazeT>0){gazeT-=dt;camera.lookAt(gazeLook);if(gazeT<=0)gazeLook=null}
   else camera.lookAt(camLook);
   // 角色待机
@@ -1124,14 +1212,27 @@ function loop(){
     DYN.ladle.position.y=.3+Math.sin(Math.min(pourT*2.4,Math.PI))*.25;
     if(pourT>.8)pourT=-1;
   }
-  // 位姿缓动
+  // 走动 + 位姿
+  updateMove(dt);
+  if(!POSE.special){
+    POSE.x=CHAR.position.x;POSE.z=CHAR.position.z;
+    POSE.y=wading?-.16:0;
+    CHAR.position.y=POSE.y;
+  }
   CHAR.position.lerp(new THREE.Vector3(POSE.x,POSE.y,POSE.z),.06);
-  CHAR.rotation.y+=(POSE.ry-CHAR.rotation.y)*.08;
+  if(!walking)CHAR.rotation.y+=(POSE.ry-CHAR.rotation.y)*.08;
   CHAR.rotation.x+=(POSE.rx-CHAR.rotation.x)*.08;
-  const floatY=POSE.rx<-.5?0:Math.abs(Math.sin(t*1.2))*.012;
+  // 摆脚走路 / 待机浮动
+  if(walking){
+    u.footL.rotation.x=Math.sin(t*11)*.55;
+    u.footR.rotation.x=-Math.sin(t*11)*.55;
+    CHAR.position.y+=Math.abs(Math.sin(t*11))*.025;
+  }else{
+    u.footL.rotation.x*=.8;u.footR.rotation.x*=.8;
+    if(POSE.rx>=-.5)CHAR.position.y+=Math.abs(Math.sin(t*1.2))*.012;
+  }
   CHAR.userData.shadow.position.set(CHAR.position.x,POSE.y<-.05?.48:.01+POSE.y+.008,CHAR.position.z);
   CHAR.userData.shadow.scale.setScalar(POSE.rx<-.5?1.3:1);
-  CHAR.position.y+=floatY;
   // 涟漪水花
   if(DYN._splashT>0){
     DYN._splashT-=dt;
