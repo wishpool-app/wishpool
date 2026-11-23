@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>情侣涂鸦窝 · 每天给最爱的人画一张小涂鸦</title>
+<meta name="description" content="情侣涂鸦窝：lovelee 式的情侣涂鸦小窝网页版。每天一个涂鸦题目，用手指画一张小涂鸦，配一句悄悄话，生成小组件风格的涂鸦卡保存或发给 TA，两个人的涂鸦都收进共同的涂鸦册。免费免注册，画都在你手机上。">
+<meta name="keywords" content="情侣涂鸦,lovelee,情侣小窝,涂鸦卡,手绘卡片,情侣互动,情侣游戏,异地恋,纪念日,小组件">
+<link rel="canonical" href="https://wishpool.xin/doodle.html">
+<meta property="og:title" content="情侣涂鸦窝 · 每天给最爱的人画一张小涂鸦">
+<meta property="og:description" content="每天一个题目，画一张小涂鸦配一句悄悄话发给 TA。两个人的画都收进共同的涂鸦册。免费免注册。">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"情侣涂鸦窝","applicationCategory":"Entertainment","operatingSystem":"Web","description":"lovelee 式情侣涂鸦小窝网页版：每天一个涂鸦题目，手指画涂鸦、配悄悄话、生成小组件风涂鸦卡发给另一半，共同涂鸦册记录两人画过的每一张。免费免注册。","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"情侣涂鸦窝是什么？","acceptedAnswer":{"@type":"Answer","text":"情侣涂鸦窝（wishpool.xin/doodle.html）是一个情侣涂鸦小窝网页版，玩法类似走红的情侣涂鸦 App lovelee：每天出一个涂鸦题目，你用手指画一张小涂鸦、配一句悄悄话，生成一张小组件风格的涂鸦卡，保存或发给另一半；TA 收到后可以照着你的画回一张。两个人画过的每一张都收进共同的涂鸦册。"}},
+{"@type":"Question","name":"怎么把涂鸦发给另一半？","acceptedAnswer":{"@type":"Answer","text":"画好后点「生成涂鸦卡」，保存图片（手机长按图片保存到相册），然后把图片通过微信 / 短信发给 TA 就行。TA 在情侣涂鸦窝里点「回画」，你的涂鸦会变成淡淡的底稿，TA 在上面照着画一张回给你。"}},
+{"@type":"Question","name":"情侣涂鸦窝收费吗？要注册吗？","acceptedAnswer":{"@type":"Answer","text":"完全免费、无需注册。所有涂鸦和悄悄话都只保存在你自己的手机浏览器里，不上传任何服务器。清除浏览器数据会清空涂鸦册，重要的话记得保存卡片图片。"}},
+{"@type":"Question","name":"不会画画能玩吗？","acceptedAnswer":{"@type":"Answer","text":"太能了。这里的涂鸦越丑越可爱——火柴人、歪歪扭扭的心、一根线条的猫都行。每天还有一个涂鸦题目帮你找灵感，比如「把今天的心情画成天气」。画完配一句悄悄话，比发十句「晚安」都管用。"}}]}
+</script>
+<style>
+:root{--bg:#fff6ec;--card:#ffffff;--ink:#2d2a26;--coral:#ff6b81;--coral-d:#e84f66;--peach:#ffd9c9;--dim:#a08d7e;--line:#f2e4d5;--green:#3f9d6c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;background:linear-gradient(180deg,#fff3e4,#fff6ec 240px);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);padding-bottom:40px}
+.wrap{max-width:440px;margin:0 auto;padding:0 16px}
+/* ===== 顶部 ===== */
+.top{padding:26px 0 6px;text-align:center}
+.top .en{font-size:10.5px;letter-spacing:3px;color:var(--dim);font-weight:800}
+.top h1{font-size:25px;margin:6px 0 4px;letter-spacing:3px;font-weight:900}
+.top h1 span{color:var(--coral)}
+.top .sub{font-size:12.5px;color:var(--dim);line-height:1.8}
+.stats{display:flex;gap:8px;justify-content:center;margin:14px 0 4px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 14px;font-size:11px;color:var(--dim)}
+.stat b{display:block;font-size:17px;color:var(--coral);margin-bottom:1px}
+/* ===== 每日题目 ===== */
+.prompt{background:linear-gradient(135deg,#fff0f2,#ffe9de);border:1.5px dashed rgba(255,107,129,.45);border-radius:16px;padding:13px 16px;margin:14px 0;text-align:center}
+.prompt .pl{font-size:10px;letter-spacing:2px;color:var(--coral);font-weight:800}
+.prompt .pt{font-size:15.5px;font-weight:800;margin-top:4px}
+.prompt .ps{font-size:11px;color:var(--dim);margin-top:3px}
+/* ===== 画板 ===== */
+.board{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:0 6px 24px rgba(232,120,90,.08)}
+.cbox{position:relative;border-radius:14px;overflow:hidden;border:1.5px solid var(--line)}
+canvas#cv{display:block;width:100%;touch-action:none;cursor:crosshair;background:#fffdf8}
+.tools{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.dot{width:30px;height:30px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;flex:none}
+.dot.on{border-color:var(--ink);transform:scale(1.12)}
+.sz{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.sz.on{border-color:var(--coral)}
+.sz i{display:block;border-radius:50%;background:var(--ink)}
+.tb{border:1.5px solid var(--line);background:#fff;border-radius:9px;font-size:15px;padding:5px 10px;cursor:pointer;flex:none}
+.tb:active{transform:scale(.92)}
+.stickers{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.stk{border:1.5px solid var(--line);background:#fff;border-radius:999px;font-size:17px;padding:4px 11px;cursor:pointer}
+.stk.on{border-color:var(--coral);background:#fff0f3}
+/* ===== 悄悄话 ===== */
+.msgs{margin:14px 0}
+.msgs input{width:100%;border:1.5px solid var(--line);border-radius:14px;background:var(--card);padding:13px 15px;font-size:14px;font-family:inherit;outline:none;color:var(--ink)}
+.msgs input:focus{border-color:var(--coral)}
+.msgs .row{display:flex;gap:8px;margin-top:8px}
+.msgs .row input{flex:1}
+/* ===== 按钮 ===== */
+.btns{display:flex;gap:9px;margin:4px 0 8px}
+.big{flex:1;border:none;border-radius:999px;padding:15px 0;font-size:15.5px;font-weight:900;letter-spacing:2px;cursor:pointer;box-shadow:0 5px 18px rgba(232,79,102,.25)}
+.big:active{transform:scale(.97)}
+.big.card{background:linear-gradient(135deg,#ff8296,var(--coral-d));color:#fff}
+.big.save{background:#fff;border:1.5px solid var(--coral);color:var(--coral);box-shadow:none}
+/* ===== 涂鸦册 ===== */
+.album{margin-top:8px}
+.album h2{font-size:15px;letter-spacing:2px;margin:18px 0 10px}
+.album h2 b{color:var(--coral)}
+.shelf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.piece{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px;position:relative}
+.piece img{width:100%;border-radius:9px;border:1px solid var(--line);display:block}
+.piece .pm{font-size:11.5px;margin-top:6px;line-height:1.5;color:#5a4f45;word-break:break-all}
+.piece .pd{font-size:9.5px;color:var(--dim);margin-top:3px;display:flex;justify-content:space-between;align-items:center}
+.piece .pa{display:flex;gap:5px}
+.piece .pa button{border:1px solid var(--line);background:#fff;border-radius:999px;font-size:10px;padding:3px 8px;cursor:pointer;color:var(--dim)}
+.piece .pa button.redl{color:var(--coral-d);border-color:#f6c9d0}
+.empty{border:1.5px dashed var(--line);border-radius:14px;padding:26px;text-align:center;font-size:12px;color:var(--dim);line-height:2}
+/* ===== 卡片弹层 ===== */
+.mask{position:fixed;inset:0;background:rgba(45,30,20,.55);display:none;z-index:20;align-items:center;justify-content:center;padding:18px}
+.mask.on{display:flex}
+.cwrap{max-width:400px;width:100%;max-height:88vh;overflow-y:auto}
+.cwrap img{width:100%;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.35);display:block}
+.cbtns{display:flex;gap:8px;margin-top:12px}
+.cbtns button{flex:1;border:none;border-radius:999px;padding:13px 0;font-size:14px;font-weight:800;cursor:pointer}
+.cbtns .dl{background:var(--coral);color:#fff}
+.cbtns .cl{background:rgba(255,255,255,.92);color:var(--ink)}
+/* ===== 更多/页脚 ===== */
+.more{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;font-size:12.5px;line-height:2.1;color:#6b5d50}
+.more a{color:var(--coral);text-decoration:none;font-weight:700}
+.more h3{margin:0 0 6px;font-size:14px;color:var(--ink)}
+.foot{margin-top:20px;text-align:center;font-size:10.5px;color:var(--dim);line-height:2}
+.toast{position:fixed;left:50%;bottom:36px;transform:translateX(-50%) translateY(14px);background:rgba(45,25,15,.94);color:#fff;font-size:13px;padding:11px 22px;border-radius:12px;opacity:0;transition:.25s;z-index:40;pointer-events:none;white-space:nowrap;max-width:92vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?31f0a55adb5210a1bf9476449d1ba48c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="en">DOODLE NEST · FOR TWO</div>
+    <h1>情侣<span>涂鸦窝</span></h1>
+    <div class="sub">每天给最爱的人画一张小涂鸦，配一句悄悄话。<br>不用画得好，越丑越可爱。</div>
+    <div class="stats">
+      <div class="stat"><b id="stCount">0</b>张涂鸦</div>
+      <div class="stat"><b id="stStreak">0</b>连续天数</div>
+      <div class="stat"><b id="stToday">—</b>今天画了吗</div>
+    </div>
+  </div>
+
+  <div class="prompt">
+    <div class="pl">今日涂鸦题目</div>
+    <div class="pt" id="promptT">—</div>
+    <div class="ps" id="promptS">—</div>
+  </div>
+
+  <div class="board">
+    <div class="cbox"><canvas id="cv" width="640" height="640"></canvas></div>
+    <div class="tools">
+      <div class="dot on" data-c="#2d2a26" style="background:#2d2a26"></div>
+      <div class="dot" data-c="#ff6b81" style="background:#ff6b81"></div>
+      <div class="dot" data-c="#4f8ef7" style="background:#4f8ef7"></div>
+      <div class="dot" data-c="#ffb63e" style="background:#ffb63e"></div>
+      <div class="dot" data-c="#4caf7d" style="background:#4caf7d"></div>
+      <div class="dot" data-c="#9b6bf2" style="background:#9b6bf2"></div>
+      <button class="tb" id="eraser" title="橡皮">🧽</button>
+      <button class="tb" id="undo" title="撤销">↩️</button>
+      <button class="tb" id="clear" title="清空">🗑️</button>
+    </div>
+    <div class="tools">
+      <div class="sz on" data-s="5"><i style="width:5px;height:5px"></i></div>
+      <div class="sz" data-s="10"><i style="width:10px;height:10px"></i></div>
+      <div class="sz" data-s="18"><i style="width:16px;height:16px"></i></div>
+      <span style="font-size:11px;color:var(--dim);margin-left:2px">贴纸点一下，再点画布盖个章：</span>
+    </div>
+    <div class="stickers">
+      <button class="stk" data-e="❤️">❤️</button>
+      <button class="stk" data-e="⭐">⭐</button>
+      <button class="stk" data-e="🐰">🐰</button>
+      <button class="stk" data-e="🍚">🍚</button>
+      <button class="stk" data-e="🌈">🌈</button>
+      <button class="stk" data-e="🐱">🐱</button>
+      <button class="stk" data-e="💋">💋</button>
+    </div>
+  </div>
+
+  <div class="msgs">
+    <input id="msg" maxlength="60" placeholder="写一句悄悄话，会印在涂鸦卡上（60 字内）">
+    <div class="row">
+      <input id="who" maxlength="12" placeholder="你的名字/称呼">
+    </div>
+  </div>
+
+  <div class="btns">
+    <button class="big card" onclick="makeCard()">💌 生成涂鸦卡</button>
+    <button class="big save" onclick="saveAlbum()">💾 存进涂鸦册</button>
+  </div>
+
+  <div class="album">
+    <h2>🎨 我们的涂鸦册 <b id="albCount"></b></h2>
+    <div id="shelf" class="shelf"></div>
+  </div>
+
+  <div class="more">
+    <h3>💌 怎么发给 TA？</h3>
+    ① 画好涂鸦 → 点「生成涂鸦卡」→ 保存图片（手机长按图片存相册）<br>
+    ② 把图片用微信 / 短信发给 TA，就送到 TA 的手机里了<br>
+    ③ TA 打开这个页面点「回画」，你的画会变成淡淡底稿，TA 照着画一张回给你<br>
+    ④ 两个人画的每一张都收进下面的涂鸦册，变成你们的小画廊<br><br>
+    <h3>🧡 同一片安静：</h3>
+    <a href="https://wishpool.xin/sauna.html">🧖 安静桑拿</a> · 六个场景的线上汗蒸房<br>
+    <a href="https://wishpool.xin/treehole.html">🌙 深夜树洞</a> · 说给夜晚听的心事<br>
+    <a href="/wooden-fish.html">🪵 在线电子木鱼</a> · 敲木鱼攒功德<br>
+    <a href="/stock-confession.html">🙏 股民忏悔室</a> · 散户情绪出口<br>
+    <a href="/">🔮 许愿池 WishPool</a> · 写下愿望，收到一封来自未来的信
+  </div>
+
+  <div class="foot">
+    两个人的画只保存在你自己的手机上，不上传服务器。<br>
+    清除浏览器数据会清空涂鸦册，喜欢的画记得存卡片。<br>
+    纯情侣互动娱乐产品 · 含 AI 生成内容 · 免费，不用注册<br>
+    情侣涂鸦窝 DOODLE NEST · wishpool.xin 出品
+  </div>
+</div>
+
+<div class="mask" id="mask">
+  <div class="cwrap">
+    <img id="cardImg" alt="涂鸦卡">
+    <div class="cbtns">
+      <button class="dl" onclick="downloadCard()">⬇️ 保存图片</button>
+      <button class="cl" onclick="closeCard()">再改改</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+<span id="busuanzi_container_site_pv" style="display:none"><span id="busuanzi_value_site_pv"></span></span><span id="busuanzi_container_page_pv" style="display:none"><span id="busuanzi_value_page_pv"></span></span>
+<script>
+/* ================= 数据 ================= */
+const KEY='doodle_nest_v1';
+let D={album:[],who:'',days:[]};
+try{D=Object.assign(D,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){}
+function save(){localStorage.setItem(KEY,JSON.stringify(D))}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+
+/* ================= 每日题目 ================= */
+const PROMPTS=[
+['把今天的心情画成一种天气','晴天、雷阵雨、还是多云转甜？'],
+['画一下你们俩的合照（丑版）','火柴人也算数'],
+['TA 最爱吃的东西','画出来让 TA 猜'],
+['画出你们第一次见面的地方','教室？公司？网上？'],
+['把「我想你」画成一个小动物','不许写字'],
+['画 TA 睡觉的样子','凭记忆就行'],
+['画一个只有你们俩懂的梗','外人看不懂才对'],
+['把今天吃的东西画出来','最好吃的那一样'],
+['画 TA 的头像（抽象派）','越抽象越爱'],
+['画出你们下次想去的地方','海？山？还是沙发？'],
+['画一只替你说晚安的小猫','它替你值班'],
+['画出 TA 让你心动的瞬间','一秒就够'],
+['把「生气了」画成一个表情','哼。'],
+['画出你今天偷懒的样子','上班摸鱼图'],
+['画一下你们的窝（现实或想象）','多大都行'],
+['把 TA 的名字画成一幅画','字不够，画来凑'],
+['画出你手机里 TA 的备注','画出来，别截图'],
+['画一个想和 TA 一起养的小宠物','猫狗乌龟都行'],
+['把「早点睡」画成一幅画','不许用文字唠叨'],
+['画出你们最像的两个瞬间','双胞胎现场'],
+['画今天窗外的风景','TA 那边也算'],
+['画一个奖品，颁给今天的 TA','今天 TA 做了什么厉害的事？'],
+['画出「冬天和 TA 在一起」','暖和的画面'],
+['画你的样子（TA 眼中的）','自信一点'],
+['画出你们共同的秘密基地','现实或想象都行'],
+['把「对不起」画成一个小人','低头的那种'],
+['画出 TA 的口头禅','画不出来就画 TA 说它时的脸'],
+['画一顿你想和 TA 一起吃的火锅','食材越满越好'],
+['把「谢谢你在」画成一个拥抱','张开手的'],
+['自由画！今天想画什么都行','空白就是自由']
+];
+const p=PROMPTS[Math.floor((Date.now()/86400000))%PROMPTS.length];
+document.getElementById('promptT').textContent=p[0];
+document.getElementById('promptS').textContent=p[1];
+
+/* ================= 画板 ================= */
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let color='#2d2a26',size=5,eraser=false,stk=null,drawing=false,lx=0,ly=0;
+let undoStack=[];
+function clearBoard(){ctx.fillStyle='#fffdf8';ctx.fillRect(0,0,640,640);undoStack=[]}
+clearBoard();
+function snap(){undoStack.push(cv.toDataURL());if(undoStack.length>18)undoStack.shift()}
+function restore(){if(!undoStack.length){toast('没有能撤销的啦');return}const u=undoStack.pop(),img=new Image();img.onload=()=>{ctx.clearRect(0,0,640,640);ctx.drawImage(img,0,0)};img.src=u}
+function pos(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*640,(e.clientY-r.top)/r.height*640]}
+cv.addEventListener('pointerdown',e=>{
+  e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}
+  snap();
+  const[x,y]=pos(e);
+  if(stk){ctx.font='52px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(stk,x,y);stk=null;document.querySelectorAll('.stk').forEach(s=>s.classList.remove('on'));return}
+  drawing=true;lx=x;ly=y;
+  ctx.beginPath();ctx.fillStyle=eraser?'#fffdf8':color;
+  ctx.arc(x,y,(eraser?26:size)/2,0,7);ctx.fill();
+});
+cv.addEventListener('pointermove',e=>{
+  if(!drawing)return;
+  const[x,y]=pos(e);
+  ctx.strokeStyle=eraser?'#fffdf8':color;
+  ctx.lineWidth=eraser?26:size;ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.beginPath();ctx.moveTo(lx,ly);
+  ctx.quadraticCurveTo(lx,ly,(lx+x)/2,(ly+y)/2);ctx.lineTo(x,y);
+  ctx.stroke();lx=x;ly=y;
+});
+addEventListener('pointerup',()=>{drawing=false});
+document.querySelectorAll('.dot').forEach(d=>d.addEventListener('click',()=>{
+  document.querySelectorAll('.dot').forEach(x=>x.classList.remove('on'));
+  d.classList.add('on');color=d.dataset.c;eraser=false;
+  document.getElementById('eraser').style.background='#fff';
+}));
+document.querySelectorAll('.sz').forEach(s=>s.addEventListener('click',()=>{
+  document.querySelectorAll('.sz').forEach(x=>x.classList.remove('on'));
+  s.classList.add('on');size=+s.dataset.s;
+}));
+document.querySelectorAll('.stk').forEach(s=>s.addEventListener('click',()=>{
+  if(stk===s.dataset.e){stk=null;s.classList.remove('on');return}
+  document.querySelectorAll('.stk').forEach(x=>x.classList.remove('on'));
+  s.classList.add('on');stk=s.dataset.e;
+}));
+document.getElementById('eraser').addEventListener('click',e=>{eraser=!eraser;e.currentTarget.style.background=eraser?'#ffe3e9':'#fff';if(eraser)toast('橡皮擦开了，画错了也不怕')});
+document.getElementById('undo').addEventListener('click',restore);
+document.getElementById('clear').addEventListener('click',()=>{if(confirm('清空画布？'))clearBoard()});
+
+/* ================= 文本换行 ================= */
+function wrapText(c,text,x,y,maxW,lh){
+  let line='',yy=y;
+  for(const ch of text){
+    if(c.measureText(line+ch).width>maxW){c.fillText(line,x,yy);line=ch;yy+=lh}
+    else line+=ch;
+  }
+  if(line)c.fillText(line,x,yy);
+  return yy;
+}
+
+/* ================= 涂鸦卡 ================= */
+let cardData=null;
+function makeCard(){
+  const msg=document.getElementById('msg').value.trim();
+  const who=D.who=document.getElementById('who').value.trim()||D.who||'';
+  save();
+  if(isBoardEmpty()){toast('先画点什么嘛，一个点也算 ❤️');return}
+  const c=document.createElement('canvas');c.width=900;c.height=1250;
+  const g=c.getContext('2d');
+  const bg=g.createLinearGradient(0,0,900,1250);
+  bg.addColorStop(0,'#ffe4d6');bg.addColorStop(.55,'#ffdfe6');bg.addColorStop(1,'#f6ddff');
+  g.fillStyle=bg;g.fillRect(0,0,900,1250);
+  // 装饰点
+  for(let i=0;i<40;i++){
+    g.globalAlpha=.12+Math.random()*.15;
+    g.font=(10+Math.random()*16)+'px serif';
+    g.fillText(['❤','✿','✦','˚'][i%4],Math.random()*880+10,Math.random()*1230+10);
+  }
+  g.globalAlpha=1;
+  // 拍立得白框（微倾斜）
+  g.save();g.translate(450,470);g.rotate(-.035);
+  g.shadowColor='rgba(160,80,60,.28)';g.shadowBlur=30;g.shadowOffsetY=14;
+  g.fillStyle='#fffdf8';g.fillRect(-330,-330,660,760);
+  g.shadowColor='transparent';
+  g.drawImage(cv,0,0,640,640,-300,-300,600,600);
+  g.strokeStyle='#f0e2d2';g.lineWidth=2;g.strokeRect(-300,-300,600,600);
+  g.fillStyle='#8a7a6a';g.font='italic 26px Georgia';
+  g.textAlign='center';g.fillText('for you, from '+((who||'me')+'').slice(0,12),0,395);
+  g.restore();
+  // 悄悄话
+  g.textAlign='center';
+  g.fillStyle='#2d2a26';g.font='bold 40px sans-serif';
+  let yy=940;
+  if(msg)yy=wrapText(g,msg,450,940,660,56)+26;
+  // 日期+窝名
+  const d=new Date();
+  g.fillStyle='#a08d7e';g.font='24px sans-serif';
+  g.fillText(d.getFullYear()+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日 · 情侣涂鸦窝',450,1130);
+  g.fillStyle='#e84f66';g.font='22px sans-serif';
+  g.fillText('wishpool.xin/doodle.html',450,1170);
+  const url=c.toDataURL('image/jpeg',.92);
+  cardData={url,msg,who,date:todayStr()};
+  document.getElementById('cardImg').src=url;
+  document.getElementById('mask').classList.add('on');
+}
+function isBoardEmpty(){
+  // 采样检测画布是否只有底色
+  const d=ctx.getImageData(0,0,640,640).data;
+  for(let i=0;i<d.length;i+=64*4){
+    if(d[i+3]>0&&(d[i]<240||d[i+1]<240||d[i+2]<230))return false;
+  }
+  return true;
+}
+function closeCard(){document.getElementById('mask').classList.remove('on')}
+document.getElementById('mask').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCard()});
+function downloadCard(){
+  if(!cardData)return;
+  try{
+    const a=document.createElement('a');
+    a.href=cardData.url;a.download='doodle-'+cardData.date+'.jpg';
+    document.body.appendChild(a);a.click();a.remove();
+    toast('已生成图片。微信里也可以长按图片保存');
+  }catch(e){toast('长按图片保存到相册，再发给 TA')}
+}
+
+/* ================= 涂鸦册 ================= */
+function thumb(){
+  const c=document.createElement('canvas');c.width=480;c.height=480;
+  c.getContext('2d').drawImage(cv,0,0,640,640,0,0,480,480);
+  return c.toDataURL('image/jpeg',.78);
+}
+function saveAlbum(){
+  if(isBoardEmpty()){toast('先画点什么嘛，一个点也算 ❤️');return}
+  D.album.unshift({img:thumb(),msg:document.getElementById('msg').value.trim(),who:D.who||'',date:todayStr()});
+  if(D.album.length>12)D.album.length=12;
+  if(!D.days.includes(todayStr()))D.days.push(todayStr());
+  save();renderAlbum();updateStats();
+  toast('存进涂鸦册啦，你们已经画了 '+D.album.length+' 张');
+}
+function renderAlbum(){
+  const el=document.getElementById('shelf');
+  document.getElementById('albCount').textContent=D.album.length?('共 '+D.album.length+' 张'):'';
+  if(!D.album.length){
+    el.innerHTML='<div class="empty" style="grid-column:1/3">涂鸦册还是空的。<br>画第一张，你们的画廊就开张了。</div>';return;
+  }
+  el.innerHTML=D.album.map((a,i)=>
+    '<div class="piece"><img src="'+a.img+'" alt="涂鸦"><div class="pm">'+(a.msg?a.msg.replace(/</g,'&lt;'):'（没写悄悄话）')+'</div>'
+    +'<div class="pd"><span>'+a.date+(a.who?' · '+a.who:'')+'</span><span class="pa">'
+    +'<button onclick="reply('+i+')">回画</button><button class="redl" onclick="del('+i+')">删</button></span></div></div>'
+  ).join('');
+}
+function reply(i){
+  const a=D.album[i];clearBoard();
+  const img=new Image();
+  img.onload=()=>{ctx.globalAlpha=.22;ctx.drawImage(img,0,0,640,640);ctx.globalAlpha=1;snap();undoStack.pop()};
+  img.src=a.img;
+  document.getElementById('msg').value='';
+  document.getElementById('msg').focus();
+  toast('TA 的画垫在下面了，照着画一张回过去吧');
+}
+function del(i){
+  if(!confirm('删掉这张涂鸦？'))return;
+  D.album.splice(i,1);save();renderAlbum();updateStats();
+}
+/* ================= 统计 ================= */
+function updateStats(){
+  document.getElementById('stCount').textContent=D.album.length;
+  const ds=[...new Set(D.days)].sort();
+  let streak=0;const day=s=>new Date(s+'T12:00').getTime();
+  const today=todayStr();
+  let cur=today;
+  for(let i=ds.length-1;i>=0;i--){
+    if(ds[i]===cur){streak++;const t=new Date(cur+'T12:00');cur=new Date(t-86400000).toISOString().slice(0,10)}
+    else if(i===ds.length-1){break}
+    else break;
+  }
+  document.getElementById('stStreak').textContent=streak;
+  document.getElementById('stToday').textContent=D.days.includes(today)?'画啦 ✅':'还没';
+}
+/* ================= 启动 ================= */
+if(D.who)document.getElementById('who').value=D.who;
+document.getElementById('who').addEventListener('change',e=>{D.who=e.target.value.trim();save()});
+renderAlbum();updateStats();
+setTimeout(()=>toast('💡 今天的题目：'+p[0]),900);
+</script>
+</body>
+</html>
