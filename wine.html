@@ -129,7 +129,7 @@ footer .warn{color:#8a7355}
 
   <h2>🎯 老带新 · 这箱白喝 <small>买过一箱的进</small></h2>
   <div class="f" id="invBox">
-    <div class="rule">已订过酒的看这里：<b>买过 1 箱</b> → 生成你的专属邀请码 → 发给朋友 → <b>朋友整箱下单成功 1 单，返你 1 箱的货款</b>。名额 <b>3 个</b>，3 个朋友都下单 = 这箱白喝。朋友也不吃亏：报你的码首单立减。仅限直接推荐的朋友（单层推荐，谢绝转介绍）。</div>
+    <div class="rule">已订过酒的看这里：<b>买过 1 箱</b> → 生成你的专属邀请码 → 发给朋友 → <b>朋友整箱下单 1 单，返你 1/3 箱货款</b>，满 <b>3 单</b>累计返满一整箱 = 这箱白喝。只算直接推荐的朋友（单层推荐，谢绝转介绍），朋友报你的码首单也有立减。</div>
     <div id="invForm">
       <div class="grid">
         <div><label>你的称呼</label><input id="iName" placeholder="如：王经理"></div>
@@ -153,11 +153,11 @@ footer .warn{color:#8a7355}
   <details class="faq"><summary>最少订多少？能送货吗？</summary><p>整箱起订，不限箱数；同城可送货上门，外地走物流（运费按距离另议或到付）。50 箱以上价格另谈。</p></details>
   <details class="faq"><summary>可以便宜到什么价？</summary><p>量大从优是真实的：10 箱、50 箱、100 箱是三个价格档，用的途和数量谈。价格表是参考区间，欢迎电话里直接砍。</p></details>
   <details class="faq"><summary>怎么验货？</summary><p>支持先验后付：当面清点箱数、查看瓶身批号与外箱日期一致、核对防伪，确认无误再付款。</p></details>
-  <details class="faq"><summary>老带新返现怎么算？</summary><p>买过 1 箱后生成专属邀请码，朋友整箱下单成功并付款后，返你 1 箱的货款（微信转账），每人最多 3 个名额。朋友报你的码首单立减。凭双方订单核对，单层推荐，不搞转介绍。</p></details>
+  <details class="faq"><summary>老带新返现怎么算？</summary><p>买过 1 箱后生成专属邀请码。朋友整箱下单成功并付款后，每单返你 1/3 箱货款，满 3 单累计返满 1 箱 = 这箱白喝，之后不再返。朋友报你的码首单立减。凭双方订单核对，仅限直接推荐（单层推荐，不搞转介绍、不按人头层层返）。</p></details>
 
   <footer>
     <p class="warn">未成年人禁止饮酒 · 饮酒有害健康 · 请适量饮酒 · 严禁酒后驾驶</p>
-    <p class="warn">老带新返现为单层推荐促销活动，仅限直接推荐且需以实际成交订单为准</p>
+    <p class="warn">老带新为单层推荐促销：每单按实际成交返 1/3 箱货款、累计 3 单封顶，不按人头计酬、不发展下线</p>
     <p>本页为正品行货整箱直供信息页 · 交易以实际签订合同为准</p>
   </footer>
 </div>
@@ -265,7 +265,7 @@ function initRef(){
   var r=null;try{r=JSON.parse(localStorage.getItem("wineRef")||"null")}catch(e){}
   if(r&&r.code){
     var b=document.getElementById("refban");
-    b.innerHTML="🎉 <b>"+r.who+"</b> 请你喝酒：下单时报 TA 的邀请码 <b>"+r.code+"</b>，你首单立减、TA 返一箱货款。已自动帮你带上推荐码，直接填表询价即可。";
+    b.innerHTML="🎉 <b>"+r.who+"</b> 请你喝酒：下单时报 TA 的邀请码 <b>"+r.code+"</b>，你首单立减；TA 攒满 3 单就白喝一箱。已自动帮你带上推荐码，直接填表询价即可。";
     b.classList.add("on");
     document.getElementById("fMsg").placeholder="已自动带上推荐码 "+r.code+"，想了解的酒写这里";
   }
@@ -289,20 +289,21 @@ function showInv(inv){
   document.getElementById("invForm").style.display="none";
   document.getElementById("invDone").style.display="block";
   document.getElementById("invCode").textContent=inv.code;
-  document.getElementById("invCount").textContent="已登记返现："+inv.n+" / 3 箱"+(inv.n>=3?" · 名额齐了，找我们收返现 🎉":"");
+  var pct=Math.round(inv.n/3*100);
+  document.getElementById("invCount").textContent="返现进度："+(inv.n>=3?"100% · 这箱白喝了 🎉":"已返 "+pct+"%（"+inv.n+"/3 单）");
 }
 function shareInv(){
   var inv=getInv();if(!inv)return;
   var u=location.origin+location.pathname+"?ref="+encodeURIComponent(inv.code)+"&who="+encodeURIComponent(inv.name);
-  var txt="【"+inv.name+"】请你喝酒 🍺\n我订的整箱白酒（厂家直供、手续齐、可开发票），你报我的邀请码 "+inv.code+" 下单：你首单立减，我返一箱货款——兄弟，帮忙喝口免费的。\n👉 "+u+"\n（整箱起订 · "+location.host+"）";
+  var txt="【"+inv.name+"】请你喝酒 🍺\n我订的整箱白酒（厂家直供、手续齐、可开发票），你报我的邀请码 "+inv.code+" 下单：你首单立减，我攒 3 单返一整箱——兄弟帮我凑个整。\n👉 "+u+"\n（整箱起订 · "+location.host+"）";
   copy(txt).then(function(){toast("邀请文案已复制，去微信发给朋友吧")});
 }
 function markOrder(){
   var inv=getInv();if(!inv)return;
-  if(inv.n>=3){toast("名额已用完");return}
+  if(inv.n>=3){toast("3 单已满，这箱已经白喝了");return}
   inv.n++;try{localStorage.setItem(INVKEY,JSON.stringify(inv))}catch(e){}
   showInv(inv);
-  toast(inv.n>=3?"3 个名额齐了！凭订单找我们收返现 🎉":"已登记 "+inv.n+"/3，朋友订单核对后微信转你");
+  toast(inv.n>=3?"3 单齐了！凭订单收返现，这箱白喝 🎉":"已登记 "+inv.n+"/3 单，返 "+(inv.n*33)+"% 箱货款");
 }
 function makePoster(){
   var inv=getInv();if(!inv)return;
@@ -326,7 +327,7 @@ function makePoster(){
   g.fillText(inv.code,360,540);
   g.font="24px 'PingFang SC',sans-serif";g.fillStyle="#f3e8d8";
   g.fillText("🎁 报码首单立减",360,640);
-  g.fillText("🍻 朋友下单，推荐人返一箱货款",360,690);
+  g.fillText("🍻 你下一单，我离白喝近一步（3 单封顶）",360,690);
   g.fillText("📦 整箱起订 · 可送货 · 可签合同",360,740);
   g.fillStyle="rgba(168,148,120,.9)";g.font="20px 'PingFang SC',sans-serif";
   g.fillText(location.host+"/wine.html",360,860);
