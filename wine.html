@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>白酒整箱订货 · 厂家直供 | 企业团购 批发配送 可开发票</title>
+<meta name="description" content="白酒整箱订货直供页：企业年会用酒、春节福利、婚宴用酒、烟酒店批发。手续齐全可开增值税发票，量大从优，同城送货。未成年人禁止饮酒。">
+<style>
+:root{--bg:#120c05;--card:#1c130a;--amber:#e8a44a;--amber2:#f0b56a;--text:#f3e8d8;--dim:#a89478;--line:rgba(232,164,74,.22);--red:#c0392b}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;padding-bottom:90px}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+/* hero */
+.hero{text-align:center;padding:46px 16px 30px;background:radial-gradient(ellipse at 50% -20%,rgba(232,164,74,.16),transparent 60%)}
+.hero .badge{display:inline-block;font-size:12px;color:var(--amber);border:1px solid var(--line);padding:3px 14px;border-radius:999px;letter-spacing:2px}
+.hero h1{font-size:30px;margin:16px 0 8px;letter-spacing:1px}
+.hero h1 span{color:var(--amber)}
+.hero .slogan{color:var(--dim);font-size:14px}
+.trust{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:18px}
+.trust i{font-style:normal;font-size:12px;color:var(--amber2);background:rgba(232,164,74,.08);border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+h2{font-size:19px;margin:34px 0 4px;display:flex;align-items:center;gap:8px}
+h2 small{font-size:12px;color:var(--dim);font-weight:normal;margin-left:auto}
+/* products */
+.prod{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:12px}
+.prod .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.prod .name{font-size:18px;font-weight:600}
+.prod .tag{font-size:12px;color:var(--amber);white-space:nowrap}
+.prod .desc{font-size:13px;color:var(--dim);margin:8px 0 12px}
+.prod .meta{display:flex;gap:8px;flex-wrap:wrap}
+.prod .meta i{font-style:normal;font-size:12px;color:var(--dim);border:1px dashed rgba(168,148,120,.4);border-radius:6px;padding:3px 8px}
+/* price */
+.price{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:12px}
+.price .row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(232,164,74,.1)}
+.price .row:last-child{border-bottom:none}
+.price .l b{font-size:14px;display:block}
+.price .l span{font-size:12px;color:var(--dim)}
+.price .r{font-size:13px;color:var(--amber2);text-align:right;white-space:nowrap}
+.note{font-size:12px;color:var(--dim);margin-top:10px}
+/* form */
+.f{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:12px}
+.f label{font-size:13px;color:var(--dim);display:block;margin:12px 0 6px}
+.f label:first-child{margin-top:0}
+.f input,.f select,.f textarea{width:100%;background:#241809;border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;padding:12px;outline:none;font-family:inherit}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--amber)}
+.f .grid{display:flex;gap:10px}
+.f .grid>div{flex:1}
+/* buttons */
+.bar{position:fixed;bottom:0;left:0;right:0;background:rgba(18,12,5,.96);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;max-width:680px;margin:0 auto}
+.bar button{flex:1;border:none;border-radius:12px;font-size:16px;font-weight:600;padding:14px;cursor:pointer;font-family:inherit}
+.b-call{background:#2a1c0c;color:var(--amber2);border:1px solid var(--line)}
+.b-wechat{background:linear-gradient(135deg,#e8a44a,#d4842e);color:#1a1005}
+/* faq */
+.faq{border:1px solid var(--line);border-radius:14px;margin-top:10px;overflow:hidden}
+.faq summary{padding:14px 16px;font-size:14px;cursor:pointer;list-style:none;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"›";position:absolute;right:16px;top:12px;color:var(--dim);transform:rotate(90deg);font-size:16px}
+.faq p{padding:0 16px 14px;font-size:13px;color:var(--dim)}
+/* footer */
+footer{margin-top:36px;text-align:center;font-size:11px;color:#6e5c44;padding:0 24px;line-height:1.8}
+footer .warn{color:#8a7355}
+/* toast */
+.toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%) translateY(14px);background:#2b1d0c;border:1px solid var(--amber);color:var(--text);font-size:13px;padding:10px 20px;border-radius:12px;opacity:0;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap;max-width:92vw}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;z-index:40}
+.modal.on{display:flex}
+.modal .box{background:var(--card);border:1px solid var(--line);border-radius:20px 20px 0 0;width:100%;max-width:680px;padding:22px 20px calc(22px + env(safe-area-inset-bottom))}
+.modal .box h3{font-size:17px;margin-bottom:6px}
+.modal .box .tip{font-size:12px;color:var(--dim);margin-bottom:12px}
+.modal textarea{width:100%;background:#241809;border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:14px;padding:12px;min-height:150px;resize:none;font-family:inherit;outline:none}
+.modal .acts{display:flex;gap:10px;margin-top:14px}
+.modal .acts button{flex:1;border-radius:12px;font-size:15px;font-weight:600;padding:13px;border:none;cursor:pointer;font-family:inherit}
+.modal .copy{background:linear-gradient(135deg,#e8a44a,#d4842e);color:#1a1005}
+.modal .close{background:#2a1c0c;color:var(--dim);border:1px solid var(--line)}
+.modal .wxid{text-align:center;font-size:14px;color:var(--amber2);margin:10px 0 2px;letter-spacing:1px}
+.modal .wxid b{font-size:18px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">正品行货 · 手续齐全 · 可开发票</div>
+  <h1>整箱白酒直供<span>·</span>厂家价格</h1>
+  <div class="slogan">企业年会 · 春节福利 · 婚宴用酒 · 烟酒店批发</div>
+  <div class="trust">
+    <i>✅ 增值税发票</i><i>🚚 可送货上门</i><i>📄 正规进货凭证</i><i>🤝 大量从优</i>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h2>🍶 在售酒品 <small>整箱起订</small></h2>
+  <div id="prodList"></div>
+
+  <h2>💰 三档报价 <small>量大从优 · 面议可谈</small></h2>
+  <div class="price" id="priceBox"></div>
+  <div class="note">* 以上为参考区间，实际按品牌、数量、送货距离一单一议。所有交易可签合同、可公对公转账。</div>
+
+  <h2>📝 留个信息，我们回电话 <small>或直接拨打底部电话</small></h2>
+  <div class="f">
+    <div class="grid">
+      <div><label>称呼</label><input id="fName" placeholder="怎么称呼您"></div>
+      <div><label>电话 *</label><input id="fTel" type="tel" placeholder="方便回电的号码" inputmode="tel"></div>
+    </div>
+    <div class="grid">
+      <div><label>用途</label><select id="fUse"><option>企业年会/福利</option><option>婚宴/宴席</option><option>烟酒店批发</option><option>送礼</option><option>自己喝/囤酒</option></select></div>
+      <div><label>大概要多少</label><select id="fQty"><option>1-2 箱</option><option>3-10 箱</option><option>10-50 箱</option><option>50 箱以上</option></select></div>
+    </div>
+    <label>想了解的酒 / 备注</label>
+    <textarea id="fMsg" rows="2" placeholder="例如：想看看 XX 那款，年后要 30 箱"></textarea>
+  </div>
+
+  <h2>❓ 常见问题</h2>
+  <details class="faq"><summary>酒是正品吗？手续齐不齐？</summary><p>全部为正规渠道进货，进货凭证、检验报告、品牌授权文件齐全，可提供复印件或现场查验，交易可签购销合同、公对公转账、开具增值税发票。</p></details>
+  <details class="faq"><summary>最少订多少？能送货吗？</summary><p>整箱起订，不限箱数；同城可送货上门，外地走物流（运费按距离另议或到付）。50 箱以上价格另谈。</p></details>
+  <details class="faq"><summary>可以便宜到什么价？</summary><p>量大从优是真实的：10 箱、50 箱、100 箱是三个价格档，用的途和数量谈。价格表是参考区间，欢迎电话里直接砍。</p></details>
+  <details class="faq"><summary>怎么验货？</summary><p>支持先验后付：当面清点箱数、查看瓶身批号与外箱日期一致、核对防伪，确认无误再付款。</p></details>
+
+  <footer>
+    <p class="warn">未成年人禁止饮酒 · 饮酒有害健康 · 请适量饮酒 · 严禁酒后驾驶</p>
+    <p>本页为正品行货整箱直供信息页 · 交易以实际签订合同为准</p>
+  </footer>
+</div>
+
+<div class="bar">
+  <button class="b-call" id="callBtn" onclick="callUs()">📞 电话直谈</button>
+  <button class="b-wechat" onclick="submitForm()">💬 微信询价</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <h3>把这条发给微信</h3>
+    <div class="tip">复制下面这段 → 发到微信 → 我们马上回报价</div>
+    <textarea id="msgBox" readonly></textarea>
+    <div class="wxid">或添加微信：<b id="wxShow"></b> <button style="background:none;border:1px solid var(--line);color:var(--amber);font-size:12px;border-radius:6px;padding:2px 8px;margin-left:6px" onclick="copyWechat()">复制</button></div>
+    <div class="acts">
+      <button class="close" onclick="closeModal()">关闭</button>
+      <button class="copy" onclick="copyMsg()">📋 一键复制</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========= 你只需要改这里 =========
+   PHONE：接电话的手机号
+   WECHAT：微信号
+   PRODUCTS：在售酒品（name 名称 / tag 一句话卖点 / desc 描述 / meta 规格）
+   PRICES：三档报价（l 标题 / s 说明 / r 价格区间）
+*/
+var CFG={
+  PHONE:"138-XXXX-XXXX",
+  WECHAT:"XXXXXXXX",
+  PRODUCTS:[
+    {name:"【在这里填写酒名 1】",tag:"次高端 · 宴席首选",desc:"【在这里填写一句话卖点：香型 / 度数 / 口感 / 适合场合。比如：浓香 52 度，入口绵甜，酒体饱满，办席有面子。】",meta:["500ml×6 瓶/箱","52%vol 浓香型","生产日期 20XX 年"]},
+    {name:"【在这里填写酒名 2】",tag:"口粮自饮 · 囤酒合适",desc:"【在这里填写第二款酒的卖点。建议放一款低价的：低价款引流，贵款赚利润。】",meta:["500ml×6 瓶/箱","42%vol","生产日期 20XX 年"]}
+  ],
+  PRICES:[
+    {l:"🎁 团购 / 宴席价",s:"企业年会、婚宴、春节福利，10 箱起",r:"零售价 75–85 折"},
+    {l:"📦 烟酒店批发价",s:"整件批发，30 箱起，长期补货更优",r:"零售价 60–70 折"},
+    {l:"🏭 大批量专供",s:"100 箱以上，一单一议，可签年度供货",r:"电话面议"}
+  ]
+};
+/* ========= 以下不用改 ========= */
+
+document.getElementById("wxShow").textContent=CFG.WECHAT;
+document.getElementById("callBtn").textContent="📞 "+CFG.PHONE;
+
+var pl=document.getElementById("prodList");
+pl.innerHTML=CFG.PRODUCTS.map(function(p){
+  return '<div class="prod"><div class="top"><div class="name">'+p.name+'</div><div class="tag">'+p.tag+'</div></div>'+
+  '<div class="desc">'+p.desc+'</div><div class="meta">'+p.meta.map(function(m){return "<i>"+m+"</i>"}).join("")+'</div></div>';
+}).join("");
+
+document.getElementById("priceBox").innerHTML=CFG.PRICES.map(function(x){
+  return '<div class="row"><div class="l"><b>'+x.l+'</b><span>'+x.s+'</span></div><div class="r">'+x.r+'</div></div>';
+}).join("");
+
+function toast(s){var t=document.getElementById("toast");t.textContent=s;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},2200)}
+function closeModal(){document.getElementById("modal").classList.remove("on")}
+
+function submitForm(){
+  var name=document.getElementById("fName").value.trim()||"客户";
+  var tel=document.getElementById("fTel").value.trim();
+  if(!/^1\d{10}$|^0\d{2,3}-?\d{7,8}$/.test(tel.replace(/\s|-/g,""))){toast("请先填一下电话，我们才好回你");document.getElementById("fTel").focus();return}
+  var use=document.getElementById("fUse").value;
+  var qty=document.getElementById("fQty").value;
+  var msg=document.getElementById("fMsg").value.trim();
+  var txt="【订酒咨询】\n称呼："+name+"\n电话："+tel+"\n用途："+use+"\n数量："+qty+(msg?"\n备注："+msg:"");
+  document.getElementById("msgBox").value=txt;
+  document.getElementById("modal").classList.add("on");
+}
+function copyMsg(){
+  var v=document.getElementById("msgBox").value;
+  copy(v).then(function(){toast("已复制，去微信粘贴发送吧");closeModal()});
+}
+function copyWechat(){
+  copy(CFG.WECHAT).then(function(){toast("微信号已复制")});
+}
+function copy(s){
+  if(navigator.clipboard&&navigator.clipboard.writeText){return navigator.clipboard.writeText(s)}
+  return new Promise(function(res){var ta=document.createElement("textarea");ta.value=s;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);res()});
+}
+function callUs(){location.href="tel:"+CFG.PHONE.replace(/[^0-9+]/g,"")}
+
+/* 入场提示 */
+window.addEventListener("load",function(){
+  if(location.hash!=="#seen")setTimeout(function(){toast("👇 填电话询价，或直接打底部电话")},1500);
+});
+</script>
+</body>
+</html>
