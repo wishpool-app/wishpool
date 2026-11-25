@@ -312,14 +312,29 @@ async function openPosition(env, symbol, side, qty, stop, tp1, live) {
 }
 
 // ============ 推送 ============
+// Bark（iPhone 通知栏）+ PushPlus（微信）双通道，配了哪个走哪个
 async function push(env, title, content) {
-  if (!env.PUSHPLUS_TOKEN) return false;
-  const r = await fetch('https://www.pushplus.plus/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: env.PUSHPLUS_TOKEN, title, content, template: 'markdown' }),
-  });
-  return r.ok;
+  let ok = false;
+  if (env.BARK) {
+    try {
+      const plain = content.replace(/^#+\s*/gm, '').replace(/\*\*/g, '')
+        .replace(/^>\s*/gm, '').replace(/\n{2,}/g, '\n').trim();
+      const r = await fetch(`${env.BARK.replace(/\/+$/, '')}/` +
+        `${encodeURIComponent(title)}/${encodeURIComponent(plain)}?group=quant`);
+      ok = r.ok;
+    } catch (e) { /* bark 失败不阻塞 pushplus */ }
+  }
+  if (env.PUSHPLUS_TOKEN) {
+    try {
+      const r = await fetch('https://www.pushplus.plus/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: env.PUSHPLUS_TOKEN, title, content, template: 'markdown' }),
+      });
+      ok = r.ok || ok;
+    } catch (e) { /* 忽略 */ }
+  }
+  return ok;
 }
 
 // ============ 主流程 ============
