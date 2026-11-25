@@ -68,6 +68,18 @@ header{display:flex;align-items:center;justify-content:space-between;gap:10px;ma
 .tk .fund{font-size:10px;color:var(--dim2);font-family:var(--mono);margin-top:6px}
 .tk::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;
   background:radial-gradient(circle,rgba(240,182,77,.1),transparent 70%)}
+.tk-wide{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 14px}
+.tk-wide .px{font-size:19px}
+.tk-wide .grow{flex:1;min-width:0}
+.tk-wide .cb.xau{background:linear-gradient(145deg,#f5d06a,#c9932a)}
+/* ---------- 资产总览 ---------- */
+.ov{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.ov .cell{text-align:center;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:13px;padding:11px 4px}
+.ov .lb{font-size:10px;color:var(--dim2);letter-spacing:.5px}
+.ov .vl{font-family:var(--mono);font-size:17px;font-weight:700;margin-top:4px;letter-spacing:-.3px}
+.ov .vl small{font-size:10px;color:var(--dim);font-weight:400}
+.ov .vl.pos-up{color:var(--up)} .ov .vl.pos-down{color:var(--down)}
+.ovnote{font-size:9px;color:var(--dim2);margin-top:9px;font-family:var(--mono);line-height:1.6}
 /* ---------- 卡片 ---------- */
 .grid{display:grid;gap:14px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;
@@ -159,13 +171,28 @@ footer{margin-top:20px;font-size:10px;color:var(--dim2);line-height:1.8;padding:
   <div class="tk">
     <div class="coin"><div class="cb btc">₿</div><div class="sym">BTC<small>USDT 永续</small></div></div>
     <div><span class="px" id="pxBTC">—</span><span class="chg" id="chBTC"></span></div>
-    <div class="fund" id="tkBtcSub">—</div>
+    <div class="fund" id="fundBTC">—</div>
   </div>
   <div class="tk">
     <div class="coin"><div class="cb sol">◎</div><div class="sym">SOL<small>USDT 永续</small></div></div>
     <div><span class="px" id="pxSOL">—</span><span class="chg" id="chSOL"></span></div>
-    <div class="fund" id="tkSolSub">—</div>
+    <div class="fund" id="fundSOL">—</div>
   </div>
+  <div class="tk tk-wide">
+    <div class="cb xau">Au</div>
+    <div class="grow"><div class="sym">XAU · 伦敦金</div><div class="fund" id="fundXAU">XAUT 永续 · 跟踪现货金价</div></div>
+    <div style="text-align:right"><span class="px" id="pxXAU">—</span><span class="chg" id="chXAU"></span></div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:14px">
+  <h2><span class="tt">资产总览</span><b id="ovUpd">读取中…</b></h2>
+  <div class="ov">
+    <div class="cell"><div class="lb">总资产</div><div class="vl" id="ovEq">—</div></div>
+    <div class="cell"><div class="lb">今日盈亏</div><div class="vl" id="ovToday">—</div></div>
+    <div class="cell"><div class="lb">累计盈亏</div><div class="vl" id="ovCum">—</div></div>
+  </div>
+  <div class="ovnote">模拟盘 BTC / SOL 各 300 USDT 起始 · 资金与持仓 15 分钟推送，行情实时 · 今日盈亏 = 今日已平仓盈亏</div>
 </div>
 
 <div class="card">
@@ -174,6 +201,11 @@ footer{margin-top:20px;font-size:10px;color:var(--dim2);line-height:1.8;padding:
 </div>
 
 <div class="grid" id="cards"></div>
+
+<div class="card" style="margin-top:14px">
+  <h2><span class="tt">XAU 黄金 · 实时走势</span><b id="lastXAU">⟳</b></h2>
+  <div class="chartwrap"><span class="lbl">实时 5m 走势 · gate.io</span><canvas class="cv-px" id="chartXAU"></canvas></div>
+</div>
 
 <div class="card" style="margin-top:14px">
   <h2><span class="tt">实盘上线门槛</span><b>45 天 · 收益≥0 · 回撤&lt;30% · ≥15 笔</b></h2>
@@ -194,7 +226,7 @@ footer{margin-top:20px;font-size:10px;color:var(--dim2);line-height:1.8;padding:
 <script>
 const BASE_RET = {BTC:28.3, SOL:18.3};
 const MIN_DAYS = 45, MIN_TRADES = 15;
-const PAIR = {BTC:"BTC_USDT", SOL:"SOL_USDT"};
+const PAIR = {BTC:"BTC_USDT", SOL:"SOL_USDT", XAU:"XAUT_USDT"};
 const GATE = "https://api.gateio.ws/api/v4/futures/usdt";
 let DATA = null, CUR = 'BTC';
 const lastPx = {};
@@ -210,7 +242,7 @@ async function jget(url){
 function paint(sym, price, chg, fund){
   const el = document.getElementById('px'+sym);
   const old = lastPx[sym];
-  el.textContent = fmt(price, sym==='BTC'?1:2);
+  el.textContent = fmt(price, sym==='BTC'||sym==='XAU'?1:2);
   if(old !== undefined && price !== old){
     el.classList.remove('fu','fd'); void el.offsetWidth;
     el.classList.add(price > old ? 'fu' : 'fd');
@@ -219,10 +251,10 @@ function paint(sym, price, chg, fund){
   const chEl = document.getElementById('ch'+sym);
   chEl.textContent = (chg>=0?'+':'')+chg.toFixed(2)+'%';
   chEl.className = 'chg ' + (chg>=0?'pos-up':'pos-down');
-  document.getElementById(sym==='BTC'?'tkBtcSub':'tkSolSub').textContent =
-    '资金费率 ' + (fund*100).toFixed(4) + '%';
+  const fe = document.getElementById('fund'+sym);
+  if(fe) fe.textContent = (sym==='XAU'?'XAUT 永续 · 资金费率 ':'资金费率 ') + (fund*100).toFixed(4) + '%';
   const lp = document.getElementById('last'+sym);
-  if(lp) lp.textContent = '⟳ ' + fmt(price, sym==='BTC'?1:2);
+  if(lp) lp.textContent = '⟳ ' + fmt(price, sym==='BTC'||sym==='XAU'?1:2);
 }
 async function pollTickers(){
   try{
@@ -259,9 +291,11 @@ function drawSeries(cv, closes){
   g.fillStyle = up?'rgba(246,70,93,.2)':'rgba(14,203,129,.2)'; g.fill();
 }
 async function pollChart(sym){
+  const cv = document.getElementById('chart'+sym);
+  if(!cv) return;
   try{
     const arr = await jget(GATE+"/candlesticks?contract="+PAIR[sym]+"&interval=5m&limit=100");
-    drawSeries(document.getElementById('chart'+sym), arr.map(k=>+k.c));
+    drawSeries(cv, arr.map(k=>+k.c));
   }catch(e){}
 }
 /* ---------- 权益曲线 ---------- */
@@ -435,10 +469,29 @@ async function load(){
     DATA = await r.json();
     const upd = new Date(DATA.updated);
     document.getElementById('upd').textContent = '资金/持仓更新 ' + upd.toLocaleString('zh-CN',{hour12:false}) + ' · 行情实时直连';
-    renderCards(); renderGates(); renderTrades();
+    renderCards(); renderGates(); renderTrades(); renderOverview();
   }catch(e){
     document.getElementById('upd').textContent = '资金数据推送中，行情已实时连接';
   }
+}
+function renderOverview(){
+  const set = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
+  set('ovUpd', '行情实时 · 资金 ' + new Date().toLocaleTimeString('zh-CN',{hour12:false}) + ' 刷新');
+  if(!DATA){ set('ovEq','—'); set('ovToday','—'); set('ovCum','—'); return; }
+  let eq = 0, cum = 0, today = 0;
+  const todayKey = new Date().toDateString();
+  Object.values(DATA.symbols).forEach(s=>{
+    eq += s.equity || 0;
+    (s.trades||[]).forEach(t=>{
+      cum += t.pnl || 0;
+      if(t.exit_dt && new Date(t.exit_dt).toDateString() === todayKey) today += t.pnl || 0;
+    });
+  });
+  const cls = v => v > 0.005 ? 'pos-up' : (v < -0.005 ? 'pos-down' : '');
+  const sgn = v => (v>0?'+':'') + fmt(v);
+  set('ovEq', fmt(eq) + ' <small>U</small>');
+  set('ovToday', `<span class="${cls(today)}">${sgn(today)}</span> <small>U</small>`);
+  set('ovCum', `<span class="${cls(cum)}">${sgn(cum)}</span> <small>U</small>`);
 }
 pollTickers(); setInterval(pollTickers, 4000);
 Object.keys(PAIR).forEach(s=>pollChart(s));
