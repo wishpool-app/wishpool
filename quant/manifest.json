@@ -1,0 +1,12 @@
+{
+  "name": "币安线 · 实时看板",
+  "short_name": "币安线",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
