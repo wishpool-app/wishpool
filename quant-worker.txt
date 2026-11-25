@@ -23,20 +23,21 @@
 
 // ============ 策略参数（和电脑版 quant/config.py 一一对应，勿随意改） ============
 const P = {
-  tf: '15m',
+  tf: '5m',
   risk_pct: 0.02,
   leverage: 5,
   max_margin_pct: 0.40,
-  stop_atr_mult: 1.5,
-  tp1_r: 1.5,
+  stop_atr_mult: 2.0,
+  tp1_r: 2.5,
   tp1_close_pct: 0.5,
-  adx_min: 20,
+  adx_min: 25,
   atr_pct_min: 0.0015,
   vol_ratio_min: 0.9,
   daily_ema: 50,
   fee_roundtrip: 0.0012,
 };
 
+const TF_MIN = { '1m': 1, '3m': 3, '5m': 5, '15m': 15, '30m': 30, '1h': 60 }[P.tf] || 5;
 const BN = 'https://fapi.binance.com';
 const GATE = 'https://api.gateio.ws/api/v4/futures/usdt';
 
@@ -340,7 +341,7 @@ async function run(env, trigger) {
 
       const row = { sym, feed, price: x.close, d1: x.d1, adx: x.adx, atr_pct: x.atr_pct,
         vol_ratio: x.vol_ratio, daily_up: x.daily_up, sig, pos: pos ? pos.amt : 0,
-        barTime: new Date(x.t + 15 * 60 * 1000).toISOString().slice(5, 16).replace('T', ' ') };
+        barTime: new Date(x.t + TF_MIN * 60 * 1000).toISOString().slice(5, 16).replace('T', ' ') };
 
       // 已有持仓：到 TP1 / 该推保本时提醒（只读判断，不改单，最稳）
       if (pos) {
@@ -480,7 +481,7 @@ h1{font-size:16px;font-weight:600;margin:0 0 4px}
 <h1>量化引擎 · 在线</h1>
 <div class=sub>${data.at.slice(0, 16).replace('T', ' ')} UTC ｜ 权益 ${Math.round(data.eq)}U（${data.src}）｜ ${data.live ? '自动下单' : '仅推信号 DRY'}</div>
 ${rows}
-<div class=sub style="margin-top:16px">信号条件：双 Supertrend + ADX≥20 + 日线 EMA50 同向 + 回踩 EMA20 收复 + 放量<br>15m 周期，每根 K 线收盘后 2 分钟算一次</div>`, {
+<div class=sub style="margin-top:16px">信号条件：双 Supertrend + ADX≥${P.adx_min} + 日线 EMA50 同向 + 回踩 EMA20 收复 + 放量<br>${TF_MIN} 分钟周期，每根 K 线收盘后 1 分钟算一次</div>`, {
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
     });
   },
