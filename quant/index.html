@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>币安线 · 只读看板</title>
+<title>币安线 · 实时看板</title>
 <style>
 :root{
   --bg:#0b0e14;--panel:#131822;--panel2:#0f141d;--line:#1e2633;
@@ -16,9 +16,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:4px}
 h1{font-size:18px;font-weight:600;letter-spacing:.5px}
 h1 em{font-style:normal;color:var(--gold)}
-.sub{font-size:11px;color:var(--dim);font-family:var(--mono);margin-bottom:14px}
-.pill{display:inline-block;font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+.sub{font-size:11px;color:var(--dim);font-family:var(--mono);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
 .pill.live{color:var(--gold);border-color:rgba(232,180,74,.4);background:rgba(232,180,74,.08)}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--down);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+.tape{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.tk{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between}
+.tk .sym{font-size:12px;color:var(--dim);font-weight:600}
+.tk .px{font-family:var(--mono);font-size:16px;font-weight:600;transition:color .15s}
+.tk .chg{font-family:var(--mono);font-size:11px;margin-left:6px}
+.tk .px.fu{color:var(--up)} .tk .px.fd{color:var(--down)}
+.tk small{display:block;font-size:9px;color:#4d5766;font-family:var(--mono)}
 .grid{display:grid;gap:10px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
 .card h2{font-size:13px;font-weight:600;color:var(--dim);display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
@@ -29,7 +38,11 @@ h1 em{font-style:normal;color:var(--gold)}
 .pos-up{color:var(--up)}.pos-down{color:var(--down)}
 .row{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:6px}
 .row b{color:var(--text);font-family:var(--mono);font-weight:500}
-canvas{width:100%;height:96px;display:block;margin-top:10px}
+.chartwrap{position:relative;margin-top:10px}
+.chartwrap .lbl{position:absolute;top:4px;left:6px;font-size:9px;color:#4d5766;font-family:var(--mono);z-index:2}
+.chartwrap .lastpx{position:absolute;top:4px;right:6px;font-size:11px;font-family:var(--mono);font-weight:600;z-index:2;color:var(--gold)}
+canvas{width:100%;display:block}
+.cv-px{height:120px}.cv-eq{height:64px;margin-top:6px}
 table{width:100%;border-collapse:collapse;font-size:11px;font-family:var(--mono)}
 th{text-align:left;color:var(--dim);font-weight:400;padding:6px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:6px 4px;border-bottom:1px solid rgba(30,38,51,.6);white-space:nowrap;color:#c8d2e0}
@@ -50,15 +63,20 @@ footer{margin-top:18px;font-size:10px;color:#4d5766;line-height:1.7}
 </head>
 <body>
 <header>
-  <h1>币安线 · <em>只读看板</em></h1>
-  <span class="pill live" id="livePill">加载中</span>
+  <h1>币安线 · <em>实时看板</em></h1>
+  <span class="pill live"><span class="dot"></span><span id="livePill">LIVE</span></span>
 </header>
-<div class="sub" id="upd">—</div>
+<div class="sub"><span id="upd">连接实时行情…</span></div>
+
+<div class="tape">
+  <div class="tk"><div><div class="sym">BTC · 永续</div><small id="tkBtcSub">—</small></div><div style="text-align:right"><span class="px" id="pxBTC">—</span><span class="chg" id="chBTC"></span></div></div>
+  <div class="tk"><div><div class="sym">SOL · 永续</div><small id="tkSolSub">—</small></div><div style="text-align:right"><span class="px" id="pxSOL">—</span><span class="chg" id="chSOL"></span></div></div>
+</div>
 
 <div class="grid" id="cards"></div>
 
 <div class="card" style="margin-top:10px">
-  <h2>实盘上线门槛 <b>90 天 · 收益≥0 · ≥15 笔</b></h2>
+  <h2>实盘上线门槛 <b>45 天 · 收益≥0 · 回撤&lt;30% · ≥15 笔</b></h2>
   <div id="gates"></div>
 </div>
 
@@ -69,22 +87,87 @@ footer{margin-top:18px;font-size:10px;color:#4d5766;line-height:1.7}
 </div>
 
 <footer>
-  只读页面：数据由本机程序每 15 分钟推送，无任何下单/资金接口。<br>
-  纸面模拟（虚拟资金 300 USDT），非实盘，不构成投资建议。加密货币合约交易风险极高。
+  行情为 gate.io 公开接口直连（价格 4 秒 / 走势 60 秒刷新），资金与持仓数据每 15 分钟推送。<br>
+  只读页面：无任何下单/资金接口。纸面模拟（虚拟资金 300 USDT），非实盘，不构成投资建议。合约交易风险极高。
 </footer>
 
 <script>
 const BASE_RET = {BTC:28.3, SOL:18.3};
+const MIN_DAYS = 45, MIN_TRADES = 15;
+const PAIR = {BTC:"BTC_USDT", SOL:"SOL_USDT"};
+const GATE = "https://api.gateio.ws/api/v4/futures/usdt";
 let DATA = null, CUR = 'BTC';
+const lastPx = {};
 
-function fmt(n, d=2){ return Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}) }
+function fmt(n, d){ d = d===undefined?2:d; if(n===undefined||n===null||isNaN(n))return "—"; return Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}) }
 
+/* ---------- 实时行情（浏览器直连 gate.io 公开接口） ---------- */
+async function jget(url){
+  const r = await fetch(url, {cache:'no-store'});
+  if(!r.ok) throw new Error(r.status);
+  return r.json();
+}
+function paint(sym, price, chg, fund){
+  const el = document.getElementById('px'+sym);
+  const old = lastPx[sym];
+  el.textContent = fmt(price, sym==='BTC'?1:2);
+  if(old !== undefined && price !== old){
+    el.classList.remove('fu','fd'); void el.offsetWidth;
+    el.classList.add(price > old ? 'fu' : 'fd');
+  }
+  lastPx[sym] = price;
+  const chEl = document.getElementById('ch'+sym);
+  chEl.textContent = (chg>=0?'+':'')+chg.toFixed(2)+'%';
+  chEl.className = 'chg ' + (chg>=0?'pos-up':'pos-down');
+  document.getElementById(sym==='BTC'?'tkBtcSub':'tkSolSub').textContent =
+    '资金费率 ' + (fund*100).toFixed(4) + '% · 24h 涨跌';
+  const lp = document.getElementById('last'+sym);
+  if(lp) lp.textContent = '⟳ ' + fmt(price, sym==='BTC'?1:2);
+}
+async function pollTickers(){
+  try{
+    const rs = await Promise.all(Object.entries(PAIR).map(([s,p])=>jget(GATE+"/tickers?contract="+p)));
+    rs.forEach((arr,i)=>{ const t=arr[0]; paint(Object.keys(PAIR)[i], +t.last, +t.change_percentage, +t.funding_rate_indicative); });
+    document.getElementById('livePill').textContent = 'LIVE';
+  }catch(e){ document.getElementById('livePill').textContent = '重连中…'; }
+}
+/* ---------- 实时 5m 走势 ---------- */
+function drawSeries(cv, closes){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w*dpr; cv.height = h*dpr;
+  const g = cv.getContext('2d'); g.scale(dpr,dpr); g.clearRect(0,0,w,h);
+  if(!closes || closes.length<2) return;
+  let mn = Math.min(...closes), mx = Math.max(...closes);
+  const pad = (mx-mn)*0.12 || 1; mn-=pad; mx+=pad;
+  const X = i => i/(closes.length-1)*(w-4)+2;
+  const Y = v => h-8 - (v-mn)/(mx-mn)*(h-20);
+  const up = closes[closes.length-1] >= closes[0];
+  const col = up ? '#f6465d' : '#0ecb81';
+  const grad = g.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0, up?'rgba(246,70,93,.25)':'rgba(14,203,129,.25)');
+  grad.addColorStop(1,'rgba(0,0,0,0)');
+  g.beginPath(); g.moveTo(X(0), Y(closes[0]));
+  closes.forEach((v,i)=>g.lineTo(X(i),Y(v)));
+  g.lineTo(w-2,h); g.lineTo(2,h); g.closePath(); g.fillStyle=grad; g.fill();
+  g.beginPath(); g.moveTo(X(0), Y(closes[0]));
+  closes.forEach((v,i)=>g.lineTo(X(i),Y(v)));
+  g.strokeStyle=col; g.lineWidth=1.5; g.stroke();
+  g.beginPath(); g.arc(X(closes.length-1), Y(closes[closes.length-1]), 2.8, 0, Math.PI*2);
+  g.fillStyle=col; g.fill();
+}
+async function pollChart(sym){
+  try{
+    const arr = await jget(GATE+"/candlesticks?contract="+PAIR[sym]+"&interval=5m&limit=100");
+    drawSeries(document.getElementById('chart'+sym), arr.map(k=>+k.c));
+  }catch(e){}
+}
+/* ---------- 权益曲线 ---------- */
 function spark(cv, pts, startEq){
   const dpr = window.devicePixelRatio || 1;
   const w = cv.clientWidth, h = cv.clientHeight;
   cv.width = w*dpr; cv.height = h*dpr;
-  const g = cv.getContext('2d'); g.scale(dpr,dpr);
-  g.clearRect(0,0,w,h);
+  const g = cv.getContext('2d'); g.scale(dpr,dpr); g.clearRect(0,0,w,h);
   if(!pts || pts.length < 2){
     g.strokeStyle='#1e2633'; g.setLineDash([3,4]); g.beginPath();
     g.moveTo(0,h/2); g.lineTo(w,h/2); g.stroke(); g.setLineDash([]);
@@ -92,14 +175,11 @@ function spark(cv, pts, startEq){
     g.fillText('暂无成交，等待信号', 8, h/2 - 6);
     return;
   }
-  const vs = [startEq, ...pts.map(p=>p.eq)];
-  let mn = Math.min(...vs), mx = Math.max(...vs);
+  const vs = [startEq].concat(pts.map(p=>p.eq));
+  let mn = Math.min.apply(null,vs), mx = Math.max.apply(null,vs);
   const pad = Math.max((mx-mn)*0.18, 1); mn-=pad; mx+=pad;
   const X = i => i/(pts.length-1)*(w-4)+2;
   const Y = v => h-6 - (v-mn)/(mx-mn)*(h-14);
-  // 基准线：初始权益
-  g.strokeStyle='#232c3a'; g.beginPath(); g.moveTo(0,Y(startEq)); g.lineTo(w,Y(startEq)); g.stroke();
-  // 面积 + 折线
   const last = pts[pts.length-1].eq;
   const col = last >= startEq ? '#f6465d' : '#0ecb81';
   const grad = g.createLinearGradient(0,0,0,h);
@@ -114,7 +194,7 @@ function spark(cv, pts, startEq){
   g.strokeStyle = col; g.lineWidth = 1.6; g.stroke();
   g.beginPath(); g.arc(X(pts.length-1), Y(last), 2.6, 0, Math.PI*2); g.fillStyle=col; g.fill();
 }
-
+/* ---------- 渲染 ---------- */
 function renderCards(){
   const wrap = document.getElementById('cards');
   wrap.innerHTML = '';
@@ -127,22 +207,26 @@ function renderCards(){
     card.innerHTML = `
       <h2>${sym} <b>${posTxt}${s.halted_until?' · 冷静期':''}</b></h2>
       <div><span class="eq">${fmt(s.equity)}</span><small>USDT</small><span class="ret ${cls}">${ret>=0?'+':''}${ret.toFixed(1)}%</span></div>
+      <div class="chartwrap"><span class="lbl">实时 5m 走势 · gate.io</span><span class="lastpx" id="last${sym}">⟳</span><canvas class="cv-px" id="chart${sym}"></canvas></div>
+      <div class="chartwrap"><span class="lbl">累计权益曲线</span><canvas class="cv-eq" id="eq${sym}"></canvas></div>
       <div class="row"><span>回测基准</span><b>+${BASE_RET[sym].toFixed(1)}%</b></div>
-      <div class="row"><span>已平仓 / 连亏</span><b>${(s.trades||[]).length} 笔 / ${s.consec_loss||0}</b></div>
-      <canvas></canvas>`;
+      <div class="row"><span>已平仓 / 连亏 / 纸面天数</span><b>${(s.trades||[]).length} / ${s.consec_loss||0} / ${s.days||0}天</b></div>`;
     wrap.appendChild(card);
-    spark(card.querySelector('canvas'), s.curve, 300);
+    spark(document.getElementById('eq'+sym), s.curve, 300);
+    pollChart(sym);
   });
 }
-
 function renderGates(){
   const g = document.getElementById('gates');
   g.innerHTML = '';
   Object.entries(DATA.symbols).forEach(([sym,s])=>{
     const days = s.days || 0;
-    [['纸面运行满 90 天', days>=90, days+' / 90 天'],
-     ['收益 ≥ 0', (s.equity-300)>=0, ((s.equity/300-1)*100).toFixed(1)+'%'],
-     ['样本 ≥ 15 笔', (s.trades||[]).length>=15, (s.trades||[]).length+' / 15 笔']].forEach(([label,ok,val])=>{
+    const ret = (s.equity/300-1)*100;
+    const dd = s.peak ? Math.max(0, (1 - s.equity/s.peak)*100) : 0;
+    [['纸面运行满 45 天', days>=MIN_DAYS, days+' / 45 天'],
+     ['收益 ≥ 0', ret>=0, (ret>=0?'+':'')+ret.toFixed(1)+'%'],
+     ['回撤 < 30%', dd<30, dd.toFixed(1)+'%'],
+     ['样本 ≥ 15 笔', (s.trades||[]).length>=MIN_TRADES, (s.trades||[]).length+' / 15 笔']].forEach(([label,ok,val])=>{
       const d = document.createElement('div');
       d.className='gate';
       d.innerHTML = `<span class="dot ${ok?'ok':''}">${ok?'✓':''}</span><span>${sym} · ${label}</span><b style="margin-left:auto">${val}</b>`;
@@ -150,7 +234,6 @@ function renderGates(){
     });
   });
 }
-
 function renderTrades(){
   const seg = document.getElementById('seg');
   const syms = Object.keys(DATA.symbols);
@@ -160,7 +243,7 @@ function renderTrades(){
   const list = (s.trades||[]).slice().reverse().slice(0,12);
   document.getElementById('tradeCount').textContent = (s.trades||[]).length + ' 笔';
   const box = document.getElementById('trades');
-  if(!list.length){ box.innerHTML = '<div class="empty">暂无成交。信号条件严格，9 个月回测平均每月约 20 次入场。</div>'; return; }
+  if(!list.length){ box.innerHTML = '<div class="empty">暂无成交。信号条件严格，回测平均每月约 20 次入场。</div>'; return; }
   box.innerHTML = `<table><thead><tr><th>方向</th><th>入场</th><th>出场</th><th class="r">盈亏</th><th class="r">权益</th></tr></thead><tbody>
     ${list.map(t=>`<tr>
       <td><span class="tag ${t.side}">${t.side==='long'?'多':'空'}</span> <span style="color:#5d6878">${t.reason||''}</span></td>
@@ -169,23 +252,22 @@ function renderTrades(){
       <td class="r">${fmt(t.equity)}</td></tr>`).join('')}
   </tbody></table>`;
 }
-
 async function load(){
   try{
     const r = await fetch('./data.json?v=' + Date.now(), {cache:'no-store'});
     if(!r.ok) throw new Error('no data');
     DATA = await r.json();
     const upd = new Date(DATA.updated);
-    document.getElementById('upd').textContent = '更新时间 ' + upd.toLocaleString('zh-CN',{hour12:false}) + ' · 数据由本机每 15 分钟推送';
-    document.getElementById('livePill').textContent = '运行中';
+    document.getElementById('upd').textContent = '资金/持仓更新 ' + upd.toLocaleString('zh-CN',{hour12:false}) + ' · 行情实时直连';
     renderCards(); renderGates(); renderTrades();
   }catch(e){
-    document.getElementById('livePill').textContent = '数据未就绪';
-    document.getElementById('upd').textContent = '首次推送后这里会显示最新状态';
+    document.getElementById('upd').textContent = '资金数据推送中，行情已实时连接';
   }
 }
-load();
-setInterval(load, 60000);
+pollTickers(); setInterval(pollTickers, 4000);
+Object.keys(PAIR).forEach(s=>pollChart(s));
+setInterval(function(){Object.keys(PAIR).forEach(pollChart)}, 60000);
+load(); setInterval(load, 60000);
 </script>
 </body>
 </html>
