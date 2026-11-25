@@ -342,6 +342,28 @@ async function run(env, trigger) {
         vol_ratio: x.vol_ratio, daily_up: x.daily_up, sig, pos: pos ? pos.amt : 0,
         barTime: new Date(x.t + 15 * 60 * 1000).toISOString().slice(5, 16).replace('T', ' ') };
 
+      // 已有持仓：到 TP1 / 该推保本时提醒（只读判断，不改单，最稳）
+      if (pos) {
+        const isLong = pos.amt > 0;
+        const entry = pos.entry;
+        const gain = isLong ? x.close - entry : entry - x.close;
+        const R = P.stop_atr_mult * x.atr;          // 近似初始风险距离
+        row.pnl_r = round(R > 0 ? gain / R : 0, 2);
+        if (R > 0 && gain >= P.tp1_r * R && !(await seen(`tp1:${sym}`, 240 * 60000))) {
+          await markSeen(`tp1:${sym}`);
+          await push(env, `到 TP1 了 · ${sym}`, [
+            `### 💰 ${sym} 到 TP1`,
+            ``,
+            `入场 ${round(entry, 2)} ｜ 现价 ${round(x.close, 2)} ｜ 浮盈 ${row.pnl_r}R`,
+            ``,
+            `**动作：平掉一半，剩下那一半的止损改到 ${round(entry, 2)}（保本）**`,
+            `App 里点「平仓」输入一半数量，再把止损单价格改成入场价。`,
+            ``,
+            `之后价格再涨就让它跑，跌破保本价自动出局。`,
+          ].join('\n'));
+        }
+      }
+
       if (sig && !pos) {
         const dupKey = `sig:${sym}:${sig}`;
         if (await seen(dupKey, 50 * 60 * 1000)) {
