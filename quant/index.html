@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>币安线 · 只读看板</title>
+<style>
+:root{
+  --bg:#0b0e14;--panel:#131822;--panel2:#0f141d;--line:#1e2633;
+  --text:#e6ebf2;--dim:#8b97a8;--up:#f6465d;--down:#0ecb81;--gold:#e8b44a;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding:16px 14px 40px;max-width:780px;margin:0 auto;line-height:1.55}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:4px}
+h1{font-size:18px;font-weight:600;letter-spacing:.5px}
+h1 em{font-style:normal;color:var(--gold)}
+.sub{font-size:11px;color:var(--dim);font-family:var(--mono);margin-bottom:14px}
+.pill{display:inline-block;font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+.pill.live{color:var(--gold);border-color:rgba(232,180,74,.4);background:rgba(232,180,74,.08)}
+.grid{display:grid;gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card h2{font-size:13px;font-weight:600;color:var(--dim);display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.card h2 b{font-family:var(--mono);font-size:11px;color:var(--dim);font-weight:400}
+.eq{font-family:var(--mono);font-size:26px;font-weight:600;letter-spacing:-.5px}
+.eq small{font-size:12px;color:var(--dim);margin-left:4px}
+.ret{font-family:var(--mono);font-size:13px;margin-left:8px}
+.pos-up{color:var(--up)}.pos-down{color:var(--down)}
+.row{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:6px}
+.row b{color:var(--text);font-family:var(--mono);font-weight:500}
+canvas{width:100%;height:96px;display:block;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:11px;font-family:var(--mono)}
+th{text-align:left;color:var(--dim);font-weight:400;padding:6px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:6px 4px;border-bottom:1px solid rgba(30,38,51,.6);white-space:nowrap;color:#c8d2e0}
+td.r{text-align:right}
+.tag{font-size:10px;padding:1px 6px;border-radius:4px;border:1px solid var(--line);color:var(--dim)}
+.tag.long{color:var(--up);border-color:rgba(246,70,93,.35)}
+.tag.short{color:var(--down);border-color:rgba(14,203,129,.35)}
+.gate{display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;color:var(--dim)}
+.gate b{color:var(--text);font-family:var(--mono)}
+.gate .dot{width:14px;height:14px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--dim);flex:none}
+.gate .dot.ok{background:rgba(14,203,129,.15);border-color:rgba(14,203,129,.5);color:var(--down)}
+.empty{font-size:12px;color:var(--dim);padding:10px 0}
+footer{margin-top:18px;font-size:10px;color:#4d5766;line-height:1.7}
+.seg{display:flex;gap:6px;margin-bottom:8px}
+.seg button{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--dim);font-size:12px;padding:7px 0;border-radius:9px;font-family:inherit}
+.seg button.on{background:rgba(232,180,74,.1);border-color:rgba(232,180,74,.45);color:var(--gold)}
+</style>
+</head>
+<body>
+<header>
+  <h1>币安线 · <em>只读看板</em></h1>
+  <span class="pill live" id="livePill">加载中</span>
+</header>
+<div class="sub" id="upd">—</div>
+
+<div class="grid" id="cards"></div>
+
+<div class="card" style="margin-top:10px">
+  <h2>实盘上线门槛 <b>90 天 · 收益≥0 · ≥15 笔</b></h2>
+  <div id="gates"></div>
+</div>
+
+<div class="card" style="margin-top:10px">
+  <h2>逐笔记录 <b id="tradeCount">0 笔</b></h2>
+  <div class="seg" id="seg"></div>
+  <div id="trades"></div>
+</div>
+
+<footer>
+  只读页面：数据由本机程序每 15 分钟推送，无任何下单/资金接口。<br>
+  纸面模拟（虚拟资金 300 USDT），非实盘，不构成投资建议。加密货币合约交易风险极高。
+</footer>
+
+<script>
+const BASE_RET = {BTC:28.3, SOL:18.3};
+let DATA = null, CUR = 'BTC';
+
+function fmt(n, d=2){ return Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}) }
+
+function spark(cv, pts, startEq){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w*dpr; cv.height = h*dpr;
+  const g = cv.getContext('2d'); g.scale(dpr,dpr);
+  g.clearRect(0,0,w,h);
+  if(!pts || pts.length < 2){
+    g.strokeStyle='#1e2633'; g.setLineDash([3,4]); g.beginPath();
+    g.moveTo(0,h/2); g.lineTo(w,h/2); g.stroke(); g.setLineDash([]);
+    g.fillStyle='#4d5766'; g.font='10px ui-monospace,monospace';
+    g.fillText('暂无成交，等待信号', 8, h/2 - 6);
+    return;
+  }
+  const vs = [startEq, ...pts.map(p=>p.eq)];
+  let mn = Math.min(...vs), mx = Math.max(...vs);
+  const pad = Math.max((mx-mn)*0.18, 1); mn-=pad; mx+=pad;
+  const X = i => i/(pts.length-1)*(w-4)+2;
+  const Y = v => h-6 - (v-mn)/(mx-mn)*(h-14);
+  // 基准线：初始权益
+  g.strokeStyle='#232c3a'; g.beginPath(); g.moveTo(0,Y(startEq)); g.lineTo(w,Y(startEq)); g.stroke();
+  // 面积 + 折线
+  const last = pts[pts.length-1].eq;
+  const col = last >= startEq ? '#f6465d' : '#0ecb81';
+  const grad = g.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0, last>=startEq?'rgba(246,70,93,.22)':'rgba(14,203,129,.22)');
+  grad.addColorStop(1,'rgba(0,0,0,0)');
+  g.beginPath(); g.moveTo(X(0), Y(startEq));
+  pts.forEach((p,i)=>g.lineTo(X(i),Y(p.eq)));
+  g.lineTo(X(pts.length-1), h); g.lineTo(X(0), h); g.closePath();
+  g.fillStyle = grad; g.fill();
+  g.beginPath(); g.moveTo(X(0), Y(startEq));
+  pts.forEach((p,i)=>g.lineTo(X(i),Y(p.eq)));
+  g.strokeStyle = col; g.lineWidth = 1.6; g.stroke();
+  g.beginPath(); g.arc(X(pts.length-1), Y(last), 2.6, 0, Math.PI*2); g.fillStyle=col; g.fill();
+}
+
+function renderCards(){
+  const wrap = document.getElementById('cards');
+  wrap.innerHTML = '';
+  Object.entries(DATA.symbols).forEach(([sym, s])=>{
+    const ret = (s.equity/300-1)*100;
+    const cls = ret > 0 ? 'pos-up' : (ret < 0 ? 'pos-down' : '');
+    const posTxt = s.pos ? `<span class="tag ${s.pos.side}">${s.pos.side==='long'?'多':'空'} ${fmt(s.pos.entry,1)}</span>` : '<span class="tag">空仓</span>';
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h2>${sym} <b>${posTxt}${s.halted_until?' · 冷静期':''}</b></h2>
+      <div><span class="eq">${fmt(s.equity)}</span><small>USDT</small><span class="ret ${cls}">${ret>=0?'+':''}${ret.toFixed(1)}%</span></div>
+      <div class="row"><span>回测基准</span><b>+${BASE_RET[sym].toFixed(1)}%</b></div>
+      <div class="row"><span>已平仓 / 连亏</span><b>${(s.trades||[]).length} 笔 / ${s.consec_loss||0}</b></div>
+      <canvas></canvas>`;
+    wrap.appendChild(card);
+    spark(card.querySelector('canvas'), s.curve, 300);
+  });
+}
+
+function renderGates(){
+  const g = document.getElementById('gates');
+  g.innerHTML = '';
+  Object.entries(DATA.symbols).forEach(([sym,s])=>{
+    const days = s.days || 0;
+    [['纸面运行满 90 天', days>=90, days+' / 90 天'],
+     ['收益 ≥ 0', (s.equity-300)>=0, ((s.equity/300-1)*100).toFixed(1)+'%'],
+     ['样本 ≥ 15 笔', (s.trades||[]).length>=15, (s.trades||[]).length+' / 15 笔']].forEach(([label,ok,val])=>{
+      const d = document.createElement('div');
+      d.className='gate';
+      d.innerHTML = `<span class="dot ${ok?'ok':''}">${ok?'✓':''}</span><span>${sym} · ${label}</span><b style="margin-left:auto">${val}</b>`;
+      g.appendChild(d);
+    });
+  });
+}
+
+function renderTrades(){
+  const seg = document.getElementById('seg');
+  const syms = Object.keys(DATA.symbols);
+  seg.innerHTML = syms.map(s=>`<button class="${s===CUR?'on':''}" data-s="${s}">${s}</button>`).join('');
+  seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{CUR=b.dataset.s;renderTrades()});
+  const s = DATA.symbols[CUR];
+  const list = (s.trades||[]).slice().reverse().slice(0,12);
+  document.getElementById('tradeCount').textContent = (s.trades||[]).length + ' 笔';
+  const box = document.getElementById('trades');
+  if(!list.length){ box.innerHTML = '<div class="empty">暂无成交。信号条件严格，9 个月回测平均每月约 20 次入场。</div>'; return; }
+  box.innerHTML = `<table><thead><tr><th>方向</th><th>入场</th><th>出场</th><th class="r">盈亏</th><th class="r">权益</th></tr></thead><tbody>
+    ${list.map(t=>`<tr>
+      <td><span class="tag ${t.side}">${t.side==='long'?'多':'空'}</span> <span style="color:#5d6878">${t.reason||''}</span></td>
+      <td>${fmt(t.entry,1)}</td><td>${fmt(t.exit,1)}</td>
+      <td class="r" style="color:${t.pnl>=0?'var(--up)':'var(--down)'}">${t.pnl>=0?'+':''}${fmt(t.pnl)}</td>
+      <td class="r">${fmt(t.equity)}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+async function load(){
+  try{
+    const r = await fetch('./data.json?v=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('no data');
+    DATA = await r.json();
+    const upd = new Date(DATA.updated);
+    document.getElementById('upd').textContent = '更新时间 ' + upd.toLocaleString('zh-CN',{hour12:false}) + ' · 数据由本机每 15 分钟推送';
+    document.getElementById('livePill').textContent = '运行中';
+    renderCards(); renderGates(); renderTrades();
+  }catch(e){
+    document.getElementById('livePill').textContent = '数据未就绪';
+    document.getElementById('upd').textContent = '首次推送后这里会显示最新状态';
+  }
+}
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
