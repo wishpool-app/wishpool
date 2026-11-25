@@ -4,90 +4,184 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0e14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="币安线">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" href="./icon.png">
+<link rel="manifest" href="./manifest.json">
 <title>币安线 · 实时看板</title>
 <style>
 :root{
-  --bg:#0b0e14;--panel:#131822;--panel2:#0f141d;--line:#1e2633;
-  --text:#e6ebf2;--dim:#8b97a8;--up:#f6465d;--down:#0ecb81;--gold:#e8b44a;
+  --bg:#0b0e14;--panel:rgba(21,26,37,.72);--panel2:rgba(15,20,29,.8);--line:rgba(255,255,255,.07);
+  --text:#eef2f8;--dim:#8b97a8;--dim2:#5d6878;--up:#f6465d;--down:#0ecb81;
+  --gold:#f0b64d;--gold2:#ffd98a;
   --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding:16px 14px 40px;max-width:780px;margin:0 auto;line-height:1.55}
-header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:4px}
-h1{font-size:18px;font-weight:600;letter-spacing:.5px}
-h1 em{font-style:normal;color:var(--gold)}
-.sub{font-size:11px;color:var(--dim);font-family:var(--mono);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
-.pill.live{color:var(--gold);border-color:rgba(232,180,74,.4);background:rgba(232,180,74,.08)}
-.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--down);animation:pulse 1.6s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
-.tape{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.tk{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between}
-.tk .sym{font-size:12px;color:var(--dim);font-weight:600;flex:none}
-.tk .px{font-family:var(--mono);font-size:16px;font-weight:600;transition:color .15s;white-space:nowrap}
-.tk .chg{font-family:var(--mono);font-size:11px;margin-left:6px}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  padding:max(14px,env(safe-area-inset-top)) 16px 44px;max-width:780px;margin:0 auto;line-height:1.55;
+  background-image:
+    radial-gradient(900px 420px at -10% -10%, rgba(240,182,77,.13), transparent 60%),
+    radial-gradient(800px 460px at 110% 20%, rgba(70,110,230,.12), transparent 60%),
+    radial-gradient(700px 500px at 50% 115%, rgba(240,182,77,.06), transparent 60%);
+  background-attachment:fixed;
+}
+/* ---------- 头部 ---------- */
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:40px;height:40px;border-radius:11px;flex:none;
+  background:linear-gradient(145deg,#1a2130,#12171f);
+  border:1px solid rgba(240,182,77,.55);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(240,182,77,.18), inset 0 1px 0 rgba(255,255,255,.06)}
+.logo b{font-family:var(--mono);font-size:21px;font-weight:800;
+  background:linear-gradient(160deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand h1{font-size:17px;font-weight:700;letter-spacing:.3px;line-height:1.25}
+.brand h1 em{font-style:normal;background:linear-gradient(120deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{display:block;font-size:10px;color:var(--dim2);font-family:var(--mono);letter-spacing:1px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:10px;padding:4px 11px;border-radius:999px;
+  border:1px solid rgba(240,182,77,.4);color:var(--gold);background:rgba(240,182,77,.08);font-weight:600;letter-spacing:1px}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.sub{font-size:11px;color:var(--dim2);font-family:var(--mono);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+/* ---------- 行情双卡 ---------- */
+.tape{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.tk{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:13px 14px 12px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 8px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04)}
+.tk .coin{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tk .cb{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;flex:none;color:#fff}
+.tk .cb.btc{background:linear-gradient(145deg,#f7931a,#e2800f)}
+.tk .cb.sol{background:linear-gradient(145deg,#8a5cf6,#4c6ef5)}
+.tk .sym{font-size:13px;color:var(--text);font-weight:700;letter-spacing:.3px}
+.tk .sym small{display:block;font-size:9px;color:var(--dim2);font-weight:400;font-family:var(--mono)}
+.tk .px{font-family:var(--mono);font-size:21px;font-weight:700;letter-spacing:-.3px;transition:color .15s;white-space:nowrap}
 .tk .px.fu{color:var(--up)} .tk .px.fd{color:var(--down)}
-.tk small{display:block;font-size:9px;color:#4d5766;font-family:var(--mono)}
-.grid{display:grid;gap:10px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
-.card h2{font-size:13px;font-weight:600;color:var(--dim);display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.card h2 b{font-family:var(--mono);font-size:11px;color:var(--dim);font-weight:400}
-.eq{font-family:var(--mono);font-size:26px;font-weight:600;letter-spacing:-.5px}
-.eq small{font-size:12px;color:var(--dim);margin-left:4px}
-.ret{font-family:var(--mono);font-size:13px;margin-left:8px}
-.pos-up{color:var(--up)}.pos-down{color:var(--down)}
-.row{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:6px}
+.tk .chg{font-family:var(--mono);font-size:12px;font-weight:600;padding:2px 8px;border-radius:7px;margin-left:8px;display:inline-block}
+.tk .chg.pos-up{color:var(--up);background:rgba(246,70,93,.12)}
+.tk .chg.pos-down{color:var(--down);background:rgba(14,203,129,.12)}
+.tk .fund{font-size:10px;color:var(--dim2);font-family:var(--mono);margin-top:6px}
+.tk::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;
+  background:radial-gradient(circle,rgba(240,182,77,.1),transparent 70%)}
+/* ---------- 卡片 ---------- */
+.grid{display:grid;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04)}
+.card+.card{margin-top:14px}
+.card h2{font-size:13px;font-weight:700;color:var(--text);display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.card h2 .tt{display:flex;align-items:center;gap:7px}
+.card h2 .tt::before{content:"";width:3px;height:13px;border-radius:2px;background:linear-gradient(180deg,var(--gold2),var(--gold))}
+.card h2 b{font-family:var(--mono);font-size:10px;color:var(--dim2);font-weight:400;text-align:right}
+.eq{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:-.8px;
+  background:linear-gradient(160deg,#fff,#c9d4e6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eq small{font-size:12px;color:var(--dim);margin-left:5px;-webkit-text-fill-color:var(--dim)}
+.ret{font-family:var(--mono);font-size:13px;font-weight:700;margin-left:10px;padding:3px 10px;border-radius:8px}
+.pos-up{color:var(--up)} .pos-down{color:var(--down)}
+.ret.pos-up{background:rgba(246,70,93,.12)} .ret.pos-down{background:rgba(14,203,129,.12)}
+.row{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:8px}
 .row b{color:var(--text);font-family:var(--mono);font-weight:500}
-.chartwrap{position:relative;margin-top:10px}
-.chartwrap .lbl{position:absolute;top:4px;left:6px;font-size:9px;color:#4d5766;font-family:var(--mono);z-index:2}
-.chartwrap .lastpx{position:absolute;top:4px;right:6px;font-size:11px;font-family:var(--mono);font-weight:600;z-index:2;color:var(--gold)}
+/* ---------- 图表 ---------- */
+.chartwrap{position:relative;margin-top:12px;border-radius:12px;overflow:hidden;
+  background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.04)}
+.chartwrap .lbl{position:absolute;top:6px;left:9px;font-size:9px;color:var(--dim2);font-family:var(--mono);z-index:2;letter-spacing:.5px}
+.chartwrap .lastpx{position:absolute;top:5px;right:9px;font-size:11px;font-family:var(--mono);font-weight:600;z-index:2;color:var(--gold)}
 canvas{width:100%;display:block}
-.cv-px{height:120px}.cv-eq{height:64px;margin-top:6px}
+.cv-px{height:130px}.cv-eq{height:70px;margin-top:10px}
+/* ---------- 表格 ---------- */
 table{width:100%;border-collapse:collapse;font-size:11px;font-family:var(--mono)}
-th{text-align:left;color:var(--dim);font-weight:400;padding:6px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:6px 4px;border-bottom:1px solid rgba(30,38,51,.6);white-space:nowrap;color:#c8d2e0}
+th{text-align:left;color:var(--dim2);font-weight:500;padding:7px 5px;border-bottom:1px solid var(--line);white-space:nowrap;letter-spacing:.5px}
+td{padding:8px 5px;border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap;color:#c8d2e0}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
 td.r{text-align:right}
-.tag{font-size:10px;padding:1px 6px;border-radius:4px;border:1px solid var(--line);color:var(--dim)}
-.tag.long{color:var(--up);border-color:rgba(246,70,93,.35)}
-.tag.short{color:var(--down);border-color:rgba(14,203,129,.35)}
-.gate{display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;color:var(--dim)}
-.gate b{color:var(--text);font-family:var(--mono)}
-.gate .dot{width:14px;height:14px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--dim);flex:none}
-.gate .dot.ok{background:rgba(14,203,129,.15);border-color:rgba(14,203,129,.5);color:var(--down)}
-.empty{font-size:12px;color:var(--dim);padding:10px 0}
-footer{margin-top:18px;font-size:10px;color:#4d5766;line-height:1.7}
-.seg{display:flex;gap:6px;margin-bottom:8px}
-.seg button{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--dim);font-size:12px;padding:7px 0;border-radius:9px;font-family:inherit}
-.seg button.on{background:rgba(232,180,74,.1);border-color:rgba(232,180,74,.45);color:var(--gold)}
+.tag{font-size:10px;padding:2px 8px;border-radius:6px;border:1px solid var(--line);color:var(--dim);font-weight:600}
+.tag.long{color:var(--up);border-color:rgba(246,70,93,.4);background:rgba(246,70,93,.08)}
+.tag.short{color:var(--down);border-color:rgba(14,203,129,.4);background:rgba(14,203,129,.08)}
+/* ---------- 信号 ---------- */
+.sig{display:flex;align-items:flex-start;gap:12px;padding:12px 2px;border-bottom:1px solid rgba(255,255,255,.05)}
+.sig:last-child{border-bottom:none}
+.sig .symbox{width:58px;flex:none;text-align:center;padding:8px 0;border-radius:12px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.sig .symbox b{font-size:15px;font-weight:800}
+.sig .symbox span{display:block;font-size:9px;margin-top:2px;font-family:var(--mono)}
+.sig .symbox.l{color:var(--up)} .sig .symbox.s{color:var(--down)}
+.sig .info{flex:1;min-width:0}
+.sig .state{font-size:13px;font-weight:700}
+.sig .state.wait{color:var(--dim)} .sig .state.hit{color:var(--gold)}
+.sig .plan{font-size:11px;color:var(--dim);font-family:var(--mono);margin-top:4px;
+  background:rgba(240,182,77,.06);border:1px dashed rgba(240,182,77,.25);border-radius:8px;padding:5px 9px;display:inline-block}
+.sig .meta{font-size:10px;color:var(--dim2);font-family:var(--mono);margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{font-size:9px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim2);font-family:var(--mono)}
+.chip.ok{color:var(--down);border-color:rgba(14,203,129,.4);background:rgba(14,203,129,.07)}
+/* ---------- 门槛进度条 ---------- */
+.gate{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.gate:last-child{border-bottom:none}
+.gate .gt{display:flex;align-items:center;gap:9px;font-size:12px}
+.gate .gt .nm{color:var(--dim);flex:1}
+.gate .gt b{color:var(--text);font-family:var(--mono);font-weight:500}
+.gate .dot{width:17px;height:17px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--dim2);flex:none}
+.gate .dot.ok{background:rgba(14,203,129,.15);border-color:rgba(14,203,129,.5);color:var(--down);box-shadow:0 0 8px rgba(14,203,129,.25)}
+.gate .bar{height:4px;border-radius:99px;background:rgba(255,255,255,.06);margin-top:6px;overflow:hidden}
+.gate .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .5s}
+.gate .bar i.done{background:linear-gradient(90deg,var(--down),#2ee6a8)}
+/* ---------- 其他 ---------- */
+.empty{font-size:12px;color:var(--dim);padding:12px 0}
+footer{margin-top:20px;font-size:10px;color:var(--dim2);line-height:1.8;padding:0 4px}
+.seg{display:flex;gap:7px;margin-bottom:10px}
+.seg button{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--dim);font-size:12px;
+  padding:8px 0;border-radius:10px;font-family:inherit;font-weight:600;transition:.15s}
+.seg button.on{background:rgba(240,182,77,.12);border-color:rgba(240,182,77,.5);color:var(--gold)}
 </style>
 </head>
 <body>
 <header>
-  <h1>币安线 · <em>实时看板</em></h1>
-  <span class="pill live"><span class="dot"></span><span id="livePill">LIVE</span></span>
+  <div class="brand">
+    <div class="logo"><b>B</b></div>
+    <div>
+      <h1>币安线 · <em>实时看板</em></h1>
+      <small>QUANT DASHBOARD</small>
+    </div>
+  </div>
+  <span class="pill"><span class="dot"></span><span id="livePill">LIVE</span></span>
 </header>
 <div class="sub"><span id="upd">连接实时行情…</span></div>
 
 <div class="tape">
-  <div class="tk"><div><div class="sym">BTC · 永续</div><small id="tkBtcSub">—</small></div><div style="text-align:right"><span class="px" id="pxBTC">—</span><span class="chg" id="chBTC"></span></div></div>
-  <div class="tk"><div><div class="sym">SOL · 永续</div><small id="tkSolSub">—</small></div><div style="text-align:right"><span class="px" id="pxSOL">—</span><span class="chg" id="chSOL"></span></div></div>
+  <div class="tk">
+    <div class="coin"><div class="cb btc">₿</div><div class="sym">BTC<small>USDT 永续</small></div></div>
+    <div><span class="px" id="pxBTC">—</span><span class="chg" id="chBTC"></span></div>
+    <div class="fund" id="tkBtcSub">—</div>
+  </div>
+  <div class="tk">
+    <div class="coin"><div class="cb sol">◎</div><div class="sym">SOL<small>USDT 永续</small></div></div>
+    <div><span class="px" id="pxSOL">—</span><span class="chg" id="chSOL"></span></div>
+    <div class="fund" id="tkSolSub">—</div>
+  </div>
 </div>
 
-<div class="card" style="margin-bottom:10px">
-  <h2>策略信号 <b id="sigUpd">计算中…</b></h2>
-  <div id="sigRows"><div class="empty">读取 15m K 线…</div></div>
-  <div style="font-size:10px;color:#4d5766;line-height:1.6;margin-top:8px">双 Supertrend + ADX≥20 + 日线 EMA50 同向 + 回踩 EMA20 收复 + 放量&gt;0.9，15m 收盘确认。与云端引擎同一套算法。</div>
+<div class="card">
+  <h2><span class="tt">策略信号</span><b id="sigUpd">计算中…</b></h2>
+  <div id="sigRows"><div class="empty">读取 K 线…</div></div>
 </div>
 
 <div class="grid" id="cards"></div>
 
-<div class="card" style="margin-top:10px">
-  <h2>实盘上线门槛 <b>45 天 · 收益≥0 · 回撤&lt;30% · ≥15 笔</b></h2>
+<div class="card" style="margin-top:14px">
+  <h2><span class="tt">实盘上线门槛</span><b>45 天 · 收益≥0 · 回撤&lt;30% · ≥15 笔</b></h2>
   <div id="gates"></div>
 </div>
 
-<div class="card" style="margin-top:10px">
-  <h2>逐笔记录 <b id="tradeCount">0 笔</b></h2>
+<div class="card" style="margin-top:14px">
+  <h2><span class="tt">逐笔记录</span><b id="tradeCount">0 笔</b></h2>
   <div class="seg" id="seg"></div>
   <div id="trades"></div>
 </div>
@@ -151,16 +245,18 @@ function drawSeries(cv, closes){
   const up = closes[closes.length-1] >= closes[0];
   const col = up ? '#f6465d' : '#0ecb81';
   const grad = g.createLinearGradient(0,0,0,h);
-  grad.addColorStop(0, up?'rgba(246,70,93,.25)':'rgba(14,203,129,.25)');
+  grad.addColorStop(0, up?'rgba(246,70,93,.28)':'rgba(14,203,129,.28)');
   grad.addColorStop(1,'rgba(0,0,0,0)');
   g.beginPath(); g.moveTo(X(0), Y(closes[0]));
   closes.forEach((v,i)=>g.lineTo(X(i),Y(v)));
   g.lineTo(w-2,h); g.lineTo(2,h); g.closePath(); g.fillStyle=grad; g.fill();
   g.beginPath(); g.moveTo(X(0), Y(closes[0]));
   closes.forEach((v,i)=>g.lineTo(X(i),Y(v)));
-  g.strokeStyle=col; g.lineWidth=1.5; g.stroke();
-  g.beginPath(); g.arc(X(closes.length-1), Y(closes[closes.length-1]), 2.8, 0, Math.PI*2);
+  g.strokeStyle=col; g.lineWidth=1.6; g.stroke();
+  g.beginPath(); g.arc(X(closes.length-1), Y(closes[closes.length-1]), 3, 0, Math.PI*2);
   g.fillStyle=col; g.fill();
+  g.beginPath(); g.arc(X(closes.length-1), Y(closes[closes.length-1]), 6.5, 0, Math.PI*2);
+  g.fillStyle = up?'rgba(246,70,93,.2)':'rgba(14,203,129,.2)'; g.fill();
 }
 async function pollChart(sym){
   try{
@@ -175,9 +271,9 @@ function spark(cv, pts, startEq){
   cv.width = w*dpr; cv.height = h*dpr;
   const g = cv.getContext('2d'); g.scale(dpr,dpr); g.clearRect(0,0,w,h);
   if(!pts || pts.length < 2){
-    g.strokeStyle='#1e2633'; g.setLineDash([3,4]); g.beginPath();
+    g.strokeStyle='rgba(255,255,255,.15)'; g.setLineDash([3,4]); g.beginPath();
     g.moveTo(0,h/2); g.lineTo(w,h/2); g.stroke(); g.setLineDash([]);
-    g.fillStyle='#4d5766'; g.font='10px ui-monospace,monospace';
+    g.fillStyle='#5d6878'; g.font='10px ui-monospace,monospace';
     g.fillText('暂无成交，等待信号', 8, h/2 - 6);
     return;
   }
@@ -189,7 +285,7 @@ function spark(cv, pts, startEq){
   const last = pts[pts.length-1].eq;
   const col = last >= startEq ? '#f6465d' : '#0ecb81';
   const grad = g.createLinearGradient(0,0,0,h);
-  grad.addColorStop(0, last>=startEq?'rgba(246,70,93,.22)':'rgba(14,203,129,.22)');
+  grad.addColorStop(0, last>=startEq?'rgba(246,70,93,.25)':'rgba(14,203,129,.25)');
   grad.addColorStop(1,'rgba(0,0,0,0)');
   g.beginPath(); g.moveTo(X(0), Y(startEq));
   pts.forEach((p,i)=>g.lineTo(X(i),Y(p.eq)));
@@ -197,8 +293,8 @@ function spark(cv, pts, startEq){
   g.fillStyle = grad; g.fill();
   g.beginPath(); g.moveTo(X(0), Y(startEq));
   pts.forEach((p,i)=>g.lineTo(X(i),Y(p.eq)));
-  g.strokeStyle = col; g.lineWidth = 1.6; g.stroke();
-  g.beginPath(); g.arc(X(pts.length-1), Y(last), 2.6, 0, Math.PI*2); g.fillStyle=col; g.fill();
+  g.strokeStyle = col; g.lineWidth = 1.7; g.stroke();
+  g.beginPath(); g.arc(X(pts.length-1), Y(last), 2.8, 0, Math.PI*2); g.fillStyle=col; g.fill();
 }
 /* ---------- 渲染 ---------- */
 function renderCards(){
@@ -211,11 +307,11 @@ function renderCards(){
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <h2>${sym} <b>${posTxt}${s.halted_until?' · 冷静期':''}</b></h2>
+      <h2><span class="tt">${sym} 模拟盘</span><b>${posTxt}${s.halted_until?' · 冷静期':''}</b></h2>
       <div><span class="eq">${fmt(s.equity)}</span><small>USDT</small><span class="ret ${cls}">${ret>=0?'+':''}${ret.toFixed(1)}%</span></div>
       <div class="chartwrap"><span class="lbl">实时 5m 走势 · gate.io</span><span class="lastpx" id="last${sym}">⟳</span><canvas class="cv-px" id="chart${sym}"></canvas></div>
       <div class="chartwrap"><span class="lbl">累计权益曲线</span><canvas class="cv-eq" id="eq${sym}"></canvas></div>
-      <div class="row"><span>回测基准</span><b>+${BASE_RET[sym].toFixed(1)}%</b></div>
+      <div class="row"><span>回测基准</span><b style="color:var(--gold)">+${BASE_RET[sym].toFixed(1)}%</b></div>
       <div class="row"><span>已平仓 / 连亏 / 纸面天数</span><b>${(s.trades||[]).length} / ${s.consec_loss||0} / ${s.days||0}天</b></div>`;
     wrap.appendChild(card);
     spark(document.getElementById('eq'+sym), s.curve, 300);
@@ -229,13 +325,17 @@ function renderGates(){
     const days = s.days || 0;
     const ret = (s.equity/300-1)*100;
     const dd = s.peak ? Math.max(0, (1 - s.equity/s.peak)*100) : 0;
-    [['纸面运行满 45 天', days>=MIN_DAYS, days+' / 45 天'],
-     ['收益 ≥ 0', ret>=0, (ret>=0?'+':'')+ret.toFixed(1)+'%'],
-     ['回撤 < 30%', dd<30, dd.toFixed(1)+'%'],
-     ['样本 ≥ 15 笔', (s.trades||[]).length>=MIN_TRADES, (s.trades||[]).length+' / 15 笔']].forEach(([label,ok,val])=>{
+    const items = [
+      ['纸面运行满 45 天', days>=MIN_DAYS, days+' / 45 天', Math.min(days/MIN_DAYS*100,100)],
+      ['收益 ≥ 0', ret>=0, (ret>=0?'+':'')+ret.toFixed(1)+'%', ret>=0?100:Math.max(0,Math.min((1+ret/20)*100,100))],
+      ['回撤 < 30%', dd<30, dd.toFixed(1)+'%', Math.max(0,Math.min((1-dd/30)*100,100))],
+      ['样本 ≥ 15 笔', (s.trades||[]).length>=MIN_TRADES, (s.trades||[]).length+' / 15 笔', Math.min((s.trades||[]).length/MIN_TRADES*100,100)]
+    ];
+    items.forEach(([label,ok,val,pct])=>{
       const d = document.createElement('div');
       d.className='gate';
-      d.innerHTML = `<span class="dot ${ok?'ok':''}">${ok?'✓':''}</span><span>${sym} · ${label}</span><b style="margin-left:auto">${val}</b>`;
+      d.innerHTML = `<div class="gt"><span class="dot ${ok?'ok':''}">${ok?'✓':''}</span><span class="nm">${sym} · ${label}</span><b>${val}</b></div>
+        <div class="bar"><i class="${ok?'done':''}" style="width:${Math.round(pct)}%"></i></div>`;
       g.appendChild(d);
     });
   });
@@ -254,7 +354,7 @@ function renderTrades(){
     ${list.map(t=>`<tr>
       <td><span class="tag ${t.side}">${t.side==='long'?'多':'空'}</span> <span style="color:#5d6878">${t.reason||''}</span></td>
       <td>${fmt(t.entry,1)}</td><td>${fmt(t.exit,1)}</td>
-      <td class="r" style="color:${t.pnl>=0?'var(--up)':'var(--down)'}">${t.pnl>=0?'+':''}${fmt(t.pnl)}</td>
+      <td class="r" style="color:${t.pnl>=0?'var(--up)':'var(--down)'};font-weight:600">${t.pnl>=0?'+':''}${fmt(t.pnl)}</td>
       <td class="r">${fmt(t.equity)}</td></tr>`).join('')}
   </tbody></table>`;
 }
@@ -297,24 +397,25 @@ function renderSig(map){
     if(r.err) return `<div class="empty">${sym} 读取失败（${r.err}）</div>`;
     const x = r.x, isLong = x.d1===1;
     const miss = [];
-    if(x.adx < SIGP.adx_min) miss.push('ADX');
-    if(x.atr_pct < SIGP.atr_pct_min) miss.push('波动');
-    if(x.vol_ratio <= SIGP.vol_ratio_min) miss.push('放量');
-    if(x.daily_up===null) miss.push('日线数据');
-    else if((isLong)!==x.daily_up) miss.push('日线反向');
+    const cond = {adx:x.adx>=SIGP.adx_min, 波动:x.atr_pct>=SIGP.atr_pct_min, 放量:x.vol_ratio>SIGP.vol_ratio_min};
+    if(x.daily_up===null){ miss.push('日线数据'); var dailyOk=false; }
+    else { dailyOk = (isLong)===x.daily_up; if(!dailyOk) miss.push('日线反向'); }
     const reach = isLong ? (x.close>x.ema20 && x.close>x.open && x.low<=x.ema20)
                          : (x.close<x.ema20 && x.close<x.open && x.high>=x.ema20);
     if(!reach) miss.push('回踩收复');
+    cond['日线'] = dailyOk; cond['回踩收复'] = reach;
     const sd = 1.5*x.atr;
     const plan = r.sig ? (r.sig==='long'
         ? `入场 ${fmt(x.close,1)} ｜ 止损 ${fmt(x.close-sd,1)} ｜ TP1 ${fmt(x.close+1.5*sd,1)}`
         : `入场 ${fmt(x.close,1)} ｜ 止损 ${fmt(x.close+sd,1)} ｜ TP1 ${fmt(x.close-1.5*sd,1)}`) : '';
-    return `<div class="gate" style="align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(30,38,51,.6)">
-      <b style="width:54px;flex:none;color:${isLong?'var(--up)':'var(--down)'};font-size:14px">${sym}<br><span style="font-size:11px;opacity:.85">趋势${isLong?'多':'空'}</span></b>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:${r.sig?600:400};color:${r.sig?'var(--gold)':'#6b7686'}">${r.sig?'⭐ 信号：开'+(r.sig==='long'?'多':'空'):(miss.length?'等待：'+miss.join(' / '):'条件已齐，等收盘确认')}</div>
-        ${plan?`<div style="font-size:10px;color:#8b97a8;font-family:var(--mono);margin-top:3px">${plan}</div>`:''}
-        <div style="font-size:10px;color:#4d5766;font-family:var(--mono);margin-top:3px">ADX ${x.adx.toFixed(1)} · ATR ${(x.atr_pct*100).toFixed(2)}% · 量比 ${x.vol_ratio.toFixed(2)} · ${x.daily_up?'日线上方':'日线下方'}</div>
+    const chips = Object.entries(cond).map(([k,v])=>`<span class="chip ${v?'ok':''}">${k}${v?' ✓':''}</span>`).join('');
+    return `<div class="sig">
+      <div class="symbox ${isLong?'l':'s'}"><b>${sym}</b><span>趋势${isLong?'多':'空'}</span></div>
+      <div class="info">
+        <div class="state ${r.sig?'hit':'wait'}">${r.sig?'⭐ 信号：开'+(r.sig==='long'?'多':'空'):(miss.length?'等待 · '+miss.join(' / '):'条件已齐，等收盘确认')}</div>
+        <div class="chips">${chips}</div>
+        ${plan?`<div class="plan">${plan}</div>`:''}
+        <div class="meta">ADX ${x.adx.toFixed(1)} · ATR ${(x.atr_pct*100).toFixed(2)}% · 量比 ${x.vol_ratio.toFixed(2)} · ${x.daily_up?'日线上方':'日线下方'}</div>
       </div></div>`;
   }).join('');
 }
