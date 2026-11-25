@@ -209,6 +209,8 @@ async function bn(env, path, params = {}, method = 'GET') {
 
 async function equityOf(env) {
   const fallback = parseFloat(env.EQUITY || '300');
+  // EQUITY 一旦设定，就是「策略专用资金」：仓位只按这个数算，不碰账户里的其他钱
+  if (parseFloat(env.EQUITY || '0') > 0) return { eq: fallback, src: '设定值' };
   if (!env.BINANCE_KEY) return { eq: fallback, src: '设定值' };
   try {
     const b = await bn(env, '/fapi/v2/balance');
