@@ -233,23 +233,79 @@ async function positionOf(env, symbol) {
 
 const round = (x, d) => Math.round(x * 10 ** d) / 10 ** d;
 
+// 交易所精度：数量步长/最小名义/价格步长，不取整会被币安直接拒单
+const F = {};
+async function symFilter(symbol) {
+  if (F[symbol]) return F[symbol];
+  let out = { step: 0.001, minQty: 0.001, minNotional: 5, tick: 0.01 };
+  try {
+    const r = await fetch(`${BN}/fapi/v1/exchangeInfo`);
+    if (r.ok) {
+      const j = await r.json();
+      const s = j.symbols.find((x) => x.symbol === symbol);
+      if (s) {
+        const lot = s.filters.find((f) => f.filterType === 'LOT_SIZE');
+        const mn = s.filters.find((f) => f.filterType === 'MIN_NOTIONAL');
+        const pf = s.filters.find((f) => f.filterType === 'PRICE_FILTER');
+        out = {
+          step: parseFloat(lot?.stepSize || '0.001'),
+          minQty: parseFloat(lot?.minQty || '0.001'),
+          minNotional: parseFloat(mn?.notional || mn?.minNotional || '5'),
+          tick: parseFloat(pf?.tickSize || '0.01'),
+        };
+      }
+    }
+  } catch (e) { /* 用默认值，宁可保守 */ }
+  F[symbol] = out;
+  return out;
+}
+
+const floorStep = (q, step) => {
+  const d = step < 1 ? Math.min(8, Math.round(-Math.log10(step))) : 0;
+  return +(Math.floor(q / step + 1e-9) * step).toFixed(d);
+};
+const snap = (p, tick) => {
+  const d = tick < 1 ? Math.min(8, Math.round(-Math.log10(tick))) : 0;
+  return +(Math.round(p / tick) * tick).toFixed(d);
+};
+
+// 同向信号去重：同一根 K 线/同一波行情只提醒一次（Cache 尽力而为，miss 也只多推一条）
+async function seen(key, ms) {
+  try {
+    const c = caches.default;
+    const hit = await c.match(key);
+    if (hit) {
+      const last = +(await hit.text());
+      if (Date.now() - last < ms) return true;
+    }
+    return false;
+  } catch (e) { return false; }
+}
+async function markSeen(key) {
+  try {
+    await caches.default.put(key, new Response(String(Date.now()), { headers: { 'Cache-Control': 'max-age=86400' } }));
+  } catch (e) { /* 忽略 */ }
+}
+
 // ============ 下单（默认 DRY） ============
 async function openPosition(env, symbol, side, qty, stop, tp1, live) {
   const buy = side === 'long';
-  const plan = {
-    symbol, side: buy ? 'BUY' : 'SELL', qty: round(qty, 3),
-    stop: round(stop, 2), tp1: round(tp1, 2),
-  };
+  const plan = { symbol, side: buy ? 'BUY' : 'SELL', qty, stop, tp1 };
   if (!live) return { ok: true, dry: true, plan };
-  await bn(env, '/fapi/v1/leverage', { symbol, leverage: P.leverage }, 'POST');
-  await bn(env, '/fapi/v1/order', {
-    symbol, side: plan.side, type: 'MARKET', quantity: plan.qty,
-  }, 'POST');
-  await bn(env, '/fapi/v1/order', {
-    symbol, side: buy ? 'SELL' : 'BUY', type: 'STOP_MARKET',
-    stopPrice: plan.stop, closePosition: 'true', workingType: 'MARK_PRICE',
-  }, 'POST');
-  return { ok: true, dry: false, plan };
+  try {
+    await bn(env, '/fapi/v1/leverage', { symbol, leverage: P.leverage }, 'POST');
+    await bn(env, '/fapi/v1/order', {
+      symbol, side: plan.side, type: 'MARKET', quantity: plan.qty,
+    }, 'POST');
+    await bn(env, '/fapi/v1/order', {
+      symbol, side: buy ? 'SELL' : 'BUY', type: 'STOP_MARKET',
+      stopPrice: plan.stop, closePosition: 'true', workingType: 'MARK_PRICE',
+    }, 'POST');
+    return { ok: true, dry: false, plan };
+  } catch (e) {
+    // 自动下单失败也要让人知道：降级成「手动开仓指令」继续推送
+    return { ok: false, dry: true, plan, err: String(e.message || e).slice(0, 140) };
+  }
 }
 
 // ============ 推送 ============
@@ -285,20 +341,28 @@ async function run(env, trigger) {
         barTime: new Date(x.t + 15 * 60 * 1000).toISOString().slice(5, 16).replace('T', ' ') };
 
       if (sig && !pos) {
-        const stopDist = P.stop_atr_mult * x.atr;
-        const entry = x.close;
-        const riskBudget = eq * riskPct;
-        let qty = riskBudget / (stopDist + entry * P.fee_roundtrip);
-        qty = Math.min(qty, (eq * P.leverage) / entry, (eq * P.max_margin_pct * P.leverage) / entry);
-        const stop = sig === 'long' ? entry - stopDist : entry + stopDist;
-        const tp1 = sig === 'long' ? entry + P.tp1_r * stopDist : entry - P.tp1_r * stopDist;
-
-        if (qty * entry < 5) {
-          row.skip = `仓位过小 ${round(qty * entry, 1)}U`;
+        const dupKey = `sig:${sym}:${sig}`;
+        if (await seen(dupKey, 50 * 60 * 1000)) {
+          row.dup = true;                       // 同一波行情已提醒过，不重复喊、不重复下单
         } else {
-          const res = await openPosition(env, sym, sig, qty, stop, tp1, live);
-          row.order = res;
-          hits.push({ sym, sig, entry, stop, tp1, qty, notional: qty * entry, dry: res.dry });
+          const f = await symFilter(sym);
+          const stopDist = P.stop_atr_mult * x.atr;
+          const entry = x.close;
+          const riskBudget = eq * riskPct;
+          let qty = riskBudget / (stopDist + entry * P.fee_roundtrip);
+          qty = Math.min(qty, (eq * P.leverage) / entry, (eq * P.max_margin_pct * P.leverage) / entry);
+          qty = floorStep(qty, f.step);
+          const stop = snap(sig === 'long' ? entry - stopDist : entry + stopDist, f.tick);
+          const tp1 = snap(sig === 'long' ? entry + P.tp1_r * stopDist : entry - P.tp1_r * stopDist, f.tick);
+
+          if (qty < f.minQty || qty * entry < Math.max(f.minNotional, 5)) {
+            row.skip = `仓位过小 ${round(qty * entry, 1)}U（币安下限 ${f.minNotional}U）`;
+          } else {
+            const res = await openPosition(env, sym, sig, qty, stop, tp1, live);
+            row.order = res;
+            await markSeen(dupKey);
+            hits.push({ sym, sig, entry, stop, tp1, qty, notional: qty * entry, ...res });
+          }
         }
       }
       rows.push(row);
@@ -310,21 +374,24 @@ async function run(env, trigger) {
   // 有信号才推（推送次数省着用，也不吵）
   for (const h of hits) {
     const emo = h.sig === 'long' ? '🟢 开多' : '🔴 开空';
+    const status = h.ok && !h.dry
+      ? `> 已自动下单，止损单挂在交易所端（断网也保护）。`
+      : h.err
+        ? `> ⚠️ 自动下单失败（${h.err}）\n> **请在币安 App 手动按上面参数开${h.sig === 'long' ? '多' : '空'}，并挂止损。**`
+        : `> DRY-RUN：没有下单。要跟就在币安 App 按上面参数开${h.sig === 'long' ? '多' : '空'}，挂好止损。`;
     const md = [
       `### ${emo} ${h.sym}`,
       ``,
       `**入场** ${round(h.entry, 2)}`,
       `**止损** ${round(h.stop, 2)}（距 ${round((Math.abs(h.entry - h.stop) / h.entry) * 100, 2)}%）`,
-      `**TP1** ${round(h.tp1, 2)} → 平一半，止损推保本`,
+      `**TP1** ${round(h.tp1, 2)} → 到价平一半，止损推保本`,
       `**仓位** ${round(h.qty, 3)} 张 ≈ ${round(h.notional, 0)} U 名义 · ${P.leverage}x`,
       ``,
-      h.dry
-        ? `> DRY-RUN：**没有下单**。要手动就打开币安 App 按上面参数开 ${h.sig === 'long' ? '多' : '空'}，并挂止损。`
-        : `> 已自动下单，止损单已挂交易所端（断网也生效）。`,
+      status,
       ``,
       `权益 ${round(eq, 1)}U（${src}）｜单笔风险 ${round(eq * riskPct, 1)}U`,
     ].join('\n');
-    await push(env, `${h.sig === 'long' ? '开多' : '开空'} ${h.sym} @ ${round(h.entry, 2)}${h.dry ? '（仅信号）' : ''}`, md);
+    await push(env, `${h.sig === 'long' ? '开多' : '开空'} ${h.sym} @ ${round(h.entry, 2)}${h.ok && !h.dry ? '' : '（手动）'}`, md);
   }
 
   // 每天 UTC 00:05 推一次日报（北京时间 08:05）
