@@ -58,12 +58,19 @@ footer{color:var(--dim);font-size:11px;text-align:center;margin-top:20px;line-he
 </div>
 
 <div class="card lock" id="lock">
-  <div class="lbl" style="text-align:center">今日免费次数已用完</div>
+  <div class="lbl" style="text-align:center;font-size:15px;color:var(--ink)">今日免费 5 条已用完</div>
   <p style="font-size:14px;line-height:1.9;text-align:center;color:var(--dim)">
-    每人每天免费 5 条，明天 0 点刷新。<br>
-    急用不限量？<b>解锁当日不限次</b>：<br>
-    （此处放你的微信收款码 / 赞赏码，付款后自动或手动发放解锁码）
+    解锁<b style="color:var(--gold)">今日不限次</b> · <b style="color:var(--gold)">¥9.9</b><br>
+    ① 长按识别下方二维码付款（备注「AI文案」）<br>
+    ② 把付款截图发给军哥，领取 6 位解锁码<br>
+    ③ 在下方输入解锁码，立即不限次
   </p>
+  <img src="qr.jpg" alt="微信收款码" style="display:block;width:220px;max-width:70%;margin:10px auto;border-radius:12px;border:1px solid var(--line)">
+  <div style="display:flex;gap:8px;margin-top:12px">
+    <input id="uc" placeholder="输入 6 位解锁码" maxlength="6" style="margin-bottom:0;text-transform:uppercase;text-align:center;letter-spacing:4px;font-family:var(--mono,monospace)">
+    <button class="go" id="ubtn" style="width:auto;padding:11px 22px;letter-spacing:1px">解锁</button>
+  </div>
+  <div class="err" id="uerr"></div>
 </div>
 
 <div id="out"></div>
@@ -89,8 +96,9 @@ function qs(s){ return document.querySelector(s); }
 reType(type); reTone(tone);
 
 const QKEY = 'aiq_' + new Date().toISOString().slice(0,10);
-let free = Math.max(0, 5 - parseInt(localStorage.getItem(QKEY)||'0',10));
-function paintQ(){ qs('#q').textContent = `今日免费 5 条 · 余 ${free} 条`; if(free<=0){ qs('#lock').style.display='block'; qs('#go').disabled=true; } }
+let UNLOCK = localStorage.getItem('aiunlock') || '';
+let free = UNLOCK ? 99 : Math.max(0, 5 - parseInt(localStorage.getItem(QKEY)||'0',10));
+function paintQ(){ if(UNLOCK){ qs('#q').textContent = '✅ 已解锁 · 今日不限次'; qs('#lock').style.display='none'; qs('#go').disabled=false; return; } qs('#q').textContent = `今日免费 5 条 · 余 ${free} 条`; if(free<=0){ qs('#lock').style.display='block'; qs('#go').disabled=true; } }
 paintQ();
 
 function showErr(m){ const e=qs('#err'); e.textContent=m; e.style.display=m?'block':'none'; }
@@ -107,11 +115,11 @@ qs('#go').onclick = async ()=>{
   const btn = qs('#go'); btn.disabled=true; btn.innerHTML='<span class="spin"></span> 生成中…';
   try{
     const r = await fetch(API+'/gen', {method:'POST',headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({type, tone, to:qs('#to').value.trim(), rel:qs('#rel').value.trim(), extra:qs('#extra').value.trim()})});
+      body: JSON.stringify({type, tone, to:qs('#to').value.trim(), rel:qs('#rel').value.trim(), extra:qs('#extra').value.trim(), unlockCode:UNLOCK})});
     const d = await r.json();
     if(!r.ok){ if(d.needUnlock){ paintQ(); } showErr(d.error||'生成失败，请重试'); return; }
-    free = d.quota ? d.quota.free : free-1;
-    localStorage.setItem(QKEY, String(5-free));
+    if(d.quota && d.quota.unlocked){ free = 99; }
+    else { free = d.quota ? d.quota.free : free-1; localStorage.setItem(QKEY, String(5-free)); }
     paintQ();
     if(d.total) qs('#social').textContent = '🔥 全站已生成 ' + d.total + ' 条走心文案';
     qs('#out').innerHTML = d.items.map((t,i)=>`
@@ -123,6 +131,21 @@ qs('#go').onclick = async ()=>{
     qs('#out').scrollIntoView({behavior:'smooth', block:'start'});
   }catch(e){ showErr('网络异常，请重试'); }
   finally{ btn.disabled = free<=0; btn.textContent='生 成 3 条'; }
+};
+
+/* 解锁码 */
+qs('#ubtn').onclick = async ()=>{
+  const ue = qs('#uerr'); ue.style.display='none';
+  const code = qs('#uc').value.trim().toUpperCase();
+  const btn = qs('#ubtn'); btn.disabled=true; btn.textContent='验证中…';
+  try{
+    const r = await fetch(API+'/unlock', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+    const d = await r.json();
+    if(!r.ok){ ue.textContent=d.error||'解锁失败'; ue.style.display='block'; return; }
+    UNLOCK = code; localStorage.setItem('aiunlock', code);
+    paintQ();
+  }catch(e){ ue.textContent='网络异常，请重试'; ue.style.display='block'; }
+  finally{ btn.disabled=false; btn.textContent='解锁'; }
 };
 </script>
 </body>
