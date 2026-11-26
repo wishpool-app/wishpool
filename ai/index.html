@@ -66,6 +66,12 @@ footer{color:var(--dim);font-size:11px;text-align:center;margin-top:20px;line-he
     ③ 在下方输入解锁码，立即不限次
   </p>
   <img src="qr.jpg" alt="微信收款码" style="display:block;width:220px;max-width:70%;margin:10px auto;border-radius:12px;border:1px solid var(--line)">
+  <div style="text-align:center;color:var(--dim);font-size:12px;margin:6px 0">—— 或 ——</div>
+  <button class="go" id="paybtn" style="margin-bottom:10px">微信扫码付 ¥9.9 · 自动发码秒解锁</button>
+  <div id="payqr" style="display:none;text-align:center">
+    <img id="payimg" alt="支付二维码" style="width:210px;max-width:60%;border-radius:12px;border:1px solid var(--line)">
+    <div class="quota">支付完成后本页自动解锁（通常几秒）</div>
+  </div>
   <div style="display:flex;gap:8px;margin-top:12px">
     <input id="uc" placeholder="输入 6 位解锁码" maxlength="6" style="margin-bottom:0;text-transform:uppercase;text-align:center;letter-spacing:4px;font-family:var(--mono,monospace)">
     <button class="go" id="ubtn" style="width:auto;padding:11px 22px;letter-spacing:1px">解锁</button>
@@ -131,6 +137,26 @@ qs('#go').onclick = async ()=>{
     qs('#out').scrollIntoView({behavior:'smooth', block:'start'});
   }catch(e){ showErr('网络异常，请重试'); }
   finally{ btn.disabled = free<=0; btn.textContent='生 成 3 条'; }
+};
+
+/* 在线支付：下单 → 出码 → 轮询回调 → 自动解锁 */
+qs('#paybtn').onclick = async ()=>{
+  const b=qs('#paybtn'); b.disabled=true; b.innerHTML='<span class="spin"></span> 创建订单…';
+  try{
+    const r=await fetch(API+'/pay/create',{method:'POST'});
+    const d=await r.json();
+    if(!d.ok){ const ue=qs('#uerr'); ue.textContent=d.error||'下单失败'; ue.style.display='block'; b.disabled=false; b.textContent='微信扫码付 ¥9.9 · 自动发码秒解锁'; return; }
+    qs('#payqr').style.display='block';
+    qs('#payimg').src = d.qr || ('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(d.codeUrl));
+    const t0=Date.now();
+    const timer=setInterval(async ()=>{
+      try{
+        const q=await (await fetch(API+'/pay/query?oid='+encodeURIComponent(d.oid))).json();
+        if(q.paid){ clearInterval(timer); qs('#payqr').style.display='none'; UNLOCK=q.code; localStorage.setItem('aiunlock', q.code); paintQ(); return; }
+      }catch(e){}
+      if(Date.now()-t0>600000){ clearInterval(timer); b.disabled=false; b.textContent='微信扫码付 ¥9.9 · 自动发码秒解锁'; }
+    }, 3000);
+  }catch(e){ b.disabled=false; b.textContent='微信扫码付 ¥9.9 · 自动发码秒解锁'; }
 };
 
 /* 解锁码 */
