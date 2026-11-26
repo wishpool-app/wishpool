@@ -301,6 +301,7 @@ async function pollTickers(){
   try{
     const rs = await Promise.all(Object.entries(PAIR).map(([s,p])=>jget(GATE+"/tickers?contract="+p)));
     rs.forEach((arr,i)=>{ const t=arr[0]; paint(Object.keys(PAIR)[i], +t.last, +t.change_percentage, +t.funding_rate_indicative); });
+    updateOverviewLive();
     document.getElementById('livePill').textContent = 'LIVE';
   }catch(e){ document.getElementById('livePill').textContent = '重连中…'; }
 }
@@ -446,24 +447,36 @@ function renderTrades(){
   </tbody></table>`;
 }
 /* ---------- 资产总览 ---------- */
-function renderOverview(){
-  const set = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
-  set('ovUpd', '行情实时 · 资金 ' + new Date().toLocaleTimeString('zh-CN',{hour12:false}) + ' 刷新');
-  if(!DATA){ set('ovEq','—'); set('ovToday','—'); set('ovCum','—'); return; }
+const set = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
+function clsOf(v){ return v > 0.005 ? 'pos-up' : (v < -0.005 ? 'pos-down' : ''); }
+function sgnOf(v){ return (v>0?'+':'') + fmt(v); }
+function floatPnl(){
+  let f = 0;
+  Object.entries(DATA.symbols).forEach(([sym,s])=>{
+    if(s.pos && lastPx[sym]) f += (s.pos.side==='short' ? s.pos.entry - lastPx[sym] : lastPx[sym] - s.pos.entry) * s.pos.qty;
+  });
+  return f;
+}
+function updateOverviewLive(){
+  if(!DATA) return;
   let eq = 0, cum = 0, today = 0;
-  const todayKey = new Date().toDateString();
+  const tk = new Date().toDateString();
   Object.values(DATA.symbols).forEach(s=>{
     eq += s.equity || 0;
     (s.trades||[]).forEach(t=>{
       cum += t.pnl || 0;
-      if(t.exit_dt && new Date(t.exit_dt).toDateString() === todayKey) today += t.pnl || 0;
+      if(t.exit_dt && new Date(t.exit_dt).toDateString() === tk) today += t.pnl || 0;
     });
   });
-  const cls = v => v > 0.005 ? 'pos-up' : (v < -0.005 ? 'pos-down' : '');
-  const sgn = v => (v>0?'+':'') + fmt(v);
-  set('ovEq', fmt(eq) + ' <small>U</small>');
-  set('ovToday', `<span class="${cls(today)}">${sgn(today)}</span> <small>U</small>`);
-  set('ovCum', `<span class="${cls(cum)}">${sgn(cum)}</span> <small>U</small>`);
+  const f = floatPnl();
+  set('ovEq', fmt(eq + f) + ' <small>U</small>');
+  set('ovToday', `<span class="${clsOf(today+f)}">${sgnOf(today+f)}</span> <small>U</small>`);
+  set('ovCum', `<span class="${clsOf(cum+f)}">${sgnOf(cum+f)}</span> <small>U</small>`);
+}
+function renderOverview(){
+  set('ovUpd', '行情实时 · 含浮动盈亏 · 资金 ' + new Date().toLocaleTimeString('zh-CN',{hour12:false}) + ' 刷新');
+  if(!DATA){ set('ovEq','—'); set('ovToday','—'); set('ovCum','—'); return; }
+  updateOverviewLive();
 }
 /* ---------- 策略信号：浏览器本地算，和云端引擎同一套公式 ---------- */
 const SIGP = {adx_min:20, atr_pct_min:0.0015, vol_ratio_min:0.9, daily_ema:50};
