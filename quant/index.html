@@ -369,7 +369,7 @@ function renderCards(){
   const wrap = document.getElementById('cards');
   wrap.innerHTML = '';
   Object.entries(DATA.symbols).forEach(([sym, s])=>{
-    const ret = (s.equity/300-1)*100;
+    const ret = (s.equity/3000-1)*100;
     const cls = ret > 0 ? 'pos-up' : (ret < 0 ? 'pos-down' : '');
     const posTxt = s.pos ? `<span class="tag ${s.pos.side}">${s.pos.side==='long'?'多':'空'} ${fmt(s.pos.entry,1)}</span>` : '<span class="tag">空仓</span>';
     const card = document.createElement('div');
@@ -382,7 +382,7 @@ function renderCards(){
       <div class="row"><span>回测基准</span><b style="color:var(--gold)">${BASE_RET[sym]!=null ? '+'+BASE_RET[sym].toFixed(1)+'%' : '待回测'}</b></div>
       <div class="row"><span>已平仓 / 连亏 / 纸面天数</span><b>${(s.trades||[]).length} / ${s.consec_loss||0} / ${s.days||0}天</b></div>`;
     wrap.appendChild(card);
-    spark(document.getElementById('eq'+sym), s.curve, 300);
+    spark(document.getElementById('eq'+sym), s.curve, 3000);
     pollChart(sym);
   });
 }
@@ -391,7 +391,7 @@ function renderGates(){
   g.innerHTML = '';
   Object.entries(DATA.symbols).forEach(([sym,s])=>{
     const days = s.days || 0;
-    const ret = (s.equity/300-1)*100;
+    const ret = (s.equity/3000-1)*100;
     const dd = s.peak ? Math.max(0, (1 - s.equity/s.peak)*100) : 0;
     const items = [
       ['纸面运行满 45 天', days>=MIN_DAYS, days+' / 45 天', Math.min(days/MIN_DAYS*100,100)],
@@ -517,7 +517,7 @@ async function refreshSig(){
 }
 
 /* 兜底快照：线上 data.json 与中转都拉不到时使用 */
-const DATA_EMBED = {"updated":"2026-11-25T10:56:51.340021+00:00","symbols":{"BTC":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-25 09:45:04","days":0,"pos":null,"trades":[],"curve":[]},"ETH":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]},"SOL":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-25 09:45:02","days":0,"pos":null,"trades":[],"curve":[]},"BNB":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]},"XAU":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]}}};
+const DATA_EMBED = {"updated":"2026-11-25T10:56:51.340021+00:00","symbols":{"BTC":{"equity":3000.0,"peak":3000.0,"consec_loss":0,"halted_until":null,"started":"2026-11-25 09:45:04","days":0,"pos":null,"trades":[],"curve":[]},"ETH":{"equity":3000.0,"peak":3000.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]},"SOL":{"equity":3000.0,"peak":3000.0,"consec_loss":0,"halted_until":null,"started":"2026-11-25 09:45:02","days":0,"pos":null,"trades":[],"curve":[]},"BNB":{"equity":3000.0,"peak":3000.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]},"XAU":{"equity":3000.0,"peak":3000.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]}},"reset":"2026-11-26 04:04:10"};
 async function load(){
   const tries = ['./data.json?v=' + Date.now(), 'https://quant.hzjiance.cn/data?cb=' + Date.now()];
   DATA = null;
