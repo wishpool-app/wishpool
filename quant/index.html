@@ -516,11 +516,16 @@ async function refreshSig(){
   document.getElementById('sigUpd').textContent = '更新 ' + new Date().toLocaleTimeString('zh-CN',{hour12:false});
 }
 
+/* 兜底快照：线上 data.json 与中转都拉不到时使用 */
+const DATA_EMBED = {"updated":"2026-11-25T10:56:51.340021+00:00","symbols":{"BTC":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-25 09:45:04","days":0,"pos":null,"trades":[],"curve":[]},"ETH":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]},"SOL":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-25 09:45:02","days":0,"pos":null,"trades":[],"curve":[]},"BNB":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]},"XAU":{"equity":300.0,"peak":300.0,"consec_loss":0,"halted_until":null,"started":"2026-11-26 01:23:30","days":0,"pos":null,"trades":[],"curve":[]}}};
 async function load(){
+  const tries = ['./data.json?v=' + Date.now(), 'https://quant.hzjiance.cn/data?cb=' + Date.now()];
+  DATA = null;
+  for (const u of tries) {
+    try { const r = await fetch(u, {cache:'no-store'}); if(!r.ok) throw new Error('bad'); DATA = await r.json(); break; } catch(e){}
+  }
+  if (!DATA) { DATA = DATA_EMBED; }
   try{
-    const r = await fetch('./data.json?v=' + Date.now(), {cache:'no-store'});
-    if(!r.ok) throw new Error('no data');
-    DATA = await r.json();
     const upd = new Date(DATA.updated);
     document.getElementById('upd').textContent = '资金/持仓更新 ' + upd.toLocaleString('zh-CN',{hour12:false}) + ' · 行情实时直连';
     renderCards(); renderGates(); renderTrades(); renderOverview();
