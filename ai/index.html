@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI 祝福文案生成器 · 一秒写出走心祝福</title>
+<meta name="description" content="输入对象和场景，AI 一秒生成 3 条可直接发微信的祝福文案：生日祝福、新年祝福、表白、道歉、检讨书、朋友圈文案。">
+<link rel="canonical" href="https://wishpool.xin/ai/">
+<style>
+:root{--gold:#c9932a;--ink:#2b2a26;--dim:#8a8577;--line:#ece7db;--bg:#faf7f0;--card:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);max-width:520px;margin:0 auto;padding:18px 16px calc(30px + env(safe-area-inset-bottom))}
+h1{font-size:22px;font-weight:800;letter-spacing:.5px}
+h1 .ai{color:var(--gold)}
+.sub{color:var(--dim);font-size:13px;margin:6px 0 16px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(180,150,80,.06)}
+.lbl{font-size:13px;font-weight:600;color:var(--dim);margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border:1.5px solid var(--line);border-radius:999px;font-size:14px;background:#fff;cursor:pointer;transition:.15s;user-select:none}
+.chip.on{border-color:var(--gold);background:rgba(201,147,42,.08);color:var(--gold);font-weight:700}
+input,textarea,select{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;font-size:15px;font-family:inherit;background:#fff;outline:none;margin-bottom:10px}
+input:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:none;height:56px}
+.go{width:100%;padding:14px;border:none;border-radius:13px;background:linear-gradient(135deg,#d9a53d,#b98520);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:2px}
+.go:disabled{opacity:.5}
+.quota{font-size:12px;color:var(--dim);text-align:center;margin-top:9px}
+.res{border:1px solid var(--line);border-radius:13px;padding:13px;margin-top:11px;background:#fffdf8}
+.res p{font-size:15px;line-height:1.8;white-space:pre-wrap}
+.copy{margin-top:9px;font-size:12px;color:var(--gold);border:1px solid var(--gold);background:none;border-radius:8px;padding:5px 14px;cursor:pointer;font-weight:600}
+.copy:active{background:rgba(201,147,42,.1)}
+.err{background:#fdf1f0;border:1px solid #f3c8c4;color:#b4403a;border-radius:11px;padding:11px 13px;font-size:13px;margin-top:10px;line-height:1.6;display:none}
+.lock{text-align:center;display:none}
+.lock b{color:var(--gold)}
+footer{color:var(--dim);font-size:11px;text-align:center;margin-top:20px;line-height:1.8}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<h1>AI 祝福<span class="ai">文案</span>生成器</h1>
+<div class="sub">输入对象和场景，AI 一秒给你 3 条能直接发微信的走心文案。<br>不再「岁月如梭」，句句有细节。</div>
+
+<div class="card">
+  <div class="lbl">要写什么？</div>
+  <div class="chips" id="types"></div>
+  <div style="height:14px"></div>
+  <div class="lbl">什么语气？</div>
+  <div class="chips" id="tones"></div>
+  <div style="height:14px"></div>
+  <input id="to" placeholder="送给谁？（如：王芳 / 老爸 / 张总）" maxlength="20">
+  <input id="rel" placeholder="你的身份或关系（如：女儿 / 好朋友 / 下属）" maxlength="20">
+  <textarea id="extra" placeholder="补充信息，写得越细越走心（可选）：比如「她今年考上研究生」「爸爱钓鱼，下周六生日宴」" maxlength="120"></textarea>
+  <button class="go" id="go">生 成 3 条</button>
+  <div class="quota" id="q">今日免费 5 条 · 余 5 条</div>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="card lock" id="lock">
+  <div class="lbl" style="text-align:center">今日免费次数已用完</div>
+  <p style="font-size:14px;line-height:1.9;text-align:center;color:var(--dim)">
+    每人每天免费 5 条，明天 0 点刷新。<br>
+    急用不限量？<b>解锁当日不限次</b>：<br>
+    （此处放你的微信收款码 / 赞赏码，付款后自动或手动发放解锁码）
+  </p>
+</div>
+
+<div id="out"></div>
+
+<footer>
+  由 wishpool.xin 出品 · AI 生成内容仅供参考<br>
+  文案版权归你所有，放心使用
+</footer>
+
+<script>
+const TYPES = [['birthday','🎂 生日祝福'],['newyear','🧨 新年祝福'],['love','💗 表白'],['sorry','🙏 道歉'],['review','📝 检讨书'],['moments','📸 朋友圈'],['festival','🏮 节日祝福'],['toast','🥂 祝酒词']];
+const TONES = [['warm','走心'],['funny','幽默'],['formal','正式'],['short','简短']];
+let type='birthday', tone='warm';
+const API = 'https://ai.hzjiance.cn';
+
+function chips(el, arr, cur, cb){
+  el.innerHTML = arr.map(([v,t])=>`<div class="chip${v===cur?' on':''}" data-v="${v}">${t}</div>`).join('');
+  el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>cb(c.dataset.v));
+}
+function reType(v){ type=v; chips(qs('#types'),TYPES,v,reType); }
+function reTone(v){ tone=v; chips(qs('#tones'),TONES,v,reTone); }
+function qs(s){ return document.querySelector(s); }
+reType(type); reTone(tone);
+
+const QKEY = 'aiq_' + new Date().toISOString().slice(0,10);
+let free = Math.max(0, 5 - parseInt(localStorage.getItem(QKEY)||'0',10));
+function paintQ(){ qs('#q').textContent = `今日免费 5 条 · 余 ${free} 条`; if(free<=0){ qs('#lock').style.display='block'; qs('#go').disabled=true; } }
+paintQ();
+
+function showErr(m){ const e=qs('#err'); e.textContent=m; e.style.display=m?'block':'none'; }
+
+qs('#go').onclick = async ()=>{
+  showErr('');
+  if(free<=0) return;
+  const btn = qs('#go'); btn.disabled=true; btn.innerHTML='<span class="spin"></span> 生成中…';
+  try{
+    const r = await fetch(API+'/gen', {method:'POST',headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({type, tone, to:qs('#to').value.trim(), rel:qs('#rel').value.trim(), extra:qs('#extra').value.trim()})});
+    const d = await r.json();
+    if(!r.ok){ if(d.needUnlock){ paintQ(); } showErr(d.error||'生成失败，请重试'); return; }
+    free = d.quota ? d.quota.free : free-1;
+    localStorage.setItem(QKEY, String(5-free));
+    paintQ();
+    qs('#out').innerHTML = d.items.map((t,i)=>`
+      <div class="card res"><div class="lbl">方案 ${'一二三'[i]||i+1}</div><p>${t.replace(/</g,'&lt;')}</p>
+      <button class="copy" data-i="${i}">复制</button></div>`).join('');
+    qs('#out').querySelectorAll('.copy').forEach(b=>b.onclick=()=>{
+      navigator.clipboard.writeText(d.items[+b.dataset.i]).then(()=>{ b.textContent='已复制 ✓'; setTimeout(()=>b.textContent='复制',1500); });
+    });
+    qs('#out').scrollIntoView({behavior:'smooth', block:'start'});
+  }catch(e){ showErr('网络异常，请重试'); }
+  finally{ btn.disabled = free<=0; btn.textContent='生 成 3 条'; }
+};
+</script>
+</body>
+</html>
