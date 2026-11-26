@@ -379,7 +379,7 @@ function renderCards(){
       <div><span class="eq">${fmt(s.equity)}</span><small>USDT</small><span class="ret ${cls}">${ret>=0?'+':''}${ret.toFixed(1)}%</span></div>
       <div class="chartwrap"><span class="lbl">实时 5m 走势 · gate.io</span><span class="lastpx" id="last${sym}">⟳</span><canvas class="cv-px" id="chart${sym}"></canvas></div>
       <div class="chartwrap"><span class="lbl">累计权益曲线</span><canvas class="cv-eq" id="eq${sym}"></canvas></div>
-      <div class="row"><span>回测基准</span><b style="color:var(--gold)">+${BASE_RET[sym].toFixed(1)}%</b></div>
+      <div class="row"><span>回测基准</span><b style="color:var(--gold)">${BASE_RET[sym]!=null ? '+'+BASE_RET[sym].toFixed(1)+'%' : '待回测'}</b></div>
       <div class="row"><span>已平仓 / 连亏 / 纸面天数</span><b>${(s.trades||[]).length} / ${s.consec_loss||0} / ${s.days||0}天</b></div>`;
     wrap.appendChild(card);
     spark(document.getElementById('eq'+sym), s.curve, 300);
@@ -528,7 +528,10 @@ async function load(){
   try{
     const upd = new Date(DATA.updated);
     document.getElementById('upd').textContent = '资金/持仓更新 ' + upd.toLocaleString('zh-CN',{hour12:false}) + ' · 行情实时直连';
-    renderCards(); renderGates(); renderTrades(); renderOverview();
+    renderOverview();
+    try{renderCards()}catch(e){console.error('cards',e)}
+    try{renderGates()}catch(e){console.error('gates',e)}
+    try{renderTrades()}catch(e){console.error('trades',e)}
   }catch(e){
     document.getElementById('upd').textContent = '资金数据推送中，行情已实时连接';
   }
