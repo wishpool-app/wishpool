@@ -139,25 +139,29 @@ qs('#go').onclick = async ()=>{
   finally{ btn.disabled = free<=0; btn.textContent='生 成 3 条'; }
 };
 
-/* 在线支付：下单 → 出码 → 轮询回调 → 自动解锁 */
+/* 在线支付：下单 → 跳支付页 → 支付完自动回跳解锁 */
 qs('#paybtn').onclick = async ()=>{
   const b=qs('#paybtn'); b.disabled=true; b.innerHTML='<span class="spin"></span> 创建订单…';
   try{
     const r=await fetch(API+'/pay/create',{method:'POST'});
     const d=await r.json();
     if(!d.ok){ const ue=qs('#uerr'); ue.textContent=d.error||'下单失败'; ue.style.display='block'; b.disabled=false; b.textContent='微信扫码付 ¥9.9 · 自动发码秒解锁'; return; }
-    qs('#payqr').style.display='block';
-    qs('#payimg').src = d.qr || ('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(d.codeUrl));
-    const t0=Date.now();
-    const timer=setInterval(async ()=>{
-      try{
-        const q=await (await fetch(API+'/pay/query?oid='+encodeURIComponent(d.oid))).json();
-        if(q.paid){ clearInterval(timer); qs('#payqr').style.display='none'; UNLOCK=q.code; localStorage.setItem('aiunlock', q.code); paintQ(); return; }
-      }catch(e){}
-      if(Date.now()-t0>600000){ clearInterval(timer); b.disabled=false; b.textContent='微信扫码付 ¥9.9 · 自动发码秒解锁'; }
-    }, 3000);
+    location.href = d.url || ('https://wishpool.xin/ai/?oid=' + d.oid);
   }catch(e){ b.disabled=false; b.textContent='微信扫码付 ¥9.9 · 自动发码秒解锁'; }
 };
+
+/* 支付回跳：带 ?oid 时轮询订单，支付成功自动解锁 */
+const oidParam = new URLSearchParams(location.search).get('oid');
+if(oidParam){
+  const t0=Date.now();
+  const pt=setInterval(async ()=>{
+    try{
+      const q=await (await fetch(API+'/pay/query?oid='+encodeURIComponent(oidParam))).json();
+      if(q.paid){ clearInterval(pt); UNLOCK=q.code; localStorage.setItem('aiunlock', q.code); paintQ(); history.replaceState(null,'','/ai/'); return; }
+    }catch(e){}
+    if(Date.now()-t0>120000) clearInterval(pt);
+  }, 3000);
+}
 
 /* 解锁码 */
 qs('#ubtn').onclick = async ()=>{
