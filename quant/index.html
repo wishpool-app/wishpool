@@ -96,6 +96,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:10px;ma
 .ret.pos-up{background:rgba(246,70,93,.12)} .ret.pos-down{background:rgba(14,203,129,.12)}
 .row{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:8px;gap:10px}
 .row b{color:var(--text);font-family:var(--mono);font-weight:500}
+.flt{display:flex;align-items:baseline;gap:8px;margin:2px 0 0;font-size:12px;color:var(--dim)}
+.flt b{font-family:var(--mono);font-size:19px;font-weight:700;letter-spacing:-.3px}
+.flt small{font-size:11px;color:var(--dim);font-family:var(--mono)}
 /* ---------- 资产总览 ---------- */
 .ov{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
 .ov .cell{text-align:center;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:13px;padding:11px 4px}
@@ -279,6 +282,20 @@ function paint(sym, price, chg, fund){
   if(fe) fe.textContent = (sym==='XAU'?'XAUT 永续 · 资金费率 ':'资金费率 ') + (fund*100).toFixed(4) + '%';
   const lp = document.getElementById('last'+sym);
   if(lp) lp.textContent = ' ⟳ ' + fmt(price, dec);
+  updateFloat(sym, price);
+}
+/* 持仓浮动盈亏：跟行情每 4 秒刷新 */
+function updateFloat(sym, price){
+  const s = DATA && DATA.symbols && DATA.symbols[sym];
+  const pos = s && s.pos;
+  const eb = document.getElementById('flt'+sym);
+  if(!eb || !pos || !price) return;
+  const u = (pos.side === 'short' ? pos.entry - price : price - pos.entry) * pos.qty;
+  eb.textContent = (u>=0?'+':'') + fmt(u) + ' U';
+  eb.className = u > 0.01 ? 'pos-up' : (u < -0.01 ? 'pos-down' : '');
+  const pct = (pos.side === 'short' ? (pos.entry/price - 1) : (price/pos.entry - 1)) * 100;
+  const d2 = document.getElementById('flt2'+sym);
+  if(d2) d2.textContent = `${pct>=0?'+':''}${pct.toFixed(2)}% · 止损 ${fmt(pos.stop,2)} · TP1 ${fmt(pos.tp1,2)}`;
 }
 async function pollTickers(){
   try{
@@ -377,6 +394,7 @@ function renderCards(){
     card.innerHTML = `
       <h2><span class="tt">${sym} 模拟盘</span><b>${posTxt}${s.halted_until?' · 冷静期':''}</b></h2>
       <div><span class="eq">${fmt(s.equity)}</span><small>USDT</small><span class="ret ${cls}">${ret>=0?'+':''}${ret.toFixed(1)}%</span></div>
+      ${s.pos ? `<div class="flt"><span>浮动</span><b id="flt${sym}">—</b><small id="flt2${sym}"></small></div>` : ''}
       <div class="chartwrap"><span class="lbl">实时 5m 走势 · gate.io</span><span class="lastpx" id="last${sym}">⟳</span><canvas class="cv-px" id="chart${sym}"></canvas></div>
       <div class="chartwrap"><span class="lbl">累计权益曲线</span><canvas class="cv-eq" id="eq${sym}"></canvas></div>
       <div class="row"><span>回测基准</span><b style="color:var(--gold)">${BASE_RET[sym]!=null ? '+'+BASE_RET[sym].toFixed(1)+'%' : '待回测'}</b></div>
@@ -384,6 +402,7 @@ function renderCards(){
     wrap.appendChild(card);
     spark(document.getElementById('eq'+sym), s.curve, 30000);
     pollChart(sym);
+    if(lastPx[sym]) updateFloat(sym, lastPx[sym]);
   });
 }
 function renderGates(){
