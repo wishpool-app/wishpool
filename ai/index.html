@@ -13,6 +13,7 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 h1{font-size:22px;font-weight:800;letter-spacing:.5px}
 h1 .ai{color:var(--gold)}
 .sub{color:var(--dim);font-size:13px;margin:6px 0 16px;line-height:1.6}
+.social{font-size:12px;color:var(--gold);font-weight:600;margin:-8px 0 14px;text-align:center}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(180,150,80,.06)}
 .lbl{font-size:13px;font-weight:600;color:var(--dim);margin:0 0 8px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -39,6 +40,7 @@ footer{color:var(--dim);font-size:11px;text-align:center;margin-top:20px;line-he
 <body>
 <h1>AI 祝福<span class="ai">文案</span>生成器</h1>
 <div class="sub">输入对象和场景，AI 一秒给你 3 条能直接发微信的走心文案。<br>不再「岁月如梭」，句句有细节。</div>
+<div class="social" id="social"></div>
 
 <div class="card">
   <div class="lbl">要写什么？</div>
@@ -93,6 +95,12 @@ paintQ();
 
 function showErr(m){ const e=qs('#err'); e.textContent=m; e.style.display=m?'block':'none'; }
 
+/* 社交证明：全站累计生成量 + 访问计数 */
+fetch(API+'/stats?visit=1').then(r=>r.json()).then(d=>{
+  const el = qs('#social');
+  if(d.total > 3) el.textContent = `🔥 全站已生成 ${d.total} 条走心文案`;
+}).catch(()=>{});
+
 qs('#go').onclick = async ()=>{
   showErr('');
   if(free<=0) return;
@@ -105,6 +113,7 @@ qs('#go').onclick = async ()=>{
     free = d.quota ? d.quota.free : free-1;
     localStorage.setItem(QKEY, String(5-free));
     paintQ();
+    if(d.total) qs('#social').textContent = '🔥 全站已生成 ' + d.total + ' 条走心文案';
     qs('#out').innerHTML = d.items.map((t,i)=>`
       <div class="card res"><div class="lbl">方案 ${'一二三'[i]||i+1}</div><p>${t.replace(/</g,'&lt;')}</p>
       <button class="copy" data-i="${i}">复制</button></div>`).join('');
