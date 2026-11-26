@@ -287,15 +287,28 @@ function paint(sym, price, chg, fund){
 /* 持仓浮动盈亏：跟行情每 4 秒刷新 */
 function updateFloat(sym, price){
   const s = DATA && DATA.symbols && DATA.symbols[sym];
-  const pos = s && s.pos;
+  if(!s || !price) return;
+  const pos = s.pos;
+  const u = pos ? (pos.side === 'short' ? pos.entry - price : price - pos.entry) * pos.qty : 0;
   const eb = document.getElementById('flt'+sym);
-  if(!eb || !pos || !price) return;
-  const u = (pos.side === 'short' ? pos.entry - price : price - pos.entry) * pos.qty;
-  eb.textContent = (u>=0?'+':'') + fmt(u) + ' U';
-  eb.className = u > 0.01 ? 'pos-up' : (u < -0.01 ? 'pos-down' : '');
-  const pct = (pos.side === 'short' ? (pos.entry/price - 1) : (price/pos.entry - 1)) * 100;
-  const d2 = document.getElementById('flt2'+sym);
-  if(d2) d2.textContent = `${pct>=0?'+':''}${pct.toFixed(2)}% · 止损 ${fmt(pos.stop,2)} · TP1 ${fmt(pos.tp1,2)}`;
+  if(eb){
+    if(pos){
+      eb.textContent = (u>=0?'+':'') + fmt(u) + ' U';
+      eb.className = u > 0.01 ? 'pos-up' : (u < -0.01 ? 'pos-down' : '');
+      const pct = (pos.side === 'short' ? (pos.entry/price - 1) : (price/pos.entry - 1)) * 100;
+      const d2 = document.getElementById('flt2'+sym);
+      if(d2) d2.textContent = `${pct>=0?'+':''}${pct.toFixed(2)}% · 止损 ${fmt(pos.stop,2)} · TP1 ${fmt(pos.tp1,2)}`;
+    }
+  }
+  /* 卡片权益数字 = 本金 + 浮动，实时滚动 */
+  const ev = document.getElementById('eqv'+sym);
+  if(ev){
+    const tot = s.equity + u;
+    ev.textContent = fmt(tot);
+    const r = (tot/30000 - 1) * 100;
+    const re = document.getElementById('ret'+sym);
+    if(re){ re.textContent = (r>=0?'+':'') + r.toFixed(1) + '%'; re.className = 'ret ' + (r>0.005 ? 'pos-up' : (r<-0.005 ? 'pos-down' : '')); }
+  }
 }
 async function pollTickers(){
   try{
@@ -394,7 +407,7 @@ function renderCards(){
     card.className = 'card';
     card.innerHTML = `
       <h2><span class="tt">${sym} 模拟盘</span><b>${posTxt}${s.halted_until?' · 冷静期':''}</b></h2>
-      <div><span class="eq">${fmt(s.equity)}</span><small>USDT</small><span class="ret ${cls}">${ret>=0?'+':''}${ret.toFixed(1)}%</span></div>
+      <div><span class="eq" id="eqv${sym}">${fmt(s.equity)}</span><small>USDT</small><span class="ret ${cls}" id="ret${sym}">${ret>=0?'+':''}${ret.toFixed(1)}%</span></div>
       ${s.pos ? `<div class="flt"><span>浮动</span><b id="flt${sym}">—</b><small id="flt2${sym}"></small></div>` : ''}
       <div class="chartwrap"><span class="lbl">实时 5m 走势 · gate.io</span><span class="lastpx" id="last${sym}">⟳</span><canvas class="cv-px" id="chart${sym}"></canvas></div>
       <div class="chartwrap"><span class="lbl">累计权益曲线</span><canvas class="cv-eq" id="eq${sym}"></canvas></div>
