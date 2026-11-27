@@ -136,6 +136,24 @@ function showErr(m){ const e=qs('#err'); e.textContent=m||''; e.style.display=m?
 qs('#lgZh').onclick=()=>{lang='zh';qs('#lgZh').classList.add('on');qs('#lgEn').classList.remove('on');paint()};
 qs('#lgEn').onclick=()=>{lang='en';qs('#lgEn').classList.add('on');qs('#lgZh').classList.remove('on');paint()};
 
+// 带超时+自动重试的请求封装（防止弱网下转圈卡死）
+async function api(path,opts={},tries=2){
+  for(let i=0;i<tries;i++){
+    const ctl=new AbortController();
+    const timer=setTimeout(()=>ctl.abort(),opts.timeout||45000);
+    try{
+      const r=await fetch(API+path,{...opts,signal:ctl.signal});
+      clearTimeout(timer);
+      if(r.status>=500&&i<tries-1){ await new Promise(z=>setTimeout(z,1500)); continue; }
+      return r;
+    }catch(e){
+      clearTimeout(timer);
+      if(i===tries-1) throw e;
+      await new Promise(z=>setTimeout(z,1500));
+    }
+  }
+}
+
 fetch(API+'/poem/stats').then(r=>r.json()).then(d=>{ if(d.total) qs('#social').innerHTML=T().soc(d.total); }).catch(()=>{});
 
 // 解锁状态记忆
@@ -167,7 +185,7 @@ qs('#go').onclick=async ()=>{
   if(freeUsed!==null && !unlocked && freeUsed>=2){ qs('#lock').style.display='block'; return; }
   const b=qs('#go'); b.disabled=true; b.innerHTML='<span class="spin"></span> '+T().gen;
   try{
-    const r=await fetch(API+'/poem',{method:'POST',headers:{'Content-Type':'application/json'},
+    const r=await api('/poem',{method:'POST',headers:{'Content-Type':'application/json'},timeout:60000,
       body:JSON.stringify({name,occasion:T().occs[occ],note:qs('#note').value.trim(),lang,unlockCode:savedCode||''})});
     const d=await r.json();
     if(!r.ok){ if(d.needUnlock){ paintQ(); qs('#lock').style.display='block'; } showErr(d.error||T().errNet); return; }
@@ -182,7 +200,7 @@ qs('#uok').onclick=async ()=>{
   const e=qs('#uerr'); e.style.display='none';
   const code=qs('#ucode').value.trim().toUpperCase();
   try{
-    const r=await fetch(API+'/unlock',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+    const r=await api('/unlock',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
     const d=await r.json();
     if(!r.ok){ e.textContent=d.error||'error'; e.style.display='block'; return; }
     unlocked=true; localStorage.setItem(UK,code); e.textContent=T().errUnlock; e.style.display='block';
