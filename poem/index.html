@@ -77,9 +77,10 @@ footer{color:var(--dim);font-size:11px;text-align:center;margin-top:20px;line-he
 <div class="card lock" id="lock">
   <div class="lbl" style="text-align:center" id="lk1">免费次数已用完</div>
   <p style="font-size:14px;line-height:1.9;text-align:center;color:var(--dim)" id="lk2">
-    每人每天免费 2 次。急用不限量？<br>扫码付款 <b>¥9.9</b>，把截图发给客服拿解锁码，<br>输入后<b>当日不限次</b>。
+    每人每天免费 2 次。急用不限量？<br>
+    <a href="https://mbd.pub/o/bread/YZaWmpZpbA==" target="_blank" rel="noopener" class="buynow" style="display:inline-block;margin:10px auto 6px;padding:10px 26px;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;border-radius:24px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 4px 14px rgba(231,76,60,.35)">💳 在线购买 ¥9.9 · 立即解锁</a><br>
+    <span style="font-size:12px">付款后页面自动显示解锁码，输入下方即享当日不限次</span>
   </p>
-  <img src="/ai/qr.jpg" alt="微信收款码">
   <div class="urow">
     <input id="ucode" maxlength="6" placeholder="输入解锁码">
     <button id="uok">解锁</button>
@@ -102,14 +103,14 @@ const I18N={
    l1:'藏头的名字（2-7 个字）',ph1:'如：李明 / 王芳',l2:'什么场景？',l3:'补充一句（可选）',ph3:'如：爱钓鱼，四十岁生日',go:'生 成',
    q:(f,u)=>'今日免费 2 次 · 已用 '+u+' 次'+(f>0?' · 余 '+f:''),needName:'请输入 2-7 个字的名字',
    gen:'藏 头 生 成 中…',copy:'复制',copied:'已复制 ✓',occs:['生日祝福','表白','婚礼','毕业','新年','励志','感恩'],
-   lk1:'免费次数已用完',lk2:'每人每天免费 2 次。急用不限量？<br>扫码付款 <b>¥9.9</b>，把截图发给客服拿解锁码，<br>输入后<b>当日不限次</b>。',
+   lk1:'免费次数已用完',lk2:'每人每天免费 2 次。急用不限量？<br><a href="https://mbd.pub/o/bread/YZaWmpZpbA==" target="_blank" rel="noopener" style="display:inline-block;margin:10px auto 6px;padding:10px 26px;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;border-radius:24px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 4px 14px rgba(231,76,60,.35)">💳 在线购买 ¥9.9 · 立即解锁</a><br><span style="font-size:12px">付款后页面自动显示解锁码，输入下方即享当日不限次</span>',
    ucode:'输入解锁码',uok:'解锁',soc:t=>'🔥 全站已写出 <b style="font-size:15px">'+t+'</b> 首藏头诗',
    errNet:'网络异常，请重试',errUnlock:'解锁成功！当日不限次 🎉'},
  en:{t1:'Acrostic <span class="ai">Poem</span> Generator',t2:'Type a name — AI writes two acrostic poems in one second.<br>Each line starts with a letter of the name. Birthdays, weddings, graduations.',
    l1:'Name to hide (2-7 letters)',ph1:'e.g. Emily / James',l2:'Occasion?',l3:'Add a detail (optional)',ph3:'e.g. loves fishing, 40th birthday',go:'WRITE POEMS',
    q:(f,u)=>'2 free per day · used '+u,needName:'Please enter a name (2-7 letters)',
    gen:'WRITING POEMS…',copy:'Copy',copied:'Copied ✓',occs:['Birthday','Proposal','Wedding','Graduation','New Year','Motivation','Thanks'],
-   lk1:'Free uses are used up',lk2:'2 free per day. Need more today?<br>Unlock unlimited uses for <b>¥9.9</b>.<br>Enter your unlock code below.',
+   lk1:'Free uses are used up',lk2:'2 free per day. Need more today?<br><a href="https://mbd.pub/o/bread/YZaWmpZpbA==" target="_blank" rel="noopener" style="display:inline-block;margin:10px auto 6px;padding:10px 26px;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;border-radius:24px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 4px 14px rgba(231,76,60,.35)">💳 Buy Now ¥9.9 · Instant Unlock</a><br><span style="font-size:12px">Unlock code is shown right after payment</span>',
    ucode:'Enter unlock code',uok:'Unlock',soc:t=>'🔥 <b style="font-size:15px">'+t+'</b> acrostic poems written so far',
    errNet:'Network error, please retry',errUnlock:'Unlocked! Unlimited today 🎉'}
 };
